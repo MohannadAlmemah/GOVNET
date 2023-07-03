@@ -1,0 +1,55 @@
+<div class="container-fluid dashboard-content ">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h3 class="card-header"> الجهات </h3>
+                <div class="card-body">
+
+                    <div class="our_solution_category">
+                        <div class="solution_cards_box row">
+                            <ng-container *ngFor="let item of services">
+                                
+                                <div class="col-md-4 col-12">
+                                    <a href="/Sections?SectionId={{item.id}}">
+                                        <div class="solution_card">
+                                            <div class="hover_color_bubble"></div>
+                                            <div class="so_top_icon">
+                                                <img  id="Layer_1" src="../../assets/images/royal.png">
+                                            </div>
+                                            <div class="solu_title">
+                                              <h3>{{item.name}}</h3>
+                                            </div>
+                                            <!-- <div class="solu_description">
+                                              <p>
+                                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+                                              </p>
+                                            </div> -->
+                                        </div>
+                                    </a>
+                                </div>
+                                  
+                            </ng-container>
+                            
+                        </div>
+                    </div>
+
+                    <!-- <ng-container *ngFor="let item of services">
+                        <div class="col-md-4">
+                                <a href="/Sections?SectionId={{item.id}}">
+                                    <div class="custom-card">
+                                        <div class="custom-card-details">
+                                          <p class="text-title"> {{item.name}}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                          </div>
+                    </ng-container> -->
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

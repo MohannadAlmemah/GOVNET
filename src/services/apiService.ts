@@ -39,6 +39,16 @@ export class ApiService {
     return this.http.post(url, data, { headers });
   }
 
+
+  login(endpoint: string, data: any, headers?: HttpHeaders): Observable<any> {
+    
+    const url = `${endpoint}`;
+
+    return this.http.post(url, data, { headers });
+  }
+
+
+
   // postWithToken(endpoint: string, data: any,token:string=this.authService.getToken()!, headers?: HttpHeaders): Observable<any> {
   //   const url = `${this.apiUrl}/${endpoint}`;
   //   if (!headers) {

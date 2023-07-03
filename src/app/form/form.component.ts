@@ -1,23 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/services/apiService';
-// import { MessageService } from 'primeng/api';
+import { SweetAlertService } from 'src/services/sweetAlertService';
+import { Field } from '../models/field';
+import {Container} from '../models/ContainerField';
+import { formBody } from '../models/formBody';
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
+
 export class FormComponent implements OnInit {
 
-  fileds:any[]
-  myForm:UntypedFormGroup;
-  files:any[]
+  @ViewChild('myPond') myPond: any;
 
-  constructor(private apiService:ApiService) {
-    this.fileds=[];
+  fields:Field[];
+
+  myForm:UntypedFormGroup; 
+  files:any[];
+  serviceId:string|undefined;
+  BluePrintId:string|undefined;
+  isLoading=true;
+  pondFiles: string[] = [];
+  service:any;
+  nationalId:string="9971063036";
+  submitted = false;
+  currentIndex=0;
+  containers:Container[]=[];
+  //9861049531
+  constructor(private apiService:ApiService,private route: ActivatedRoute,
+    private sweetAlertService:SweetAlertService
+    ) {
     this.myForm=new UntypedFormGroup({});
     this.files=[];
+    this.fields=[];
+    
   }
 
   onUploadFile(controlName:string,event:any){
@@ -33,128 +53,286 @@ export class FormComponent implements OnInit {
 
       this.files.push({controlName:controlName,fileBase64:base64WithoutPrefix});
 
+      console.log(this.files);
     };
 
   }
 
+  GetContainerItems(containerId:string):Container[]{
+    var filterdContainer=this.containers.filter(x=>x.containerId==containerId);
+    return filterdContainer;
+  }
+
   ngOnInit(): void {
 
-    this.fileds=[
-      {
-          "type": "FILE",
-          "required": true,
-          "multiSelect": false,
-          "mediaType": "IMAGE",
-          "values": null,
-          "allowedExtensions": [],
-          "id": "@id/step_3/image",
-          "label": "Image",
-          "hidden": false,
-          "value": null,
-          "comment": null
-      },
-      {
-          "type": "COMBO_BOX",
-          "multiSelect": false,
-          "comboBoxOptions": [
-              {
-                  "key": "1",
-                  "value": "استلام شخصي"
-              },
-              {
-                  "key": "2",
-                  "value": "البريد الاردني"
-              },
-              {
-                  "key": "3",
-                  "value": "ارامكس"
-              }
-          ],
-          "id": "@id/step_3/delivery_method",
-          "label": "Delivery Method",
-          "hidden": false,
-          "value": null,
-          "comment": null
-      },
-      {
-          "type": "COMBO_BOX",
-          "multiSelect": false,
-          "comboBoxOptions": [
-              {
-                  "key": "1",
-                  "value": "تحويل بنكي"
-              },
-              {
-                  "key": "2",
-                  "value": "اي فواتيركم"
-              }
-          ],
-          "id": "@id/step_3/payment_method",
-          "label": "Payment Method",
-          "hidden": false,
-          "value": null,
-          "comment": null
-      },
-  ];
+    if (this.route.snapshot.queryParams['BluePrintId']) {
 
-  this.fileds.map(filed=>{
-    this.myForm.addControl(filed.id,new FormControl(""));
-  })
+      const bluePrintId = this.route.snapshot.queryParamMap.get('BluePrintId');
 
-    var request=this.apiService.get('carboncopies/GetStepForConsumer?userId=9862015192&serviceId=6448e783255a7108b141afdb')
-    var response=request.subscribe(res=>{
-      var data=res.data[0];
+      var sectionId = this.route.snapshot.queryParamMap.get('SectionId');
+
+      if(bluePrintId!=null && sectionId!=null){
+
+        this.BluePrintId=bluePrintId;
+
+      }
+    }
+
+    var Services=this.apiService.get('categorization/GetServicesWithSectionId?id='+sectionId!);
+
+    Services.subscribe(response=>{
+
+      var data=response.data as any[];
+
+      var service=data.filter(x=>x.id==this.BluePrintId)[0];
+
+      var rootValues=service.rootValues as any[];
+
+        var body={
+          "serviceId": this.BluePrintId,
+            "rootValues": rootValues.map(x=>{
+              return{
+                "fieldId": x.fieldId,
+                "keyValue": x.keyValue,
+                "value": this.nationalId
+              }
+            })
+        };
+
+      var request=this.apiService.post("carboncopies/applyforservice",body);
+      request.subscribe(res=>{
+        
+        if(res.statusCode==200 && res.error==false){
+          this.serviceId=res.data;
+          this.GetStepForConsumer();
+        }
+      });
+
+    });
+
+  }
+
+  addContainerItems(containerId:string){
+
+    var maxIndex=Math.max(...this.containers.filter(y=>y.containerId==containerId).map(item => item.index));
+
+    var container=this.containers.filter(x=>x.containerId==containerId && x.index==1)[0];
+
+    this.containers.push(new Container(containerId,container.containerFields,maxIndex+1));
+
+    container.containerFields.map(containerField=>{
+      this.myForm.addControl(containerField.id+`#${maxIndex+1}`,new FormControl(containerField.value??""));
+    });
+
+  }
+
+  GetStepForConsumer(){
+    var request=this.apiService.get(`carboncopies/GetStepForConsumer?userId=${this.nationalId}&serviceId=${this.serviceId}`)
+    request.subscribe(res=>{
+
+      if(res.statusCode==200){
+        var apiFields=res.data.fields as any[];
+
+        apiFields.map( x =>{
+          const field = <Field>x;
+          this.fields.push(field);
+        });
+
+  
+        this.fields.map(field=>{
+          if(field.type=='CHECBOX'){
+            this.myForm.addControl(field.id,new FormControl(Boolean(field.value)));
+          }
+          else if(field.type=='PREDEFINED_COMBO_BOX'){
+            this.myForm.addControl(field.id,new FormControl(field.value??""));
+          }
+          else if(field.type=='COMBO_BOX'){
+            this.myForm.addControl(field.id,new FormControl(field.value??""));
+          }
+          else if(field.type=='CONTAINER'){
+
+            var containerFields=field.fields as any[];
+
+            this.containers?.push(new Container(field.id,containerFields,1));
+
+            containerFields.forEach((containerField)  => {
       
-    })
+              var controlName=containerField.id+"#1";
+
+              this.myForm.addControl(controlName,new FormControl(containerField.value??""));
+            });
+
+            this.myForm.addControl(field.id,new FormControl(field.value??""));
+          }
+
+          else{
+            this.myForm.addControl(field.id,new FormControl(field.value));
+          }
+          
+        });
+  
+        this.isLoading=false;
+      }else{
+        this.isLoading=false;
+        alert(res.message);
+      }
+
+    });
+
+    console.log(this.myForm);
+
   }
 
   Save(){
-    if(true){
+
+    this.submitted=true;
+
+    var formValues:formBody[]=[];
+
+    if(this.myForm.valid){
+
+      this.submitted=false;
+      this.isLoading=true;
 
       const controls = this.myForm.controls;
       
-      var values=Object.keys(controls).map((key) => {
-
-        var filed=this.fileds.filter(x=>x.id==key)[0];
+      Object.keys(controls).map((key) => {
 
         var controlValue=null;
+        var controlType="STRING";
 
-        if(filed.type=="FILE"){
+        if (!/#\d+$/.test(key)) {
+              
+          var filed=this.fields.filter(x=>x.id==key)[0];
 
-          var file=this.files.filter(x=>x.controlName==filed.id)[0];
+          if(filed.type=="TEXT_FIELD"){
 
-          controlValue=file.fileBase64;
-        }else{
+            controlValue = String(controls[key].value);
+          } 
+          else if(filed.type=="FILE"){
 
-          controlValue=controls[key].value;
+            controlType="FILE";
 
-        }
+            var file=this.files.filter(x=>x.controlName==filed.id)[0];
 
-        return {
-          fieldId:key,
-          value:controlValue??"",
+            if(file!=null){
+              var files=  [file.fileBase64??null];
+              controlValue=files;
+            }
+            else{
+              controlValue=null;
+            }
+          }
+          else if(filed.type=="CHECKBOX"){
+
+            controlType="BOOLEAN";
+
+            controlValue=this.checkCbValue(key);
+            
+          }
+          else if(filed.type=="CONTAINER"){
+
+            controlType="CONTAINER";
+
+            var containerItems=this.containers.filter(x=>x.containerId==filed.id );
+
+            var containerValue:any[]=[];
+            var fields:any[]=[];
+            
+            containerItems.map(containerItem=>{
+
+              fields=[];
+
+              var index=containerItem.index;
+
+              containerItem.containerFields.map(field=>{
+                
+                var formField=this.myForm.get(`${field.id}#${index}`);
+
+                var fieldValue=formField?.value;
+
+                if(field.type=="CHECKBOX"){
+
+                  fieldValue=this.checkCbValue(key);
+
+                }
+
+                fields.push(new formBody(controlType,field.id,fieldValue));
+
+              });
+
+              containerValue.push([...fields]);
+
+            });
+
+            controlValue= JSON.stringify(containerValue);
+
+          }
+          else{
+            controlValue=controls[key].value;
+
+          }
+
+          formValues.push(new formBody(controlType,key,controlValue ?? ""));
+
         }
       });
 
 
       var body={
-        "stepSentByConsumer": {
-          "userId": "9862015192",
-          "serviceId": "6448e783255a7108b141afdb",
-          "values": values,
-        }
+        "userId": this.nationalId,
+        "serviceId": `${this.serviceId}`,
+        "values": formValues,
       };
-
-      console.log(JSON.stringify(body));
 
       var request=this.apiService.post('carboncopies/PostDataForConsumer',body);
 
-      request.subscribe(res=>{
-        console.log(res);
-      })
+      request.subscribe(response=>{
 
+        var data=response.data;
+
+        if(response.statusCode==200){
+
+          this.isLoading=false;
+          
+          if(data.continue==false){
+            this.sweetAlertService.ShowAlertThenRedirect('success',response.message,'/');
+          }else{
+
+            this.removeFormControls();
+
+            this.GetStepForConsumer();
+          }
+        }
+
+        console.log(response);
+      });
+
+    }
+    else{
+      console.log(this.myForm);
     }
   }
 
-  
+  private removeFormControls() {
+    Object.keys(this.myForm.controls).forEach(controlName => {
+      this.isLoading = true;
+      this.fields = [];
+      this.myForm.removeControl(controlName);
+    });
+  }
+
+
+  checkCbValue(key:string):boolean{
+
+    if(this.myForm.get(key)?.value ==null || this.myForm.get(key)?.value ==''){
+      return false;
+    }else{
+      return true;
+    }
+
+  }
+
+
+
 }

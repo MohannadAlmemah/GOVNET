@@ -1,69 +1,317 @@
-<div class="container-fluid dashboard-content ">
-    <div class="row">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="section-block" id="basicform">
-                <!-- <h3 class="section-title">Form Elements</h3> -->
+<div class="overlay-wrapper" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+<main id="content" role="main" class="main">
+    <div class="content container">
+        <div dir="rtl">
+            <nav aria-label="breadcrumb">
+                <ol id="w6" class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a href="/ar/services/sub?id=12">التسجيل والترخيص</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">اصدار موافقة موقع للمنشآت الغذائية</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row justify-content-center py-7" style="background:url(/img/bg-green-full.png);">
+            <div class="col-md-8 col-12">
+
+                <div class="js-step-form" data-hs-step-form-options="{
+            &quot;progressSelector&quot;: &quot;#basicStepFormProgress&quot;,
+            &quot;stepsSelector&quot;: &quot;#basicStepFormContent&quot;,
+            &quot;endSelector&quot;: &quot;#createProjectFinishBtn&quot;
+          }">
+
+                    <ul id="basicStepFormProgress" dir="rtl"
+                        class="js-step-progress step step-sm step-icon-sm step-inline step-item-between mb-7">
+                        <li class="step-item">
+                            <a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options="{
+              &quot;targetSelector&quot;: &quot;#basicStepDetails&quot;
+            }">
+                                <span class="step-icon step-icon-soft-dark">1</span>
+                                <div class="step-content">
+                                    <span class="step-title">معلومات عامة</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="step-item active focus">
+                            <a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options="{
+               &quot;targetSelector&quot;: &quot;#basicStepTerms&quot;
+             }">
+                                <span class="step-icon step-icon-soft-dark">2</span>
+                                <div class="step-content">
+                                    <span class="step-title">تقديم الطلب</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+
+
+                    <div id="basicStepFormContent">
+                        <div id="basicStepDetails" class="card" style="display: none;">
+                            <div dir="rtl">
+                                <div class="card-header">
+                                    <h3 class="card-title h3">اصدار موافقة موقع للمنشآت الغذائية</h3>
+                                </div>
+
+                                <div class="card-body">
+                                    <p>
+                                    </p>
+                                    <div class="mb-5">
+                                        <h3>شروط الطلب</h3>
+                                        <ol>
+                                            <li>المصنع حاصل على شهادة تسجيل صناعي (شركة او مؤسسة فردية) من دائرة مراقبة
+                                                الشركات (السجل التجاري)/وزارة الصناعة والتجارة(السجل المركزي)</li>
+                                            <li>أن تكون صفة استعمال الاراضي صناعي</li>
+                                            <li>المصنع حاصل على الموافقة البيئية من قبل وزارة البيئة /او وزارة الاستثمار
+                                                (حسب نظام التصنيف والترخيص البيئي لسنة 2020 الصادرة عن وزارة البيئة)
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-primary" data-hs-step-form-next-options="{
+                        &quot;targetSelector&quot;: &quot;#basicStepTerms&quot;
+                      }">
+                                            تقديم <i class="bi-chevron-left small"></i> </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="basicStepTerms" class="card active">
+                            <div dir="rtl">
+                                <div class="card-header">
+                                    <h3 class="card-title h3">اصدار موافقة موقع للمنشآت الغذائية</h3>
+                                </div>
+
+                                <div class="card-body">
+
+
+
+                                    <form id="service-form" [formGroup]="myForm">
+
+
+                                        <ng-container *ngFor="let field of fields">
+
+                                            <ng-container *ngIf="field.type=='FILE'">
+
+                                                <div class="row mb-4">
+
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                        <span class="text-danger" *ngIf="field.required"> * </span>
+                                                    </label>
+
+                                                    <div class="col-sm-10">
+
+                                                        <table
+                                                            class="multiple-input-list table table-condensed table-renderer">
+                                                            <tbody>
+                                                                <tr class="multiple-input-list__item" data-index="0">
+                                                                    <td class="list-cell__button">
+                                                                        <div
+                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
+                                                                            <i class="bi bi-plus"></i></div>
+                                                                    </td>
+                                                                    <td class="list-cell__environmental_exsits_approval_file">
+                                                                        <div class="field-dynamicmodel-environmental_exsits_approval_file-0 form-group">
+                                                                            <input formControlName="{{field.id}}"
+                                                                                [multiple]="field.multiSelect" class="form-control"
+                                                                                type="file" (change)="onUploadFile(field.id!,$event)"
+                                                                                [required]="field.required">
+
+                                                                                <div *ngIf="myForm.get(field.id)?.invalid && submitted">
+                                                                                    <span class="text-danger"
+                                                                                        *ngIf="myForm.get(field.id)?.errors?.['required']">
+                                                                                        حقل اجباري !
+                                                                                    </span>
+                                                                                </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="list-cell__button"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        
+
+                                                        
+                                                    </div>
+                                                </div>
+
+                                            </ng-container>
+
+                                            <ng-container *ngIf="field.type=='TEXT_FIELD'">
+
+                                                <div class="row mb-4">
+
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                        <span class="text-danger" *ngIf="field.required"> * </span>
+                                                    </label>
+
+                                                    <div class="col-sm-10">
+
+                                                        <input class="form-control" formControlName="{{field.id}}" type="text" [required]="field.required">
+                                                        
+                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
+                                                            <span class="text-danger"
+                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
+                                                                حقل اجباري !
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+                                            </ng-container>
+
+
+                                            <ng-container *ngIf="field.type=='TEXT_FIELD_PHONE'">
+
+                                                <div class="row mb-4">
+
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                        <span class="text-danger" *ngIf="field.required"> * </span>
+                                                    </label>
+
+                                                    <div class="col-sm-10">
+
+                                                        <input class="form-control" formControlName="{{field.id}}"
+                                                        type="text" [required]="field.required">
+
+                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
+                                                            <span class="text-danger"
+                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
+                                                                حقل اجباري !
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+                                            </ng-container>
+
+
+                                            <ng-container *ngIf="field.type=='COMBO_BOX'">
+
+
+                                                <div class="row mb-4">
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                        <span class="text-danger" *ngIf="field.required"> * </span>
+                                                    </label>
+
+                                                    <div class="col-sm-10">
+                                                        <select formControlName="{{field.id}}" class="form-control"
+                                                            [required]="field.required">
+                                                            <option value="">يرجى الاختيار</option>
+                                                            <option *ngFor="let item of field.comboBoxOptions"
+                                                                value="{{item.key}}">
+                                                                {{item.value}}
+                                                            </option>
+                                                        </select>
+
+                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
+                                                            <span class="text-danger"
+                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
+                                                                حقل اجباري !
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </ng-container>
+
+                                            <ng-container *ngIf="field.type=='PREDEFINED_COMBO_BOX'">
+
+                                                <div class="row mb-4">
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                        <span class="text-danger" *ngIf="field.required"> * </span>
+                                                    </label>
+
+                                                    <div class="col-sm-10">
+                                                        <select formControlName="{{field.id}}" class="form-control"
+                                                            [required]="field.required">
+                                                            <option value="">يرجى الاختيار</option>
+                                                            <option *ngFor="let item of field.options"
+                                                                value="{{item.key}}">
+                                                                {{item.label}}
+                                                            </option>
+                                                        </select>
+
+                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
+                                                            <span class="text-danger"
+                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
+                                                                حقل اجباري !
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </ng-container>
+
+                                            <ng-container *ngIf="field.type=='CHECKBOX'">
+
+                                                <div class="row mb-4">
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                    </label>
+
+                                                    <div class="col-sm-12">
+                                                        <p-checkbox formControlName="{{field.id}}"
+                                                            [binary]="true"></p-checkbox>
+                                                        <label class="mx-2">{{field.label}}</label>
+                                                    </div>
+
+                                                </div>
+
+                                            </ng-container>
+
+                                        </ng-container>
+
+
+
+                                        <p class="text-danger">
+                                            (*) متطلبات إلزامية </p>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-ghost-secondary ms-4"
+                                                data-hs-step-form-prev-options="{
+                 &quot;targetSelector&quot;: &quot;#basicStepDetails&quot;
+               }">
+                                                <i class="bi-chevron-right small"></i>
+                                                الشروط </button>
+                                            <button (click)="Save()" id="submit-button"
+                                                class="btn btn-primary btn-lg">تقديم الطلب</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
-            <div class="card">
-                <h5 class="card-header"> Form</h5>
-                <div class="card-body">
-                    <form [formGroup]="myForm">
+        </div>
 
-                        <ng-container *ngFor="let field of fileds">
-                            <ng-container *ngIf="field.type=='FILE'">
-                                <div class="form-group col-md-6 col-12">
-                                    <p for="inputText3" class="col-form-label">{{field.label}}</p>
-                                    <input formControlName="{{field.id}}"  class="form-control" type="file" (change)="onUploadFile(field.id,$event)" [required]="field.required">
-                                </div>
-                            </ng-container>
-
-                            <ng-container *ngIf="field.type=='TEXT_FIELD'">
-
-                                <div class="form-group col-md-6 col-12">
-                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
-                                    <input formControlName="{{field.id}}"  type="text" [required]="field.required">
-                                </div>
-
-                            </ng-container>
-
-                            <ng-container *ngIf="field.type=='TEXT_FIELD_PHONE'">
-                                
-                                <div class="form-group col-md-6 col-12">
-                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
-                                    <input formControlName="{{field.id}}"  type="number" [required]="field.required">
-                                </div>
-
-                            </ng-container>
-
-                            <ng-container *ngIf="field.type=='TEXT_FIELD_PHONE'">
-                                
-                                <div class="form-group col-md-6 col-12">
-                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
-                                    <input formControlName="{{field.id}}"  type="number" [required]="field.required">
-                                </div>
-
-                            </ng-container>
-
-                            <ng-container *ngIf="field.type=='COMBO_BOX'">
-                                <div class="form-group col-md-6 col-12">
-                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
-                                    <select formControlName="{{field.id}}"  class="form-control" id="input-select">
-                                        <option value="">يرجى الاختيار</option>
-                                        <option *ngFor="let item of field.comboBoxOptions" value="{{item.key}}">
-                                            {{item.value}}
-                                        </option>
-                                    </select>
-
-                                </div>
-                            </ng-container>
-                        </ng-container>
-
-                        <br>
-                        <p-button (click)="Save()" label="Submit" styleClass="p-button-sm" ></p-button>
-
-                    </form>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center" id="modalContent" dir="rtl">
+                        <div id="loader" class="lds-dual-ring me-auto" style="position:relative;left:initial;"></div>
+                        <p class="lead">يرجى الانتظار نقوم حاليا بمعالجة طلبك، لا تغلق الصفحة...</p>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
-</div>
+
+</main>

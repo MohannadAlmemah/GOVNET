@@ -13,13 +13,25 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
 import { FormComponent } from './form/form.component';
-import { Form2Component } from './form2/form2.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import {  ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
+import { ServicesComponent } from './services/services.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { FilePondModule, registerPlugin } from 'ngx-filepond';
+import * as FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import { EntitiesComponent } from './entities/entities.component';
+import { SectionsComponent } from './sections/sections.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { LoginComponent } from './login/login.component';
+import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import { ServciesLayoutComponent } from './layouts/servcies-layout/servcies-layout.component';
+import { TestComponent } from './test/test.component';
+import { TextFieldComponent } from './form/Fields/text-field/text-field.component';
 
+registerPlugin(FilePondPluginFileValidateType);
 
 @NgModule({
   declarations: [
@@ -27,15 +39,24 @@ import { ToastModule } from 'primeng/toast';
     DashboardComponent,
     HomeComponent,
     FormComponent,
-    Form2Component
+    ServicesComponent,
+    EntitiesComponent,
+    SectionsComponent,
+    LoginComponent,
+    LoginLayoutComponent,
+    ServciesLayoutComponent,
+    TestComponent,
+    TextFieldComponent,
   ],
   imports: [
+    SweetAlert2Module.forRoot(),
     ReactiveFormsModule,
     ToastModule,
     FileUploadModule,
     CommonModule,
     HttpClientModule,
     BrowserModule,
+    ProgressSpinnerModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     CalendarModule,
@@ -44,6 +65,7 @@ import { ToastModule } from 'primeng/toast';
     CheckboxModule,
     RadioButtonModule,
     FormsModule,
+    FilePondModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

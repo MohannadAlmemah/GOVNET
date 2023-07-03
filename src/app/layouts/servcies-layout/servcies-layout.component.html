@@ -1,0 +1,104 @@
+<header id="header" class="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
+    <div class="navbar-light shadow w-100 bg-gradient bg-light py-2">
+        <div class="container">
+            <nav class="js-mega-menu navbar-nav-wrap hs-menu-initialized hs-menu-horizontal" style="direction: rtl;;">
+
+                <a class="navbar-brand me-5 me-md-0" href="#" aria-label="Front">
+                    <img class="navbar-brand-logo" src="../../../assets/images/Moinlogo.png" alt="Logo"
+                        data-hs-theme-appearance="default">
+                </a>
+
+
+                <div class="navbar-nav-wrap-secondary-content">
+
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarDoubleLineContainerNavDropdown"
+                        aria-controls="navbarDoubleLineContainerNavDropdown" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-default">
+                            <i class="bi-list"></i>
+                        </span>
+                        <span class="navbar-toggler-toggled">
+                            <i class="bi-x"></i>
+                        </span>
+                    </button>
+
+
+                    <a class="btn btn-default navbar-btn" href="/en">English</a>
+                    <a class="btn btn-default navbar-btn text-primary" href="#">إطلاق تجريبي</a>
+                    <a class="btn btn-default navbar-btn" href="#" style="direction:rtl;">065608400</a>
+                </div>
+
+
+                <div class="collapse navbar-collapse" id="navbarContainerNavDropdown">
+                    <ul class="navbar-nav">
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
+    </div>
+    <div class="container-fluid bg-blue">
+        <nav class="js-mega-menu flex-grow-1 hs-menu-initialized hs-menu-horizontal">
+
+            <div class="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
+                <ul class="navbar-nav navbar-dark bg-blue  justify-content-start" style="direction: rtl;">
+
+                    <li class="nav-item text-end">
+                        <a class="hs-mega-menu-invoker nav-link" href="/ar/site/index"><i
+                                class="bi-house dropdown-item-icon text-white-50"></i> الرئيسية</a>
+                    </li>
+
+
+                    <li class="nav-item text-end">
+                        <a class="hs-mega-menu-invoker nav-link" href="/ar/profile"><i
+                                class="bi-person dropdown-item-icon text-white-50"></i> الملف الشخصي</a>
+                    </li>
+
+
+                    <li class="nav-item text-end">
+                        <a class="hs-mega-menu-invoker nav-link" href="/ar/services"><i
+                                class="bi-files-alt dropdown-item-icon text-white-50"></i> الخدمات الإلكترونية</a>
+                    </li>
+
+
+                    <li class="nav-item me-2 text-end">
+                        <a class="hs-mega-menu-invoker nav-link" href="/ar/requests"><i
+                                class="bi-window-stack dropdown-item-icon text-white-50"></i> الطلبات</a>
+                    </li>
+
+
+                    <li class="nav-item me-2 text-end">
+                        <form class="d-flex" action="/ar/site/logout" method="post">
+                            <input type="hidden" name="_csrf-frontend"
+                                value="AoS6eFZQ40hw22WfQ74Ya1q0u-beuJXUb83FS4p6z5Fm7_E0JSOlGByLH8kK7V9eLMbqjofP87wfpqEe4j6l_w=="><button
+                                type="submit" class="hs-mega-menu-invoker nav-link bg-blue border-0"><i
+                                    class="bi-box-arrow-left dropdown-item-icon text-white-50"></i>
+                                تسجيل خروج</button>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+
+<router-outlet></router-outlet>
+
+
+
+
+<footer class="container-fluid text-center bg-blue navbar-dark pt-5 pb-10">
+    <div class="row justify-content-center" dir="rtl">
+        <div class="col-auto">
+            <img src="../../../assets/images/moin-logo-white.png" style="max-width: 180px;" class="img-fluid mb-2">
+            <p class="text-white-50 text-end">
+                المبنى الرئيسي - الدوار الخامس/ شارع الكندي-عمارة رقم 36 صندوق البريد: 893 عمان 11821 الاردن </p>
+        </div>
+    </div>
+    <p class="mb-0 text-white-50">© وزارة الاستثمار المملكة الأردنية الهاشمية 2023 جميع الحقوق محفوظة </p>
+</footer>

@@ -1,0 +1,500 @@
+<main id="content" role="main" class="main">
+
+    <div class="content container">
+        <div dir="rtl">
+            <nav aria-label="breadcrumb">
+                <ol id="w6" class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a href="/ar/services/sub?id=12">التسجيل والترخيص</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">اصدار موافقة موقع للمنشآت الغذائية</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row justify-content-center py-7" style="background:url(../../assets/images/bg-green-full.png);">
+            <div class="col-md-8 col-12">
+
+                <div class="js-step-form" data-hs-step-form-options="{
+                &quot;progressSelector&quot;: &quot;#basicStepFormProgress&quot;,
+                &quot;stepsSelector&quot;: &quot;#basicStepFormContent&quot;,
+                &quot;endSelector&quot;: &quot;#createProjectFinishBtn&quot;
+              }">
+
+                    <ul id="basicStepFormProgress" dir="rtl"
+                        class="js-step-progress step step-sm step-icon-sm step-inline step-item-between mb-7">
+                        <li class="step-item active focus">
+                            <a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options="{
+                  &quot;targetSelector&quot;: &quot;#basicStepDetails&quot;
+                }">
+                                <span class="step-icon step-icon-soft-dark">1</span>
+                                <div class="step-content">
+                                    <span class="step-title">معلومات عامة</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="step-item">
+                            <a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options="{
+                   &quot;targetSelector&quot;: &quot;#basicStepTerms&quot;
+                 }">
+                                <span class="step-icon step-icon-soft-dark">2</span>
+                                <div class="step-content">
+                                    <span class="step-title">تقديم الطلب</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+
+
+                    <div id="basicStepFormContent">
+                        <div id="basicStepDetails" class="card active">
+                            <div dir="rtl">
+                                <div class="card-header">
+                                    <h3 class="card-title h3">اصدار موافقة موقع للمنشآت الغذائية</h3>
+                                </div>
+
+                                <div class="card-body">
+                                    <p>
+                                    </p>
+                                    <div class="mb-5">
+                                        <h3>شروط الطلب</h3>
+                                        <ol>
+                                            <li>المصنع حاصل على شهادة تسجيل صناعي (شركة او مؤسسة فردية) من دائرة مراقبة
+                                                الشركات (السجل التجاري)/وزارة الصناعة والتجارة(السجل المركزي)</li>
+                                            <li>أن تكون صفة استعمال الاراضي صناعي</li>
+                                            <li>المصنع حاصل على الموافقة البيئية من قبل وزارة البيئة /او وزارة الاستثمار
+                                                (حسب نظام التصنيف والترخيص البيئي لسنة 2020 الصادرة عن وزارة البيئة)
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-primary" data-hs-step-form-next-options="{
+                            &quot;targetSelector&quot;: &quot;#basicStepTerms&quot;
+                          }">
+                                            تقديم <i class="bi-chevron-left small"></i> </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="basicStepTerms" class="card" style="display: none;">
+                            <div dir="rtl">
+                                <div class="card-header">
+                                    <h3 class="card-title h3">اصدار موافقة موقع للمنشآت الغذائية</h3>
+                                </div>
+
+                                <div class="card-body">
+
+                                    <form id="service-form" action="/ar/services/form?id=49" method="post"
+                                        enctype="multipart/form-data">
+                                        <input type="hidden" name="_csrf-frontend"
+                                            value="AoS6eFZQ40hw22WfQ74Ya1q0u-beuJXUb83FS4p6z5Fm7_E0JSOlGByLH8kK7V9eLMbqjofP87wfpqEe4j6l_w==">
+
+                                        <div class="row mb-4">
+                                            <label for="governorate" class="col-sm-2 col-form-label form-label">
+                                                المحافظة <span class="text-danger">*</span> </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-governorate required">
+                                                    <select id="dynamicmodel-governorate"
+                                                        class="form-control form-select"
+                                                        name="DynamicModel[governorate]" aria-required="true">
+                                                        <option value="">يرجى اختيار المحافظة</option>
+                                                        <option value="إربد">إربد</option>
+                                                        <option value="البلقاء">البلقاء</option>
+                                                        <option value="جرش">جرش</option>
+                                                        <option value="الزرقاء">الزرقاء</option>
+                                                        <option value="الطفيلة">الطفيلة</option>
+                                                        <option value="عجلون">عجلون</option>
+                                                        <option value="العقبة">العقبة</option>
+                                                        <option value="العاصمة">العاصمة</option>
+                                                        <option value="الكرك">الكرك</option>
+                                                        <option value="مادبا">مادبا</option>
+                                                        <option value="معان">معان</option>
+                                                        <option value="المفرق">المفرق</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted"></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="source_environmental_approval"
+                                                class="col-sm-2 col-form-label form-label">
+                                                مصدر الموافقة البيئية <span class="text-danger">*</span> </label>
+                                            <div class="col-sm-10">
+                                                <div
+                                                    class="mb-3 field-dynamicmodel-source_environmental_approval required">
+                                                    <select id="dynamicmodel-source_environmental_approval"
+                                                        class="form-control form-select"
+                                                        name="DynamicModel[source_environmental_approval]"
+                                                        aria-required="true">
+                                                        <option value="وزارة الاستثمار">وزارة الاستثمار</option>
+                                                        <option value="وزارة البيئة">وزارة البيئة</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted"></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="environmental_exsits_approval_file"
+                                                class="col-sm-2 col-form-label form-label">
+                                                الموافقة البيئية <span class="text-danger">*</span> </label>
+                                            <div class="col-sm-10">
+                                                <div
+                                                    class="mb-3 field-dynamicmodel-environmental_exsits_approval_file required">
+                                                    <input type="hidden"
+                                                        name="DynamicModel[environmental_exsits_approval_file]">
+                                                    <div id="w0" class="multiple-input">
+                                                        <table
+                                                            class="multiple-input-list table table-condensed table-renderer">
+                                                            <tbody>
+                                                                <tr class="multiple-input-list__item" data-index="0">
+                                                                    <td class="list-cell__button">
+                                                                        <div
+                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
+                                                                            <i class="bi bi-plus"></i></div>
+                                                                    </td>
+                                                                    <td
+                                                                        class="list-cell__environmental_exsits_approval_file">
+                                                                        <div
+                                                                            class="field-dynamicmodel-environmental_exsits_approval_file-0 form-group">
+                                                                            <input type="file"
+                                                                                id="dynamicmodel-environmental_exsits_approval_file-0"
+                                                                                class="form-control"
+                                                                                name="DynamicModel[environmental_exsits_approval_file][0]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="list-cell__button"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted"></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="environmental_approval_transaction"
+                                                class="col-sm-2 col-form-label form-label">
+                                                رقم معاملة الموافقة البيئية في وزارة الاستثمار </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-environmental_approval_transaction">
+                                                    <input type="text"
+                                                        id="dynamicmodel-environmental_approval_transaction"
+                                                        class="form-control"
+                                                        name="DynamicModel[environmental_approval_transaction]">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted">في حال كانت الموافقة البيئية صادرة عن وزارة
+                                                    الاستثمار</p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="authorization_stakeholders_file"
+                                                class="col-sm-2 col-form-label form-label">
+                                                تفويض رسمي من أصحاب العلاقة <span class="text-danger">*</span> </label>
+                                            <div class="col-sm-10">
+                                                <div
+                                                    class="mb-3 field-dynamicmodel-authorization_stakeholders_file required">
+                                                    <input type="hidden"
+                                                        name="DynamicModel[authorization_stakeholders_file]">
+                                                    <div id="w1" class="multiple-input">
+                                                        <table
+                                                            class="multiple-input-list table table-condensed table-renderer">
+                                                            <tbody>
+                                                                <tr class="multiple-input-list__item" data-index="0">
+                                                                    <td class="list-cell__button">
+                                                                        <div
+                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
+                                                                            <i class="bi bi-plus"></i></div>
+                                                                    </td>
+                                                                    <td
+                                                                        class="list-cell__authorization_stakeholders_file">
+                                                                        <div
+                                                                            class="field-dynamicmodel-authorization_stakeholders_file-0 form-group">
+                                                                            <input type="file"
+                                                                                id="dynamicmodel-authorization_stakeholders_file-0"
+                                                                                class="form-control"
+                                                                                name="DynamicModel[authorization_stakeholders_file][0]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="list-cell__button"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted"></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="company_id" class="col-sm-2 col-form-label form-label">
+                                                المنشأة <span class="text-danger">*</span> </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-company_id required">
+                                                    <select id="dynamicmodel-company_id"
+                                                        class="form-control form-select" name="DynamicModel[company_id]"
+                                                        aria-required="true">
+                                                        <option value="">يرجى اختيار شركة</option>
+                                                        <option value="2">ارامكس الأردن المحدودة</option>
+                                                        <option value="24">شركة خيرات الهادي للتخزين والتجارة العامة
+                                                        </option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted"></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="voctional_id" class="col-sm-2 col-form-label form-label">
+                                                رقم رخصة المهن </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-voctional_id">
+                                                    <input type="text" id="dynamicmodel-voctional_id"
+                                                        class="form-control" name="DynamicModel[voctional_id]"
+                                                        placeholder="ادخل رقم رخصة المهن">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted">في حال كانت الموافقة البيئية صادرة عن وزارة البيئة
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="organizational_site_chart_file"
+                                                class="col-sm-2 col-form-label form-label">
+                                                مخطط موقع تنظيمي </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-organizational_site_chart_file">
+                                                    <input type="text" id="dynamicmodel-organizational_site_chart_file"
+                                                        class="form-control"
+                                                        name="DynamicModel[organizational_site_chart_file]">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted">في حال كانت الموافقة البيئية صادرة عن وزارة
+                                                    البيئة، لم يمض عليه عام من تاريخ صدوره يبين الصفة التنظيمية للموقع
+                                                    (المخطط الاصلي او صورة مصدقة عنه)</p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="land_plan_file" class="col-sm-2 col-form-label form-label">
+                                                رقم مخطط الأراضي DLS KEY </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-land_plan_file">
+                                                    <input type="text" id="dynamicmodel-land_plan_file"
+                                                        class="form-control" name="DynamicModel[land_plan_file]">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted">في حال كانت الموافقة البيئية صادرة عن وزارة
+                                                    البيئة، DLS Key الموجود أسفل أحدث مخطط أراضي</p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="sketch_plan_site_file"
+                                                class="col-sm-2 col-form-label form-label">
+                                                مخطط كروكي للموقع </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-sketch_plan_site_file">
+                                                    <input type="hidden" name="DynamicModel[sketch_plan_site_file]">
+                                                    <div id="w2" class="multiple-input">
+                                                        <table
+                                                            class="multiple-input-list table table-condensed table-renderer">
+                                                            <tbody>
+                                                                <tr class="multiple-input-list__item" data-index="0">
+                                                                    <td class="list-cell__button">
+                                                                        <div
+                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
+                                                                            <i class="bi bi-plus"></i></div>
+                                                                    </td>
+                                                                    <td class="list-cell__sketch_plan_site_file">
+                                                                        <div
+                                                                            class="field-dynamicmodel-sketch_plan_site_file-0 form-group">
+                                                                            <input type="file"
+                                                                                id="dynamicmodel-sketch_plan_site_file-0"
+                                                                                class="form-control"
+                                                                                name="DynamicModel[sketch_plan_site_file][0]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="list-cell__button"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted">في حال كانت الموافقة البيئية صادرة عن وزارة البيئة
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="lease_contract_title_deed"
+                                                class="col-sm-2 col-form-label form-label">
+                                                عقد الايجار أو سند الملكية </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-lease_contract_title_deed">
+                                                    <input type="hidden" name="DynamicModel[lease_contract_title_deed]">
+                                                    <div id="w3" class="multiple-input">
+                                                        <table
+                                                            class="multiple-input-list table table-condensed table-renderer">
+                                                            <tbody>
+                                                                <tr class="multiple-input-list__item" data-index="0">
+                                                                    <td class="list-cell__button">
+                                                                        <div
+                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
+                                                                            <i class="bi bi-plus"></i></div>
+                                                                    </td>
+                                                                    <td class="list-cell__lease_contract_title_deed">
+                                                                        <div
+                                                                            class="field-dynamicmodel-lease_contract_title_deed-0 form-group">
+                                                                            <input type="file"
+                                                                                id="dynamicmodel-lease_contract_title_deed-0"
+                                                                                class="form-control"
+                                                                                name="DynamicModel[lease_contract_title_deed][0]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="list-cell__button"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted">في حال كانت الموافقة البيئية صادرة عن وزارة البيئة
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4" style="display:none;" id="voctional_license_file">
+                                            <label for="voctional_license_file"
+                                                class="col-sm-2 col-form-label form-label">
+                                                رخصة المهن <span class="text-danger">*</span> </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-voctional_license_file">
+                                                    <input type="hidden" name="DynamicModel[voctional_license_file]">
+                                                    <div id="w4" class="multiple-input">
+                                                        <table
+                                                            class="multiple-input-list table table-condensed table-renderer">
+                                                            <tbody>
+                                                                <tr class="multiple-input-list__item" data-index="0">
+                                                                    <td class="list-cell__button">
+                                                                        <div
+                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
+                                                                            <i class="bi bi-plus"></i></div>
+                                                                    </td>
+                                                                    <td class="list-cell__voctional_license_file">
+                                                                        <div
+                                                                            class="field-dynamicmodel-voctional_license_file-0 form-group">
+                                                                            <input type="file"
+                                                                                id="dynamicmodel-voctional_license_file-0"
+                                                                                class="form-control"
+                                                                                name="DynamicModel[voctional_license_file][0]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="list-cell__button"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted"></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-4">
+                                            <label for="other_documents" class="col-sm-2 col-form-label form-label">
+                                                وثائق اخرى </label>
+                                            <div class="col-sm-10">
+                                                <div class="mb-3 field-dynamicmodel-other_documents">
+                                                    <input type="hidden" name="DynamicModel[other_documents]">
+                                                    <div id="w5" class="multiple-input">
+                                                        <table
+                                                            class="multiple-input-list table table-condensed table-renderer">
+                                                            <tbody>
+                                                                <tr class="multiple-input-list__item" data-index="0">
+                                                                    <td class="list-cell__button">
+                                                                        <div
+                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
+                                                                            <i class="bi bi-plus"></i></div>
+                                                                    </td>
+                                                                    <td class="list-cell__other_documents">
+                                                                        <div
+                                                                            class="field-dynamicmodel-other_documents-0 form-group">
+                                                                            <input type="file"
+                                                                                id="dynamicmodel-other_documents-0"
+                                                                                class="form-control"
+                                                                                name="DynamicModel[other_documents][0]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="list-cell__button"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                                <p class="text-muted"></p>
+                                            </div>
+                                        </div>
+
+                                        <p class="text-danger">
+                                            (*) متطلبات إلزامية </p>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-ghost-secondary ms-4"
+                                                data-hs-step-form-prev-options="{
+                     &quot;targetSelector&quot;: &quot;#basicStepDetails&quot;
+                   }">
+                                                <i class="bi-chevron-right small"></i>
+                                                الشروط </button>
+                                            <button type="submit" id="submit-button"
+                                                class="btn btn-primary btn-lg">تقديم الطلب</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center" id="modalContent" dir="rtl">
+                        <div id="loader" class="lds-dual-ring me-auto" style="position:relative;left:initial;"></div>
+                        <p class="lead">يرجى الانتظار نقوم حاليا بمعالجة طلبك، لا تغلق الصفحة...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>

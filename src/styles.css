@@ -1,2 +1,44 @@
 @import "../node_modules/primeng/resources/themes/lara-light-blue/theme.css";
 @import "../node_modules/primeng/resources/primeng.css";
+
+
+body {
+  font-family: 'Vazirmatn', Arial, sans-serif !important;
+}
+
+/* @font-face {
+  font-family: 'GEFlow-Bold';
+  src:  url('../src/fonts/ar/GEFlow-Bold.woff') format('woff'), url('../src/fonts/ar/GEFlow-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GEFlow';
+  src:  url('../src/fonts/ar/GEFlow.woff') format('woff'), url('../src/fonts/ar/GEFlow.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+} */
+
+
+
+.overlay-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-wrapper p-progressSpinner {
+  position: relative;
+  z-index: 10000;
+}
+ a,a:hover{
+  text-decoration: none !important;
+ }

@@ -25,9 +25,18 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/css/multiple-input.css",
+              "src/assets/css/bootstrap-icons.css",
+              "src/assets/css/bootstrap.css",
+              "src/assets/css/hs-mega-menu.min.css",
+              "src/assets/css/theme.min.css",
+              "src/assets/css/site.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/js/app.js",
+              "src/js/core-init.js"
+            ]
           },
           "configurations": {
             "production": {
