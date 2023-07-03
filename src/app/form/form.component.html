@@ -1,0 +1,69 @@
+<div class="container-fluid dashboard-content ">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="section-block" id="basicform">
+                <!-- <h3 class="section-title">Form Elements</h3> -->
+            </div>
+            <div class="card">
+                <h5 class="card-header"> Form</h5>
+                <div class="card-body">
+                    <form [formGroup]="myForm">
+
+                        <ng-container *ngFor="let field of fileds">
+                            <ng-container *ngIf="field.type=='FILE'">
+                                <div class="form-group col-md-6 col-12">
+                                    <p for="inputText3" class="col-form-label">{{field.label}}</p>
+                                    <input formControlName="{{field.id}}"  class="form-control" type="file" (change)="onUploadFile(field.id,$event)" [required]="field.required">
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="field.type=='TEXT_FIELD'">
+
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
+                                    <input formControlName="{{field.id}}"  type="text" [required]="field.required">
+                                </div>
+
+                            </ng-container>
+
+                            <ng-container *ngIf="field.type=='TEXT_FIELD_PHONE'">
+                                
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
+                                    <input formControlName="{{field.id}}"  type="number" [required]="field.required">
+                                </div>
+
+                            </ng-container>
+
+                            <ng-container *ngIf="field.type=='TEXT_FIELD_PHONE'">
+                                
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
+                                    <input formControlName="{{field.id}}"  type="number" [required]="field.required">
+                                </div>
+
+                            </ng-container>
+
+                            <ng-container *ngIf="field.type=='COMBO_BOX'">
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="inputText3" class="col-form-label">{{field.label}}</label>
+                                    <select formControlName="{{field.id}}"  class="form-control" id="input-select">
+                                        <option value="">يرجى الاختيار</option>
+                                        <option *ngFor="let item of field.comboBoxOptions" value="{{item.key}}">
+                                            {{item.value}}
+                                        </option>
+                                    </select>
+
+                                </div>
+                            </ng-container>
+                        </ng-container>
+
+                        <br>
+                        <p-button (click)="Save()" label="Submit" styleClass="p-button-sm" ></p-button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
