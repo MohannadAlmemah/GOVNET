@@ -234,6 +234,8 @@ export class FormComponent implements OnInit {
 
             controlType="CONTAINER";
 
+            var subControlType="STRING";
+
             var containerItems=this.containers.filter(x=>x.containerId==filed.id );
 
             var containerValue:any[]=[];
@@ -253,11 +255,13 @@ export class FormComponent implements OnInit {
 
                 if(field.type=="CHECKBOX"){
 
+                  subControlType="BOOLEAN";
+
                   fieldValue=this.checkCbValue(key);
 
                 }
 
-                fields.push(new formBody(controlType,field.id,fieldValue));
+                fields.push(new formBody(subControlType,field.id,fieldValue));
 
               });
 
@@ -265,7 +269,7 @@ export class FormComponent implements OnInit {
 
             });
 
-            controlValue= JSON.stringify(containerValue);
+            controlValue= containerValue;
 
           }
           else{

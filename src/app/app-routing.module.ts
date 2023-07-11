@@ -10,6 +10,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { LoginComponent } from './login/login.component';
 import { TestComponent } from './test/test.component';
 import { ServciesLayoutComponent } from './layouts/servcies-layout/servcies-layout.component';
+import { MyRequestsComponent } from './my-requests/my-requests.component';
 
 const routes: Routes = [
   { 
@@ -30,6 +31,7 @@ const routes: Routes = [
       {path:'Sections',component:SectionsComponent},
       {path:'Services',component:ServicesComponent},
       {path:'Form',component:FormComponent},
+      {path:'MyRequests',component:MyRequestsComponent},
     ]
   }
 ];

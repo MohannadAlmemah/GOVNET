@@ -30,6 +30,7 @@ import { LoginLayoutComponent } from './layouts/login-layout/login-layout.compon
 import { ServciesLayoutComponent } from './layouts/servcies-layout/servcies-layout.component';
 import { TestComponent } from './test/test.component';
 import { TextFieldComponent } from './form/Fields/text-field/text-field.component';
+import { MyRequestsComponent } from './my-requests/my-requests.component';
 
 registerPlugin(FilePondPluginFileValidateType);
 
@@ -47,6 +48,7 @@ registerPlugin(FilePondPluginFileValidateType);
     ServciesLayoutComponent,
     TestComponent,
     TextFieldComponent,
+    MyRequestsComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

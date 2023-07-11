@@ -272,9 +272,74 @@
 
                                             </ng-container>
 
+                                            <ng-container *ngIf="field.type=='CONTAINER'">
+
+                                                <div class="our_solution_category card px-2">
+                                                    <div class="solution_cards_box row" >
+                                                        <div class="col-md-12 col-12">
+                                                            <div class="solution_card">
+                                                                <div class="hover_color_bubble"></div>
+                                                            
+                                                                <div class="solu_title">
+                                                                    <h4 class="text-center mt-2">{{field.label}}</h4>
+                                                                </div>
+                                                                <div class="solu_description">
+                                                                    <ng-container *ngFor="let container of GetContainerItems(field.id)">
+            
+                                                                        <ng-container *ngFor="let containerFiled of container.containerFields" >
+                                                                            
+                                                                            <ng-container *ngIf="containerFiled.type=='TEXT_FIELD'">
+                                    
+                                
+                                                                              <div class="form-group col-md-12 col-12 py-2">
+                                                                                    <p  class="col-form-label">{{containerFiled.label}}</p>
+                                                                                    
+                                                       
+                                                                                    <input class="form-control" formControlName="{{containerFiled.id}}#{{container.index}}"   type="text" [required]="containerFiled.required">
+                                                                                    <div *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
+                                                                                        <span class="text-danger" *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
+                                                                                            حقل اجباري !
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                
+                                                
+                                                                            </ng-container>
+                                
+                                                                            <ng-container *ngIf="containerFiled.type=='CHECKBOX'">
+                                
+                                                            
+                                                                                <div class="form-group col-md-12 col-12 py-2">
+                                                
+                                                                                    <p-checkbox formControlName="{{containerFiled.id}}#{{container.index}}" [binary]="true"></p-checkbox>
+                                                                                    <label class="mx-2">{{containerFiled.label}}</label>
+                                                
+                                                                                </div>
+                                                
+                                                                            </ng-container>
+                        
+                                                                        </ng-container>
+                                                                        
+                            
+                                                                    </ng-container>
+                            
+                            
+                                                                    <div class="col-12 text-center py-3">
+                                                                        <button id="submit-button" class="btn btn-primary" (click)="addContainerItems(field.id)">اضافة</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                            </ng-container>
+
                                         </ng-container>
 
 
+                                        <br>
+                                        <br>
 
                                         <p class="text-danger">
                                             (*) متطلبات إلزامية </p>
