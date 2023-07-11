@@ -35,8 +35,7 @@
             ],
             "scripts": [
               "src/js/app.js",
-              "src/js/core-init.js",
-              "src/js/jquery.multipleInput.js"
+              "src/js/core-init.js"
             ]
           },
           "configurations": {
@@ -106,3 +105,4 @@
     }
   }
 }
+

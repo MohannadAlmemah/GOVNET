@@ -7,11 +7,26 @@ import { Field } from '../models/field';
 import {Container} from '../models/ContainerField';
 import { formBody } from '../models/formBody';
 
+
+export class FieldInfo{
+  filedValue:any|undefined;
+  fieldType:string|undefined;
+
+
+  constructor(filedValue:any,fieldType :string) {
+    this.fieldType=fieldType;
+    this.filedValue=filedValue;
+  }
+
+
+}
+
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
+
 
 export class FormComponent implements OnInit {
 
@@ -53,8 +68,9 @@ export class FormComponent implements OnInit {
 
       this.files.push({controlName:controlName,fileBase64:base64WithoutPrefix});
 
-      console.log(this.files);
     };
+
+    console.log(this.myForm);
 
   }
 
@@ -109,6 +125,8 @@ export class FormComponent implements OnInit {
       });
 
     });
+
+    console.log(this.myForm);
 
   }
 
@@ -183,140 +201,122 @@ export class FormComponent implements OnInit {
 
   }
 
-  Save(){
-
-    this.submitted=true;
-
-    var formValues:formBody[]=[];
-
-    if(this.myForm.valid){
-
-      this.submitted=false;
-      this.isLoading=true;
-
-      const controls = this.myForm.controls;
-      
-      Object.keys(controls).map((key) => {
-
-        var controlValue=null;
-        var controlType="STRING";
-
-        if (!/#\d+$/.test(key)) {
-              
-          var filed=this.fields.filter(x=>x.id==key)[0];
-
-          if(filed.type=="TEXT_FIELD"){
-
-            controlValue = String(controls[key].value);
-          } 
-          else if(filed.type=="FILE"){
-
-            controlType="FILE";
-
-            var file=this.files.filter(x=>x.controlName==filed.id)[0];
-
-            if(file!=null){
-              var files=  [file.fileBase64??null];
-              controlValue=files;
-            }
-            else{
-              controlValue=null;
-            }
-          }
-          else if(filed.type=="CHECKBOX"){
-
-            controlType="BOOLEAN";
-
-            controlValue=this.checkCbValue(key);
-            
-          }
-          else if(filed.type=="CONTAINER"){
-
-            controlType="CONTAINER";
-
-            var subControlType="STRING";
-
-            var containerItems=this.containers.filter(x=>x.containerId==filed.id );
-
-            var containerValue:any[]=[];
-            var fields:any[]=[];
-            
-            containerItems.map(containerItem=>{
-
-              fields=[];
-
-              var index=containerItem.index;
-
-              containerItem.containerFields.map(field=>{
-                
-                var formField=this.myForm.get(`${field.id}#${index}`);
-
-                var fieldValue=formField?.value;
-
-                if(field.type=="CHECKBOX"){
-
-                  subControlType="BOOLEAN";
-
-                  fieldValue=this.checkCbValue(key);
-
-                }
-
-                fields.push(new formBody(subControlType,field.id,fieldValue));
-
-              });
-
-              containerValue.push([...fields]);
-
-            });
-
-            controlValue= containerValue;
-
-          }
-          else{
-            controlValue=controls[key].value;
-
-          }
-
-          formValues.push(new formBody(controlType,key,controlValue ?? ""));
-
-        }
-      });
-
-
-      var body={
-        "userId": this.nationalId,
-        "serviceId": `${this.serviceId}`,
-        "values": formValues,
+  Save() {
+    this.submitted = true;
+    debugger
+    if (this.myForm.valid) {
+      this.submitted = false;
+      this.isLoading = true;
+  
+      const formValues = this.getFormValues();
+  
+      const body = {
+        userId: this.nationalId,
+        serviceId: `${this.serviceId}`,
+        values: formValues,
       };
-
-      var request=this.apiService.post('carboncopies/PostDataForConsumer',body);
-
-      request.subscribe(response=>{
-
-        var data=response.data;
-
-        if(response.statusCode==200){
-
-          this.isLoading=false;
-          
-          if(data.continue==false){
-            this.sweetAlertService.ShowAlertThenRedirect('success',response.message,'/');
-          }else{
-
-            this.removeFormControls();
-
-            this.GetStepForConsumer();
+  
+      this.apiService.post('carboncopies/PostDataForConsumer', body)
+        .subscribe(response => {
+          const data = response.data;
+  
+          if (response.statusCode === 200) {
+            this.isLoading = false;
+  
+            if (data.continue === false) {
+              this.sweetAlertService.ShowAlertThenRedirect('success', response.message, '/');
+            } else {
+              this.removeFormControls();
+              this.GetStepForConsumer();
+            }
           }
-        }
-
-        console.log(response);
-      });
-
-    }
-    else{
+  
+          console.log(response);
+        });
+    } else {
       console.log(this.myForm);
     }
   }
+  
+  getFormValues(): formBody[] {
+    const formValues: formBody[] = [];
+    const controls = this.myForm.controls;
+  
+    Object.keys(controls).forEach(key => {
+      if (!/#\d+$/.test(key)) {
+        const field = this.fields.find(x => x.id === key);
+  
+        if (field) {
+          const controlValue = this.getControlValue(field);
+          formValues.push(new formBody(controlValue.fieldType!, key, controlValue.filedValue ?? ''));
+        }
+      }
+    });
+  
+    return formValues;
+  }
+  
+  getControlValue(field: Field): FieldInfo {
+    const control = this.myForm.get(field.id);
+    let controlValue = null;
+
+    var fieldType="STRING";
+  
+    switch (field.type) {
+
+      case 'TEXT_FIELD':
+        controlValue = String(control!.value);
+        break;
+
+      case 'FILE':
+
+        controlValue = this.getFileValue(field);
+        fieldType="FILE";
+
+        break;
+      case 'CHECKBOX':
+
+        controlValue = this.checkCbValue(field.id);
+        fieldType="BOOLEAN";
+
+        break;
+      case 'CONTAINER':
+
+        controlValue = this.getContainerValue(field);
+        fieldType="CONTAINER";
+
+        break;
+      default:
+        controlValue = control!.value;
+    }
+  
+    return new FieldInfo(controlValue,fieldType);
+  }
+  
+  getFileValue(field: Field): any[] | null {
+    const file = this.files.find(x => x.controlName === field.id);
+    return file ? [file.fileBase64 ?? null] : null;
+  }
+  
+  getContainerValue(field: Field): any[] {
+    const containerItems = this.containers.filter(x => x.containerId === field.id);
+    const containerValue: any[] = [];
+  
+    containerItems.forEach(containerItem => {
+      const fields: formBody[] = [];
+  
+      containerItem.containerFields.forEach(field => {
+        const formField = this.myForm.get(`${field.id}#${containerItem.index}`);
+        const fieldValue = field.type === 'CHECKBOX' ? this.checkCbValue(field.id) : formField?.value;
+        fields.push(new formBody(field.type, field.id, fieldValue));
+      });
+  
+      containerValue.push([...fields]);
+    });
+  
+    return containerValue;
+  }
+  
 
   private removeFormControls() {
     Object.keys(this.myForm.controls).forEach(controlName => {
