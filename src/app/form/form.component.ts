@@ -6,6 +6,7 @@ import { SweetAlertService } from 'src/services/sweetAlertService';
 import { Field } from '../models/field';
 import {Container} from '../models/ContainerField';
 import { formBody } from '../models/formBody';
+import { FileModel } from '../models/file';
 
 
 export class FieldInfo{
@@ -35,13 +36,13 @@ export class FormComponent implements OnInit {
   fields:Field[];
 
   myForm:UntypedFormGroup; 
-  files:any[];
+  files:FileModel[];
   serviceId:string|undefined;
   BluePrintId:string|undefined;
   isLoading=true;
   pondFiles: string[] = [];
   service:any;
-  nationalId:string="9971063036";
+  nationalId:string="9831025503";
   submitted = false;
   currentIndex=0;
   containers:Container[]=[];
@@ -66,17 +67,25 @@ export class FormComponent implements OnInit {
 
       const base64WithoutPrefix = base64String?.substring(base64String.indexOf(',') + 1);
 
-      this.files.push({controlName:controlName,fileBase64:base64WithoutPrefix});
+      this.files.push(new FileModel(this.files.length+1,controlName,base64WithoutPrefix,file.name));
 
     };
 
-    console.log(this.myForm);
+    console.log(this.files);
 
   }
 
   GetContainerItems(containerId:string):Container[]{
     var filterdContainer=this.containers.filter(x=>x.containerId==containerId);
     return filterdContainer;
+  }
+
+  getFiles(controlName:string):FileModel[]{
+    return this.files.filter(x=>x.controlName==controlName);
+  }
+
+  deleteFile(fileId:number){
+    this.files=this.files.filter(x=>x.id!=fileId);
   }
 
   ngOnInit(): void {
@@ -295,7 +304,7 @@ export class FormComponent implements OnInit {
   
   getFileValue(field: Field): any[] | null {
     const file = this.files.find(x => x.controlName === field.id);
-    return file ? [file.fileBase64 ?? null] : null;
+    return file ? [file.fileBase64 ?? null] : [];
   }
   
   getContainerValue(field: Field): any[] {
@@ -307,8 +316,36 @@ export class FormComponent implements OnInit {
   
       containerItem.containerFields.forEach(field => {
         const formField = this.myForm.get(`${field.id}#${containerItem.index}`);
+
+
+        var fieldType=this.getFieldType(field.type);
+  
+        switch (field.type) {
+
+          case 'TEXT_FIELD':
+            break;
+
+          case 'FILE':
+
+            fieldType="FILE";
+
+            break;
+          case 'CHECKBOX':
+
+            fieldType="BOOLEAN";
+
+            break;
+          case 'CONTAINER':
+
+            fieldType="CONTAINER";
+
+            break;
+          default:
+        }
+
         const fieldValue = field.type === 'CHECKBOX' ? this.checkCbValue(field.id) : formField?.value;
-        fields.push(new formBody(field.type, field.id, fieldValue));
+
+        fields.push(new formBody(fieldType, field.id, fieldValue));
       });
   
       containerValue.push([...fields]);
@@ -317,6 +354,33 @@ export class FormComponent implements OnInit {
     return containerValue;
   }
   
+
+  getFieldType(basicType:string):string{
+    switch (basicType) {
+
+      case 'TEXT_FIELD':
+
+        return 'STRING';
+
+      case 'FILE':
+
+        return "FILE";
+
+      case 'CHECKBOX':
+
+        return "BOOLEAN";
+
+      case 'CONTAINER':
+
+        return "CONTAINER";
+
+      default:
+
+        return 'STRING';
+
+    }
+  }
+
 
   private removeFormControls() {
     Object.keys(this.myForm.controls).forEach(controlName => {
