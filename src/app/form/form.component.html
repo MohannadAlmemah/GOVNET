@@ -295,7 +295,7 @@
 
                                             <ng-container *ngIf="field.type=='CONTAINER'">
 
-                                                <div class=" card px-2">
+                                                <div class=" card px-2" *ngIf="field.designType!='TABLE'">
                                                     <div class=" row" >
                                                         <div class="col-md-12 col-12">
                                                             <div class="solution_card">
@@ -350,6 +350,30 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                                <div *ngIf="field.designType=='TABLE'">
+
+
+                                                    <table class="table text-center my-3">
+                                                        <thead class="thead-light">
+
+                                                            <tr>
+                                                                <th *ngFor="let containerTableHeader of field.fields"> {{containerTableHeader.label}} </th>
+                                                            </tr>
+
+                                                        </thead>
+
+                                                        <tbody>
+
+                                                            <tr *ngFor="let containerTableBody of field.value">
+
+                                                                <td *ngFor="let containerTableBodyValue of containerTableBody">{{containerTableBodyValue.value}}</td>
+
+                                                            </tr>
+                                                            
+                                                        </tbody>
+                                                    </table>
                                                 </div>
 
                                                 <br>
