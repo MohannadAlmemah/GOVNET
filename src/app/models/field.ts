@@ -14,6 +14,7 @@ export class Field{
     public options:any[]|undefined;
     public comboBoxOptions:any[]|undefined;
     public keyboardType:string;
+    public description:string;
     /**
      *
      */
@@ -21,7 +22,7 @@ export class Field{
         editable:boolean|undefined,required:boolean,label:string,
         hidden:boolean|undefined,value:any|undefined,comment:string|undefined,
         fields:Field[]|undefined,multiSelect:boolean|undefined,options:any[]|undefined,
-        comboBoxOptions:any[]|undefined,keyboardType:string,designType:string
+        comboBoxOptions:any[]|undefined,keyboardType:string,designType:string,description:string
         ) {
             this.id=id;
             this.type=type;
@@ -38,5 +39,6 @@ export class Field{
             this.comboBoxOptions=comboBoxOptions;
             this.keyboardType=keyboardType;
             this.designType=designType;
+            this.description=description;
         }
 }
