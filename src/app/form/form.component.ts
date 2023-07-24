@@ -46,6 +46,7 @@ export class FormComponent implements OnInit {
   submitted = false;
   currentIndex=0;
   containers:Container[]=[];
+  serviceName:string|undefined;
   //9861049531
   constructor(private apiService:ApiService,private route: ActivatedRoute,
     private sweetAlertService:SweetAlertService
@@ -101,41 +102,49 @@ export class FormComponent implements OnInit {
         this.BluePrintId=bluePrintId;
 
       }
-    }
 
-    var Services=this.apiService.get('categorization/GetServicesWithSectionId?id='+sectionId!);
+      var Services=this.apiService.get('categorization/GetServicesWithSectionId?id='+sectionId!);
 
-    Services.subscribe(response=>{
+      Services.subscribe(response=>{
+  
+        var data=response.data as any[];
+  
+        var service=data.filter(x=>x.id==this.BluePrintId)[0];
 
-      var data=response.data as any[];
-
-      var service=data.filter(x=>x.id==this.BluePrintId)[0];
-
-      var rootValues=service.rootValues as any[];
-
-        var body={
-          "serviceId": this.BluePrintId,
-            "rootValues": rootValues.map(x=>{
-              return{
-                "fieldId": x.fieldId,
-                "keyValue": x.keyValue,
-                "value": this.nationalId
-              }
-            })
-        };
-
-      var request=this.apiService.post("carboncopies/applyforservice",body);
-      request.subscribe(res=>{
-        
-        if(res.statusCode==200 && res.error==false){
-          this.serviceId=res.data;
-          this.GetStepForConsumer();
-        }
+        this.serviceName=service.name;
+  
+        var rootValues=service.rootValues as any[];
+  
+          var body={
+            "serviceId": this.BluePrintId,
+              "rootValues": rootValues.map(x=>{
+                return{
+                  "fieldId": x.fieldId,
+                  "keyValue": x.keyValue,
+                  "value": this.nationalId
+                }
+              })
+          };
+  
+        var request=this.apiService.post("carboncopies/applyforservice",body);
+        request.subscribe(res=>{
+          
+          if(res.statusCode==200 && res.error==false){
+            this.serviceId=res.data;
+            this.GetStepForConsumer();
+          }
+        });
+  
       });
 
-    });
+    }
+    else if(this.route.snapshot.queryParams['serviceId']){
 
-    console.log(this.myForm);
+      this.serviceId = this.route.snapshot.queryParamMap.get('serviceId')!;
+
+      this.GetStepForConsumer();
+
+    }
 
   }
 
@@ -176,6 +185,20 @@ export class FormComponent implements OnInit {
           else if(field.type=='COMBO_BOX'){
             this.myForm.addControl(field.id,new FormControl(field.value??""));
           }
+          else if(field.type=='EFAWATEERCOM'){
+
+            var fields=field.fields!;
+
+            this.myForm.addControl(field.id,new FormControl(field.value??""));
+
+            fields.forEach(ef_field => {
+
+              this.myForm.addControl(ef_field.id,new FormControl(ef_field.value??""));
+              
+
+            });
+
+          }
           else if(field.type=='CONTAINER'){
 
             var containerFields=field.fields as any[];
@@ -212,7 +235,25 @@ export class FormComponent implements OnInit {
 
   Save() {
     this.submitted = true;
-    debugger
+
+    if(this.route.snapshot.queryParams['serviceId']){
+      var body={
+        "serviceId": this.serviceId,
+        "status": true
+      }
+
+      var request=this.apiService.post('carboncopies/CompletePaymentProcess', body);
+
+      request.subscribe(res=>{
+        if(res.statusCode==200){
+          this.sweetAlertService.ShowAlert('success', res.message ?? "paymet success");
+        }
+      })
+
+      return;
+
+    }
+    
     if (this.myForm.valid) {
       this.submitted = false;
       this.isLoading = true;

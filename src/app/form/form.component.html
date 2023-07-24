@@ -51,7 +51,7 @@
                         <div id="basicStepDetails" class="card" style="display: none;">
                             <div dir="rtl">
                                 <div class="card-header">
-                                    <h3 class="card-title h3">اصدار موافقة موقع للمنشآت الغذائية</h3>
+                                    <h3 class="card-title h3">{{serviceName}}</h3>
                                 </div>
 
                                 <div class="card-body">
@@ -81,7 +81,7 @@
                         <div id="basicStepTerms" class="card active">
                             <div dir="rtl">
                                 <div class="card-header">
-                                    <h3 class="card-title h3">اصدار موافقة موقع للمنشآت الغذائية</h3>
+                                    <h3 class="card-title h3">{{serviceName}}</h3>
                                 </div>
 
                                 <div class="card-body">
@@ -165,6 +165,43 @@
                                                         
                                                     </div>
                                                 </div>
+
+                                            </ng-container>
+
+                                            <ng-container *ngIf="field.type=='EFAWATEERCOM'">
+
+                                                <label class="col-sm-12 col-form-label form-label mb-2">
+                                                    {{field.label}}
+                                                </label>
+                                                
+                                                <ng-container *ngFor="let ef_field of field.fields">
+
+                                                    <ng-container *ngIf="ef_field.type=='TEXT_VIEW'" >
+
+                                                        <div class="row mb-4" [hidden]="ef_field.hidden">
+
+                                                            <label class="col-sm-2 col-form-label form-label">
+                                                                {{ef_field.label}}
+                                                            </label>
+        
+                                                            <div class="col-sm-10">
+        
+                                                                <input class="form-control" formControlName="{{ef_field.id}}"  type="text">
+                                                                
+                                                                <div *ngIf="myForm.get(field.id)?.invalid && submitted">
+                                                                    <span class="text-danger"
+                                                                        *ngIf="myForm.get(field.id)?.errors?.['required']">
+                                                                        حقل اجباري !
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+        
+        
+                                                        </div>
+
+                                                    </ng-container>
+
+                                                </ng-container>
 
                                             </ng-container>
 
