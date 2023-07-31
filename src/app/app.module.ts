@@ -13,7 +13,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DashboardComponent } from './layouts/dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
 import { FormComponent } from './form/form.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import {  ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -29,10 +29,19 @@ import { LoginComponent } from './login/login.component';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { ServciesLayoutComponent } from './layouts/servcies-layout/servcies-layout.component';
 import { TestComponent } from './test/test.component';
-import { TextFieldComponent } from './form/Fields/text-field/text-field.component';
 import { MyRequestsComponent } from './my-requests/my-requests.component';
+import { InvestmentDashboardComponent } from './investement/investment-dashboard/investment-dashboard.component';
+import { InvestmentProfileComponent } from './investement/investment-profile/investment-profile.component';
+import { LoginInvestmentComponent } from './investement/login-investment/login-investment.component';
+import { InvestementSignupComponent } from './investement/investement-signup/investement-signup.component';
+import { InvestmentForgetPasswordComponent } from './investement/investment-forget-password/investment-forget-password.component';
 
 registerPlugin(FilePondPluginFileValidateType);
+
+// export function HttpLoaderFactory(http: HttpClient) {
+// 	return new TranslateHttpLoader(http, './assets/languages/', '.json');
+// }
+
 
 @NgModule({
   declarations: [
@@ -47,8 +56,12 @@ registerPlugin(FilePondPluginFileValidateType);
     LoginLayoutComponent,
     ServciesLayoutComponent,
     TestComponent,
-    TextFieldComponent,
     MyRequestsComponent,
+    InvestmentDashboardComponent,
+    InvestmentProfileComponent,
+    LoginInvestmentComponent,
+    InvestementSignupComponent,
+    InvestmentForgetPasswordComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

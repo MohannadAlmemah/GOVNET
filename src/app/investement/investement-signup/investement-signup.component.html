@@ -1,0 +1,292 @@
+<header class="position-absolute top-0 start-0 end-0 mt-3 mx-3">
+    <div class="d-flex d-lg-none justify-content-center">
+        <a href="/">
+            <img class="w-100" src="../../../assets/images/logo2.png" alt="Image Description" data-hs-theme-appearance="default"
+                style="min-width: 7rem; max-width: 8.5rem;">
+        </a>
+    </div>
+</header>
+
+
+<main id="content" role="main" class="main">
+    <script type="text/javascript" async=""
+        src="https://www.gstatic.com/recaptcha/releases/pCoGBhjs9s8EhFOHJFe8cqis/recaptcha__en.js"
+        crossorigin="anonymous"
+        integrity="sha384-ER8TR/9ygDDx6eY4PVNpeuj19NsI16UfPHQbL+Y1qWVn5fYv9C/Ki3MmObCWDrbd"></script>
+    <script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script>
+
+    <div class="container-fluid" style="padding-right: 1rem;padding-left: 0.5rem;">
+        <div class="row">
+            <div class="col-lg-6 d-none d-lg-flex justify-content-center min-vh-lg-100 position-relative px-0"
+                style="background:url(../../../assets/images/signup-background.jpg) center;background-size:cover;">
+                <div class="card pt-md-7 blur px-5 pb-10"
+                    style="margin-top: 10.5rem;max-width: 23rem;max-height: 23rem;">
+                    <div class="text-center mb-5">
+                        <img class="img-fluid" src="../../../assets/images/logo2.png" alt="Image Description" style="width: 12rem;"
+                            data-hs-theme-appearance="default">
+                    </div>
+                    <div class="mb-5">
+                        <h2 class="display-5 text-center">الخدمات الاستثمارية الإلكترونية الشاملة في وزارة الاستثمار
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 d-flex justify-content-center align-items-center min-vh-lg-100">
+                <div class="w-100 content-space-t-4 content-space-t-lg-2 content-space-b-1" style="max-width: 25rem;">
+
+                    <form id="signup-form" action="/ar/site/signup" method="post" dir="rtl">
+                        <input type="hidden" name="_csrf-frontend"
+                            value="DEixXM0FXMMlQkvq4g3e8e_ZcvT72IZUS719ApMJXQlfcMcTpnYOhks0JZ6rYIqAhp0bo5-9xAQ-6TF2_X4XTA==">
+                        <div class="text-center">
+                            <div class="mb-5">
+                                <h1 class="display-4">إنشاء حساب</h1>
+                                <p>هل لديك حساب؟ <a class="link" href="/Investment/login">تسجيل الدخول هنا</a> </p>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 text-end">
+                            <label class="form-label" for="signupSrEmail">الجنسية</label>
+
+                            <div class="mb-3 field-signupform-nationality required">
+                                <select id="signupform-nationality" class="form-select" name="SignupForm[nationality]"
+                                    aria-required="true">
+                                    <option value="">يرجى اختيار الجنسية</option>
+                                    <option value="jordanian">أردني</option>
+                                    <option value="none-jordanian">غير أردني</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+
+                        <div id="input-name_en" style="display:none;" class="mb-4 text-end">
+                            <label class="form-label" for="signupform-name_en">الاسم بالانجليزية</label>
+
+                            <div class="mb-3 field-signupform-name_en">
+                                <input type="text" id="signupform-name_en" class="form-control"
+                                    name="SignupForm[name_en]">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="nationalId" class="col-sm-6">
+
+                                <div class="mb-4">
+                                    <label id="nationalId-label" class="form-label" for="signupSrEmail">الرقم
+                                        الوطني</label>
+                                    <div class="mb-3 field-signupform-username required">
+                                        <input type="number" id="signupform-username"
+                                            class="form-control form-control-lg" name="SignupForm[username]"
+                                            placeholder="الرقم الوطني" aria-required="true">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="cardId" class="col-sm-6">
+
+                                <div class="mb-4">
+                                    <label class="form-label" for="signupSrEmail">رقم الهوية</label>
+                                    <div class="mb-3 field-signupform-national_cardid">
+                                        <input type="text" id="signupform-national_cardid"
+                                            class="form-control form-control-lg" name="SignupForm[national_cardId]"
+                                            placeholder="رقم الهوية بالحروف الكبيرة">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <label class="form-label" for="signupSrEmail">تاريخ الميلاد</label>
+                        <div class="row">
+                            <div class="col-sm-4">
+
+                                <div class="mb-4">
+
+                                    <div class="mb-3 field-signupform-birth_day required">
+                                        <select id="signupform-birth_day"
+                                            class="form-control form-control-lg form-select"
+                                            name="SignupForm[birth_day]" aria-required="true">
+                                            <option value="">اليوم</option>
+                                            <option value="01">01</option>
+                                            <option value="02">02</option>
+                                            <option value="03">03</option>
+                                            <option value="04">04</option>
+                                            <option value="05">05</option>
+                                            <option value="06">06</option>
+                                            <option value="07">07</option>
+                                            <option value="08">08</option>
+                                            <option value="09">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-4">
+
+                                <div class="mb-4">
+
+                                    <div class="mb-3 field-signupform-birth_month required">
+                                        <select id="signupform-birth_month"
+                                            class="form-control form-control-lg form-select"
+                                            name="SignupForm[birth_month]" aria-required="true">
+                                            <option value="">الشهر</option>
+                                            <option value="01">01</option>
+                                            <option value="02">02</option>
+                                            <option value="03">03</option>
+                                            <option value="04">04</option>
+                                            <option value="05">05</option>
+                                            <option value="06">06</option>
+                                            <option value="07">07</option>
+                                            <option value="08">08</option>
+                                            <option value="09">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-4">
+
+                                <div class="mb-4">
+
+                                    <div class="mb-3 field-signupform-birth_year required">
+                                        <select id="signupform-birth_year"
+                                            class="form-control form-control-lg form-select"
+                                            name="SignupForm[birth_year]" aria-required="true">
+                                            <option value="">السنة</option>
+                                            <option value="1933">1933</option>
+                                            <option value="1934">1934</option>
+                                            <option value="1935">1935</option>
+                                            <option value="1936">1936</option>
+                                            <option value="1937">1937</option>
+                                            <option value="1938">1938</option>
+                                            <option value="1939">1939</option>
+                                            <option value="1940">1940</option>
+                                            <option value="1941">1941</option>
+                                            <option value="1942">1942</option>
+                                            <option value="1943">1943</option>
+                                            <option value="1944">1944</option>
+                                            <option value="1945">1945</option>
+                                            <option value="1946">1946</option>
+                                            <option value="1947">1947</option>
+                                            <option value="1948">1948</option>
+                                            <option value="1949">1949</option>
+                                            <option value="1950">1950</option>
+                                            <option value="1951">1951</option>
+                                            <option value="1952">1952</option>
+                                            <option value="1953">1953</option>
+                                            <option value="1954">1954</option>
+                                            <option value="1955">1955</option>
+                                            <option value="1956">1956</option>
+                                            <option value="1957">1957</option>
+                                            <option value="1958">1958</option>
+                                            <option value="1959">1959</option>
+                                            <option value="1960">1960</option>
+                                            <option value="1961">1961</option>
+                                            <option value="1962">1962</option>
+                                            <option value="1963">1963</option>
+                                            <option value="1964">1964</option>
+                                            <option value="1965">1965</option>
+                                            <option value="1966">1966</option>
+                                            <option value="1967">1967</option>
+                                            <option value="1968">1968</option>
+                                            <option value="1969">1969</option>
+                                            <option value="1970">1970</option>
+                                            <option value="1971">1971</option>
+                                            <option value="1972">1972</option>
+                                            <option value="1973">1973</option>
+                                            <option value="1974">1974</option>
+                                            <option value="1975">1975</option>
+                                            <option value="1976">1976</option>
+                                            <option value="1977">1977</option>
+                                            <option value="1978">1978</option>
+                                            <option value="1979">1979</option>
+                                            <option value="1980">1980</option>
+                                            <option value="1981">1981</option>
+                                            <option value="1982">1982</option>
+                                            <option value="1983">1983</option>
+                                            <option value="1984">1984</option>
+                                            <option value="1985">1985</option>
+                                            <option value="1986">1986</option>
+                                            <option value="1987">1987</option>
+                                            <option value="1988">1988</option>
+                                            <option value="1989">1989</option>
+                                            <option value="1990">1990</option>
+                                            <option value="1991">1991</option>
+                                            <option value="1992">1992</option>
+                                            <option value="1993">1993</option>
+                                            <option value="1994">1994</option>
+                                            <option value="1995">1995</option>
+                                            <option value="1996">1996</option>
+                                            <option value="1997">1997</option>
+                                            <option value="1998">1998</option>
+                                            <option value="1999">1999</option>
+                                            <option value="2000">2000</option>
+                                            <option value="2001">2001</option>
+                                            <option value="2002">2002</option>
+                                            <option value="2003">2003</option>
+                                            <option value="2004">2004</option>
+                                            <option value="2005">2005</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label" for="signupSrEmail">رقم الهاتف</label>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="signupSrEmail">كلمة السر</label>
+                            <div class="mb-3 field-signupform-password required">
+                                <input type="password" id="signupform-password" class="form-control form-control-lg"
+                                    name="SignupForm[password]"
+                                    placeholder="مجموعة من الحروف والأرقام وان لا تقل عن 8 خانات" aria-required="true">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" name="signup-button">إنشاء
+                                الحساب</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>

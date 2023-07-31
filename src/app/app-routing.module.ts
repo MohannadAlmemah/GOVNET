@@ -11,6 +11,11 @@ import { LoginComponent } from './login/login.component';
 import { TestComponent } from './test/test.component';
 import { ServciesLayoutComponent } from './layouts/servcies-layout/servcies-layout.component';
 import { MyRequestsComponent } from './my-requests/my-requests.component';
+import { InvestmentDashboardComponent } from './investement/investment-dashboard/investment-dashboard.component';
+import { InvestmentProfileComponent } from './investement/investment-profile/investment-profile.component';
+import { LoginInvestmentComponent } from './investement/login-investment/login-investment.component';
+import { InvestementSignupComponent } from './investement/investement-signup/investement-signup.component';
+import { InvestmentForgetPasswordComponent } from './investement/investment-forget-password/investment-forget-password.component';
 
 const routes: Routes = [
   { 
@@ -27,13 +32,23 @@ const routes: Routes = [
     path:'',
     component:ServciesLayoutComponent,
     children:[
-      {path:'Test',component:TestComponent},
       {path:'Sections',component:SectionsComponent},
       {path:'Services',component:ServicesComponent},
       {path:'Form',component:FormComponent},
       {path:'MyRequests',component:MyRequestsComponent},
     ]
-  }
+  },
+  {
+    path:'Investment',
+    component:ServciesLayoutComponent,
+    children:[
+      {path:'Dashboard',component:InvestmentDashboardComponent},
+      {path:'Profile',component:InvestmentProfileComponent},
+    ]
+  },
+  {path:'Investment/login',component:LoginInvestmentComponent},
+  {path:'Investment/SignUp',component:InvestementSignupComponent},
+  {path:'Investment/ForgetPassword',component:InvestmentForgetPasswordComponent},
 ];
 
 @NgModule({
