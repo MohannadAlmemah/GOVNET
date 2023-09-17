@@ -1,0 +1,8 @@
+<div class="row mb-4" [formGroup]="formGroup!">
+
+    <div class="col-sm-12">
+        <p-checkbox formControlName="{{fieldId}}" (onChange)="refreshForm(field.id,field.shouldRefresh)"
+            [binary]="true"></p-checkbox>
+        <label class="mx-2">{{field.label}}</label>
+    </div>
+</div>

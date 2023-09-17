@@ -1,11 +1,15 @@
+import { parentModel } from "./parent";
+
 export class Field{
     public id:string;
     public type:string;
     public designType:string;
+    public modifiable:boolean|undefined;
     public regex:string|undefined;
     public editable:boolean|undefined;
     public required:boolean;
     public label:string;
+    public textFieldType:string|undefined;
     public hidden:boolean|undefined;
     public value:any|undefined;
     public comment:string|undefined;
@@ -15,20 +19,34 @@ export class Field{
     public comboBoxOptions:any[]|undefined;
     public keyboardType:string;
     public description:string;
+    public approved:boolean|undefined;
+    public shouldRefresh:boolean;
+    public parent:parentModel|undefined;
+
+    public oldRequired:boolean|undefined;
+    public oldHidden:boolean|undefined;
+    public oldEditable:boolean|undefined;
+    public oldModifiable:boolean|undefined;
+
+    public url:string|undefined;
+
     /**
      *
      */
-    constructor(id:string,type:string,regex:string|undefined,
-        editable:boolean|undefined,required:boolean,label:string,
+    constructor(id:string,type:string,regex:string|undefined,textFieldType:string|undefined,
+        editable:boolean|undefined,required:boolean,label:string,modifiable:boolean|undefined,
         hidden:boolean|undefined,value:any|undefined,comment:string|undefined,
         fields:Field[]|undefined,multiSelect:boolean|undefined,options:any[]|undefined,
-        comboBoxOptions:any[]|undefined,keyboardType:string,designType:string,description:string
+        comboBoxOptions:any[]|undefined,keyboardType:string,designType:string,description:string,
+        approved:boolean|undefined,shouldRefresh:boolean,parent:parentModel|undefined,
+        url:string|undefined
         ) {
             this.id=id;
             this.type=type;
             this.regex=regex;
             this.label=label;
             this.editable=editable;
+            this.textFieldType=textFieldType;
             this.required=required;
             this.hidden=hidden;
             this.value=value;
@@ -40,5 +58,10 @@ export class Field{
             this.keyboardType=keyboardType;
             this.designType=designType;
             this.description=description;
+            this.approved=approved;
+            this.shouldRefresh=shouldRefresh;
+            this.parent=parent;
+            this.modifiable=modifiable;
+            this.url=url;
         }
 }

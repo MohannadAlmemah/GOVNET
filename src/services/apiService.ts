@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { AuthService } from './auth.service';
 // import { AuthService } from 'src/app/auth.service';
 
 @Injectable({
@@ -10,34 +11,44 @@ export class ApiService {
 
   private apiUrl = 'https://stagingapp.sanad.gov.jo/api';
 
-  constructor(private http: HttpClient) { }
+  token:string|undefined;
 
-  // GET request
-  get(endpoint: string): Observable<any> {
-    const url = `${this.apiUrl}/${endpoint}`;
-    return this.http.get<any>(url);
+  constructor(private http: HttpClient,private authService:AuthService) {
+
+    this.token=this.authService.getToken()!;
   }
 
-  // getWithToken(endpoint: string,token:string): Observable<any> {
-  //   const url = `${this.apiUrl}/${endpoint}`;
-  //   var headers = new HttpHeaders({
-  //     'Content-Type': 'application/json',
-  //     'Authorization': `Bearer ${token}`
-  //   });
-  //   return this.http.get<any>(url,{headers});
-  // }
+  // GET request
+  get(endpoint: string,apiUrl:string=this.apiUrl, headers?: HttpHeaders): Observable<any> {
+    const url = `${apiUrl}/${endpoint}`;
 
-  // POST request
-  post(endpoint: string, data: any, headers?: HttpHeaders): Observable<any> {
-    const url = `${this.apiUrl}/${endpoint}`;
     if (!headers) {
       headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin':'*',
+        'Accept-Language':'ar-JO',
+        'Authorization': this.token!=undefined ? `Bearer ${this.token}` :'',
+      });
+    }
+
+    return this.http.get<any>(url,{headers});
+  }
+
+
+  post(endpoint: string, data: any,apiUrl:string=this.apiUrl, headers?: HttpHeaders): Observable<any> {
+    const url = `${apiUrl}/${endpoint}`;
+    if (!headers) {
+      headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin':'*',
+        'Accept-Language':'ar-JO',
+        'Authorization': this.token!=undefined ? `Bearer ${this.token}` :'',
       });
     }
     return this.http.post(url, data, { headers });
   }
+
+  
 
 
   login(endpoint: string, data: any, headers?: HttpHeaders): Observable<any> {
@@ -48,16 +59,5 @@ export class ApiService {
   }
 
 
-
-  // postWithToken(endpoint: string, data: any,token:string=this.authService.getToken()!, headers?: HttpHeaders): Observable<any> {
-  //   const url = `${this.apiUrl}/${endpoint}`;
-  //   if (!headers) {
-  //     headers = new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${token}`
-  //     });
-  //   }
-  //   return this.http.post(url, data, { headers });
-  // }
   
 }

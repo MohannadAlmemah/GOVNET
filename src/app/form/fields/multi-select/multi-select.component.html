@@ -1,0 +1,39 @@
+<div class="row mb-4" [hidden]="field.hidden" [formGroup]="formGroup!">
+    <label class="col-sm-2 col-form-label form-label">
+        {{field.label}}
+        <span class="text-danger" *ngIf="field.required"> * </span>
+    </label>
+
+    <div class="col-sm-10">
+
+        <p-multiSelect class="select-items" [required]="field.required"
+            defaultLabel="يرجى الاختيار"
+            [ngClass]="isInvalid && submitted ? 'is-invalid':null"
+            [options]="field.comboBoxOptions!"
+            formControlName="{{field.id}}" optionLabel="value"
+            optionValue="key"
+            (onChange)="refreshForm(field.id, field.shouldRefresh)">
+            <ng-template let-item pTemplate="item">
+                {{ item.value }}
+            </ng-template>
+        </p-multiSelect>
+
+
+        <p class="pt-1" style="font-size: 13px !important;"
+            *ngIf="field?.description">
+            {{field.description}}
+        </p>
+
+        <p class="pt-1 text-danger" style="font-size: 13px !important;"
+            *ngIf="yourTurn && field?.approved == false">
+            {{field.comment}}
+        </p>
+
+        <div *ngIf="isInvalid && submitted">
+            <span class="text-danger"
+                *ngIf="errors?.['required']">
+                حقل اجباري !
+            </span>
+        </div>
+    </div>
+</div>

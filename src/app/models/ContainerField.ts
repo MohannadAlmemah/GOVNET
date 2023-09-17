@@ -1,3 +1,5 @@
+import { Field } from "./field";
+
 export class ContainerField{
     // public containerItems:any;
     public containerId:string; 
@@ -18,7 +20,7 @@ export class ContainerField{
 
 export class Container{
   public containerId:string; 
-  public containerFields:any[]=[];
+  public containerFields:Field[]=[];
   public index:number;
 
   constructor(containerId:string,containerFields:any[],index:number) {

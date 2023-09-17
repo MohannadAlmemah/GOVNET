@@ -1,0 +1,27 @@
+<div class="row mb-4" [hidden]="field.hidden" [formGroup]="formGroup!">
+
+    <label class="col-sm-2 col-form-label form-label">
+        {{field.label}}
+        <span class="text-danger" *ngIf="field.required"> * </span>
+    </label>
+
+    <div class="col-sm-10">
+
+        <input class="form-control" [readOnly]="!field.editable" [ngClass]="isInvalid && submitted ? 'is-invalid':null"  formControlName="{{fieldId}}" [type]="getTextFieldType(field.textFieldType!)" [required]="field.required && !field.hidden!" (blur)="refreshForm(field.id,field.shouldRefresh)">
+        
+        <p class="pt-1" style="font-size: 13px !important;" *ngIf="field?.description">
+            {{field.description}}
+        </p>
+
+        <p class="pt-1 text-danger" style="font-size: 13px !important;" *ngIf="yourTurn && field?.approved == false">
+            {{field.comment}}
+        </p>
+
+        <div *ngIf="isInvalid && submitted">
+            <span class="text-danger"
+                *ngIf="errors?.['required']">
+                حقل اجباري !
+            </span>
+        </div>
+    </div>
+</div>

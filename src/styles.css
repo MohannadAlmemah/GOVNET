@@ -6,6 +6,19 @@ body {
   font-family: 'Vazirmatn', Arial, sans-serif !important;
 }
 
+.swal2-container{
+  z-index: 99999999999 !important;
+}
+
+.p-multiselect {
+  width: 100% !important;
+  height: 43px;
+}
+
+.p-multiselect div{
+  color:black !important;
+}
+
 /* @font-face {
   font-family: 'GEFlow-Bold';
   src:  url('../src/fonts/ar/GEFlow-Bold.woff') format('woff'), url('../src/fonts/ar/GEFlow-Bold.woff2') format('woff2');

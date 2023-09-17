@@ -1,0 +1,214 @@
+<div class="overlay-wrapper" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div dir="rtl">
+            <nav aria-label="breadcrumb">
+                <ol id="w1" class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{companame}}</li>
+                </ol>
+            </nav>
+        </div>
+        <div id="create-form" class="row justify-content-center py-7" style="background:url(/img/bg-green-full.png);">
+            <div class="col-md-8 col-12">
+                <div dir="rtl" class="card">
+                    <div class="card-header">
+                        <h2 class="card-title h2">
+                            {{companame}}
+                        </h2>
+                        <span class="badge bg-success">فعالة</span>
+                    </div>
+                    <!-- Body -->
+                    <div class="card-body">
+                        <!-- Form -->
+                        <!-- Form -->
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>الرقم الوطني للمنشأة</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="national_id" value="{{companyId}}"
+                                            disabled="disabled">
+                                    </div>
+
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>رقم التسجيل</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="reg_id" [value]="regno"
+                                            disabled="disabled">
+                                    </div>
+
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>تاريخ التسجيل</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="reg_date"
+                                            [value]="regdate" disabled="disabled">
+                                    </div>
+
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>رأس مال الشركة الحالي</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="capital" [value]="totalcapital"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>منطقة التسجيل</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="reg_description"
+                                            [value]="governatE_DESC" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>نوع الشركة</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="company_type"
+                                            [value]="typearabicname" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>حالة الشركة</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="company_status" [value]="compstat"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4" *ngIf="objectives.length>0">
+                                <h4>غايات الشركة</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>رقم</th>
+                                                <th>الغاية</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of objectives">
+                                                <td>{{item.id}}</td>
+                                                <td>{{item.desc}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4" *ngIf="boardOfDirectors.length>0">
+                                <h4>المدراء</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>المنصب</th>
+                                                <th>الاسم</th>
+                                                <th>التاريخ</th>
+                                                <th>تاريخ الانتهاء</th>
+                                                <th>الجهة التي يمثلها</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of boardOfDirectors">
+                                                <td>{{item.position}}</td>
+                                                <td>{{item.name}}</td>
+                                                <td>{{item.date}}</td>
+                                                <td>{{item.endDate??'-'}}</td>
+                                                <td>.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4" *ngIf="members.length>0">
+                                <h4>الشركاء</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>الرقم الوطني</th>
+                                                <th>اسم الشريك</th>
+                                                <th>الحصة</th>
+                                                <th>الجنسية</th>
+                                                <th>الحالة</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of members">
+                                                <td>{{item.natId}}</td>
+                                                <td>{{item.name}}</td>
+                                                <td>{{item.sharespaid}}</td>
+                                                <td>{{item.nationality}}</td>
+                                                <td>{{item.status}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4" *ngIf="delegates.length>0">
+                                <h4>التفاويض</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>التاريخ</th>
+                                                <th>نص التفويض</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of delegates">
+                                                <td>
+                                                    {{item.authDate | date: 'dd/MM/yyyy'}}
+                                                </td>
+                                                <td>
+                                                    {{item.author}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                            </div>
+                        </div>
+                        <!-- End Form -->
+                    </div>
+                    <!-- End Body -->
+
+                    <!-- <div class="card-footer">
+
+                    <form id="w0" action="/ar/companies/request-update?id=24" method="post">
+<input type="hidden" name="_csrf-frontend" value="WuLCgQAM7jprL9nUI_LctvAAVeGjgSZpPyxH0DcEuMAzjZXmTGGjZRlW7aFQg5PimlEG0_f0TzFZbXL9emHcpw==">                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary btn-lg" name="contact-button">طلب تحديث معلومات للمنشأة</button>                    </div>
+                    <p class="text-center mt-2 text-muted">
+                        عند طلب تحديث معلومات المنشأة سيتم تغيير حالة الشركة الى قيد المراجعة                        </p>
+                    </form>                </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Content -->
+</main>

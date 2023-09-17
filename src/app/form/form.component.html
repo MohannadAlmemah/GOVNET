@@ -7,9 +7,9 @@
         <div dir="rtl">
             <nav aria-label="breadcrumb">
                 <ol id="w6" class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
-                    <li class="breadcrumb-item"><a href="/ar/services/sub?id=12">التسجيل والترخيص</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">اصدار موافقة موقع للمنشآت الغذائية</li>
+                    <li class="breadcrumb-item"><a href="/Investment/Dashboard">الرئيسية</a></li>
+                    <!-- <li class="breadcrumb-item"><a href="/ar/services/sub?id=12">التسجيل والترخيص</a></li> -->
+                    <li class="breadcrumb-item active" aria-current="page">{{serviceName}}</li>
                 </ol>
             </nav>
         </div>
@@ -22,7 +22,7 @@
             &quot;endSelector&quot;: &quot;#createProjectFinishBtn&quot;
           }">
 
-                    <ul id="basicStepFormProgress" dir="rtl"
+                    <!-- <ul id="basicStepFormProgress" dir="rtl"
                         class="js-step-progress step step-sm step-icon-sm step-inline step-item-between mb-7">
                         <li class="step-item">
                             <a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options="{
@@ -44,7 +44,7 @@
                                 </div>
                             </a>
                         </li>
-                    </ul>
+                    </ul> -->
 
 
                     <div id="basicStepFormContent">
@@ -86,16 +86,13 @@
 
                                 <div class="card-body">
 
-
-
                                     <form id="service-form" [formGroup]="myForm">
-
 
                                         <ng-container *ngFor="let field of fields">
 
                                             <ng-container *ngIf="field.type=='FILE'">
 
-                                                <div class="row mb-4">
+                                                <div class="row mb-4" [hidden]="field.hidden">
 
                                                     <label class="col-sm-2 col-form-label form-label">
                                                         {{field.label}}
@@ -108,33 +105,47 @@
                                                             class="multiple-input-list table table-condensed table-renderer">
                                                             <tbody>
                                                                 <tr class="multiple-input-list__item" data-index="0">
-                                                                    <!-- <td class="list-cell__button">
+
+                                                                    <td
+                                                                        class="list-cell__environmental_exsits_approval_file">
+
                                                                         <div
-                                                                            class="multiple-input-list__btn js-input-plus btn btn-default">
-                                                                            <i class="bi bi-plus"></i></div>
-                                                                    </td> -->
-                                                                    <td class="list-cell__environmental_exsits_approval_file">
-                                                                        <div class="field-dynamicmodel-environmental_exsits_approval_file-0 form-group">
+                                                                            class="field-dynamicmodel-environmental_exsits_approval_file-0 form-group">
+
                                                                             <input formControlName="{{field.id}}"
-                                                                                [multiple]="field.multiSelect" class="form-control"
-                                                                                type="file" (change)="onUploadFile(field.id!,$event)"
-                                                                                [required]="field.required">
+                                                                                [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
+                                                                                [multiple]="field.multiSelect"
+                                                                                class="form-control" type="file"
+                                                                                (change)="onUploadFile(field.id,$event,field.multiSelect!)"
+                                                                                [required]="field.required && getFiles(field.id).length==0">
 
-                                                                                <p class="pt-1" style="font-size: 13px !important;">
-                                                                                    {{field?.description??""}}
-                                                                                </p>
+                                                                            <p class="pt-1"
+                                                                                style="font-size: 13px !important;"
+                                                                                *ngIf="field?.description">
+                                                                                {{field?.description??""}}
+                                                                            </p>
 
-                                                                                <div *ngIf="myForm.get(field.id)?.invalid && submitted">
-                                                                                    <span class="text-danger"
-                                                                                        *ngIf="myForm.get(field.id)?.errors?.['required']">
-                                                                                        حقل اجباري !
-                                                                                    </span>
-                                                                                </div>
+                                                                            <p class="pt-1 text-danger"
+                                                                                style="font-size: 13px !important;"
+                                                                                *ngIf="yourTurn && field?.approved == false">
+                                                                                {{field?.comment??""}}
+                                                                            </p>
+
+
+
+                                                                            <div
+                                                                                *ngIf="myForm.get(field.id)?.invalid && submitted">
+                                                                                <span class="text-danger"
+                                                                                    *ngIf="myForm.get(field.id)?.errors?.['required']">
+                                                                                    حقل اجباري !
+                                                                                </span>
+                                                                            </div>
                                                                         </div>
 
 
 
-                                                                        <table class="table text-center my-3" *ngIf="getFiles(field.id).length>0">
+                                                                        <table class="table text-center my-3"
+                                                                            *ngIf="getFiles(field.id).length>0">
                                                                             <thead class="thead-light">
                                                                                 <tr>
                                                                                     <th>اسم الملف</th>
@@ -144,10 +155,14 @@
 
                                                                             <tbody>
 
-                                                                                <tr *ngFor="let item of getFiles(field.id)">
-                                                                                    <td>{{item.fileName}}</td>
+                                                                                <tr
+                                                                                    *ngFor="let item of getFiles(field.id)">
+                                                                                    <td>{{field.label}}</td>
                                                                                     <td>
-                                                                                        <i role="button" (click)="deleteFile(item.id)" class="fa-solid fa-trash text-danger"></i>                                                                                    </td>
+                                                                                        <i role="button"
+                                                                                            (click)="deleteFile(item.id)"
+                                                                                            class="fa-solid fa-trash text-danger"></i>
+                                                                                    </td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
@@ -160,9 +175,43 @@
                                                             </tbody>
                                                         </table>
 
-                                                        
 
-                                                        
+
+
+                                                    </div>
+                                                </div>
+
+                                            </ng-container>
+
+                                            <ng-container *ngIf="field.type=='WEBVIEW'">
+                                                <div class="row mb-4" [hidden]="field.hidden">
+
+                                                    <div class="col-4">
+
+                                                        <a href="{{field.url}}" target="_blank">
+                                                            {{field.label}}
+                                                        </a>
+
+                                                    </div>
+
+                                                </div>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="field.type=='TEXT_VIEW'">
+
+                                                <div class="row mb-4" [hidden]="field.hidden">
+
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                    </label>
+
+                                                    <div class="col-sm-10">
+
+                                                        <label class="pt-2">
+                                                            {{myForm.get(field.id)?.value}}
+                                                        </label>
+
+                                                        <!-- <input class="form-control" formControlName="{{field.id}}"  type="text" readonly="true"> -->
                                                     </div>
                                                 </div>
 
@@ -173,30 +222,25 @@
                                                 <label class="col-sm-12 col-form-label form-label mb-2">
                                                     {{field.label}}
                                                 </label>
-                                                
+
                                                 <ng-container *ngFor="let ef_field of field.fields">
 
-                                                    <ng-container *ngIf="ef_field.type=='TEXT_VIEW'" >
+                                                    <ng-container *ngIf="ef_field.type=='TEXT_VIEW'">
 
                                                         <div class="row mb-4" [hidden]="ef_field.hidden">
 
                                                             <label class="col-sm-2 col-form-label form-label">
                                                                 {{ef_field.label}}
                                                             </label>
-        
+
                                                             <div class="col-sm-10">
-        
-                                                                <input class="form-control" formControlName="{{ef_field.id}}"  type="text">
-                                                                
-                                                                <div *ngIf="myForm.get(field.id)?.invalid && submitted">
-                                                                    <span class="text-danger"
-                                                                        *ngIf="myForm.get(field.id)?.errors?.['required']">
-                                                                        حقل اجباري !
-                                                                    </span>
-                                                                </div>
+
+                                                                <label>
+                                                                    {{myForm.get(ef_field.id)?.value}}
+                                                                </label>
+
+                                                                <!-- <input class="form-control" formControlName="{{ef_field.id}}"  type="text"> -->
                                                             </div>
-        
-        
                                                         </div>
 
                                                     </ng-container>
@@ -207,7 +251,14 @@
 
                                             <ng-container *ngIf="field.type=='TEXT_FIELD'">
 
-                                                <div class="row mb-4">
+
+                                                <app-text-field [formGroup]="myForm"
+                                                    [errors]="getFormControlErrors(field.id)"
+                                                    [isInvalid]="getFormControlValidation(field.id)" [field]="field"
+                                                    [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    (refreshFormEvent)="refreshForm2($event)"></app-text-field>
+
+                                                <!-- <div class="row mb-4" [hidden]="field.hidden">
 
                                                     <label class="col-sm-2 col-form-label form-label">
                                                         {{field.label}}
@@ -216,8 +267,17 @@
 
                                                     <div class="col-sm-10">
 
-                                                        <input class="form-control" formControlName="{{field.id}}" type="text" [required]="field.required">
                                                         
+                                                        <input class="form-control" [readOnly]="!field.editable" [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"  formControlName="{{field.id}}" [type]="getTextFieldType(field.textFieldType!)" [required]="field.required && !field.hidden!" (blur)="refreshForm(field.id,field.shouldRefresh)">
+                                                        
+                                                        <p class="pt-1" style="font-size: 13px !important;" *ngIf="field?.description">
+                                                            {{field?.description??""}}
+                                                        </p>
+
+                                                        <p class="pt-1 text-danger" style="font-size: 13px !important;" *ngIf="yourTurn && field?.approved == false">
+                                                            {{field?.comment??""}}
+                                                        </p>
+
                                                         <div *ngIf="myForm.get(field.id)?.invalid && submitted">
                                                             <span class="text-danger"
                                                                 *ngIf="myForm.get(field.id)?.errors?.['required']">
@@ -227,14 +287,20 @@
                                                     </div>
 
 
-                                                </div>
+                                                </div> -->
 
                                             </ng-container>
 
 
                                             <ng-container *ngIf="field.type=='TEXT_FIELD_PHONE'">
 
-                                                <div class="row mb-4">
+                                                <app-text-field-phone [formGroup]="myForm"
+                                                    [errors]="getFormControlErrors(field.id)"
+                                                    [isInvalid]="getFormControlValidation(field.id)" [field]="field"
+                                                    [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    (refreshFormEvent)="refreshForm2($event)"></app-text-field-phone>
+
+                                                <!-- <div class="row mb-4" [hidden]="field.hidden">
 
                                                     <label class="col-sm-2 col-form-label form-label">
                                                         {{field.label}}
@@ -243,8 +309,21 @@
 
                                                     <div class="col-sm-10">
 
-                                                        <input class="form-control" formControlName="{{field.id}}"
-                                                        type="text" [required]="field.required">
+
+                                                        <input class="form-control"
+                                                            [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
+                                                            formControlName="{{field.id}}" [readOnly]="!field.editable"
+                                                            type="text" [required]="field.required && !field.hidden!">
+
+                                                        <p class="pt-1" style="font-size: 13px !important;"
+                                                            *ngIf="field?.description">
+                                                            {{field?.description??""}}
+                                                        </p>
+
+                                                        <p class="pt-1 text-danger" style="font-size: 13px !important;"
+                                                            *ngIf="yourTurn && field?.approved == false">
+                                                            {{field?.comment??""}}
+                                                        </p>
 
                                                         <div *ngIf="myForm.get(field.id)?.invalid && submitted">
                                                             <span class="text-danger"
@@ -255,172 +334,474 @@
                                                     </div>
 
 
-                                                </div>
+                                                </div> -->
 
                                             </ng-container>
 
 
                                             <ng-container *ngIf="field.type=='COMBO_BOX'">
 
+                                                <app-combo-box [formGroup]="myForm"
+                                                    [errors]="getFormControlErrors(field.id)"
+                                                    [isInvalid]="getFormControlValidation(field.id)" [field]="field"
+                                                    [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    (refreshFormEvent)="refreshForm2($event)"></app-combo-box>
 
-                                                <div class="row mb-4">
-                                                    <label class="col-sm-2 col-form-label form-label">
-                                                        {{field.label}}
-                                                        <span class="text-danger" *ngIf="field.required"> * </span>
-                                                    </label>
-
-                                                    <div class="col-sm-10">
-                                                        <select formControlName="{{field.id}}" class="form-control"
-                                                            [required]="field.required">
-                                                            <option value="">يرجى الاختيار</option>
-                                                            <option *ngFor="let item of field.comboBoxOptions"
-                                                                value="{{item.key}}">
-                                                                {{item.value}}
-                                                            </option>
-                                                        </select>
-
-                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
-                                                            <span class="text-danger"
-                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
-                                                                حقل اجباري !
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
 
                                             </ng-container>
 
+                                            <ng-container *ngIf="field.type=='MULTI_COMBO_BOX'">
+
+                                                <app-multi-select [formGroup]="myForm"
+                                                    [errors]="getFormControlErrors(field.id)"
+                                                    [isInvalid]="getFormControlValidation(field.id)" [field]="field"
+                                                    [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    (refreshFormEvent)="refreshForm2($event)"></app-multi-select>
+
+                                            </ng-container>
+
+
                                             <ng-container *ngIf="field.type=='PREDEFINED_COMBO_BOX'">
 
-                                                <div class="row mb-4">
-                                                    <label class="col-sm-2 col-form-label form-label">
-                                                        {{field.label}}
-                                                        <span class="text-danger" *ngIf="field.required"> * </span>
-                                                    </label>
-
-                                                    <div class="col-sm-10">
-                                                        <select formControlName="{{field.id}}" class="form-control"
-                                                            [required]="field.required">
-                                                            <option value="">يرجى الاختيار</option>
-                                                            <option *ngFor="let item of field.options"
-                                                                value="{{item.key}}">
-                                                                {{item.label}}
-                                                            </option>
-                                                        </select>
-
-                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
-                                                            <span class="text-danger"
-                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
-                                                                حقل اجباري !
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <app-predefined-combo-box [formGroup]="myForm"
+                                                    [errors]="getFormControlErrors(field.id)"
+                                                    [isInvalid]="getFormControlValidation(field.id)" [field]="field"
+                                                    [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    (refreshFormEvent)="refreshForm2($event)"></app-predefined-combo-box>
 
                                             </ng-container>
 
                                             <ng-container *ngIf="field.type=='CHECKBOX'">
 
-                                                <div class="row mb-4">
-                                                    <label class="col-sm-2 col-form-label form-label">
-                                                        {{field.label}}
-                                                    </label>
+                                                <app-checkbox [formGroup]="myForm"
+                                                    [errors]="getFormControlErrors(field.id)"
+                                                    [isInvalid]="getFormControlValidation(field.id)" [field]="field"
+                                                    [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    (refreshFormEvent)="refreshForm2($event)"></app-checkbox>
 
-                                                    <div class="col-sm-12">
-                                                        <p-checkbox formControlName="{{field.id}}"
-                                                            [binary]="true"></p-checkbox>
-                                                        <label class="mx-2">{{field.label}}</label>
-                                                    </div>
 
-                                                </div>
 
                                             </ng-container>
 
                                             <ng-container *ngIf="field.type=='CONTAINER'">
 
-                                                <div class=" card px-2" *ngIf="field.designType!='TABLE'">
-                                                    <div class=" row" >
-                                                        <div class="col-md-12 col-12">
-                                                            <div class="solution_card">
-                                                            
-                                                                <h4 class="text-center mt-2">{{field.label}}</h4>
+                                                <div [hidden]="field.hidden">
 
-                                                                <div>
-                                                                    <ng-container *ngFor="let container of GetContainerItems(field.id)">
-            
-                                                                        <ng-container *ngFor="let containerFiled of container.containerFields" >
-                                                                            
-                                                                            <ng-container *ngIf="containerFiled.type=='TEXT_FIELD'">
-                                    
-                                
-                                                                              <div class="form-group col-md-12 col-12 py-2">
-                                                                                    <p  class="col-form-label">{{containerFiled.label}}</p>
-                                                                                    
-                                                       
-                                                                                    <input class="form-control" formControlName="{{containerFiled.id}}#{{container.index}}"   type="text" [required]="containerFiled.required">
-                                                                                    <div *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
-                                                                                        <span class="text-danger" *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
-                                                                                            حقل اجباري !
-                                                                                        </span>
+                                                    <div class=" card px-2" *ngIf="field.designType!='TABLE'">
+
+
+                                                        <div class=" row">
+
+
+                                                            <div class="col-md-12 col-12">
+                                                                <div class="solution_card">
+
+                                                                    <h4 class="text-center mt-2">{{field.label}}</h4>
+
+                                                                    <div>
+                                                                        <ng-container
+                                                                            *ngFor="let container of GetContainerItems(field.id)">
+
+                                                                            <div class="col-12"
+                                                                                style="text-align: left;"
+                                                                                *ngIf="container.index!=1 && field.modifiable">
+                                                                                <i role="button"
+                                                                                    (click)="deleteContainer(container.index,container.containerId)"
+                                                                                    class="fa-solid fa-trash text-danger p-2"
+                                                                                    style="padding: 7px;border: 2px solid #eee;border-radius: 5px;"></i>
+                                                                            </div>
+
+                                                                            <ng-container
+                                                                                *ngFor="let containerFiled of container.containerFields">
+
+
+                                                                                <ng-container
+                                                                                    *ngIf="containerFiled.type=='TEXT_FIELD_PHONE'">
+
+                                                                                    <app-text-field-phone
+                                                                                        [formGroup]="myForm"
+                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
+                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
+                                                                                        [field]="containerFiled"
+                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                                                                        [submitted]="submitted"
+                                                                                        [yourTurn]="yourTurn"
+                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-text-field-phone>
+
+
+                                                                                    <!-- <div class="row mb-4"
+                                                                                        [hidden]="containerFiled.hidden">
+
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label form-label">
+                                                                                            {{containerFiled.label}}
+                                                                                            <span class="text-danger"
+                                                                                                *ngIf="containerFiled.required">
+                                                                                                * </span>
+                                                                                        </label>
+
+                                                                                        <div class="col-sm-10">
+
+
+                                                                                            <input class="form-control"
+                                                                                                [ngClass]="myForm.get(containerFiled.id)?.invalid && submitted ? 'is-invalid':null"
+                                                                                                formControlName="{{containerFiled.id}}#{{container.index}}"
+                                                                                                [readOnly]="!containerFiled.editable"
+                                                                                                type="text"
+                                                                                                [required]="containerFiled.required && !containerFiled.hidden!">
+
+                                                                                            <p class="pt-1"
+                                                                                                style="font-size: 13px !important;"
+                                                                                                *ngIf="containerFiled?.description">
+                                                                                                {{containerFiled?.description??""}}
+                                                                                            </p>
+
+                                                                                            <p class="pt-1 text-danger"
+                                                                                                style="font-size: 13px !important;"
+                                                                                                *ngIf="yourTurn && containerFiled?.approved == false">
+                                                                                                {{containerFiled?.comment??""}}
+                                                                                            </p>
+
+                                                                                            <div
+                                                                                                *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
+                                                                                                <span
+                                                                                                    class="text-danger"
+                                                                                                    *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
+                                                                                                    حقل اجباري !
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+
+
+                                                                                    </div> -->
+
+                                                                                </ng-container>
+
+                                                                                <ng-container
+                                                                                    *ngIf="containerFiled.type=='TEXT_FIELD'">
+
+                                                                                    <app-text-field [formGroup]="myForm"
+                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
+                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
+                                                                                        [field]="containerFiled"
+                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                                                                        [submitted]="submitted"
+                                                                                        [yourTurn]="yourTurn"
+                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-text-field>
+
+                                                                                    <!-- <div class="form-group col-md-12 col-12 py-2">
+                                                                                        <p  class="col-form-label">{{containerFiled.label}}</p>
+                                                                                        <span class="text-danger" *ngIf="containerFiled.required && !field.hidden!"> * </span>
+                                                           
+                                                                                        <input class="form-control" [ngClass]="myForm.get(containerFiled.id)?.invalid && submitted ? 'is-invalid':null" formControlName="{{containerFiled.id}}#{{container.index}}"   type="{{getTextFieldType(containerFiled.textFieldType!)}}" [required]="containerFiled.required && !field.hidden!" [readOnly]="!containerFiled.editable">
+                                                                                        <div *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
+                                                                                            <span class="text-danger" *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
+                                                                                                حقل اجباري !
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    </div> -->
+
+
+                                                                                </ng-container>
+
+                                                                                <ng-container
+                                                                                    *ngIf="containerFiled.type=='CHECKBOX'">
+
+                                                                                    <app-checkbox [formGroup]="myForm"
+                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
+                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
+                                                                                        [field]="containerFiled"
+                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                                                                        [submitted]="submitted"
+                                                                                        [yourTurn]="yourTurn"
+                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-checkbox>
+
+
+                                                                                    <!-- <div
+                                                                                        class="form-group col-md-12 col-12 py-2">
+
+                                                                                        <p-checkbox
+                                                                                            formControlName="{{containerFiled.id}}#{{container.index}}"
+                                                                                            [binary]="true"></p-checkbox>
+                                                                                        <label
+                                                                                            class="mx-2">{{containerFiled.label}}</label>
+                                                                                        <span class="text-danger"
+                                                                                            *ngIf="containerFiled.required && !field.hidden!">
+                                                                                            * </span>
+                                                                                    </div> -->
+
+                                                                                </ng-container>
+
+
+                                                                                <ng-container
+                                                                                    *ngIf="containerFiled.type=='COMBO_BOX'">
+
+
+                                                                                    <app-combo-box [formGroup]="myForm"
+                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
+                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
+                                                                                        [field]="containerFiled"
+                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                                                                        [submitted]="submitted"
+                                                                                        [yourTurn]="yourTurn"
+                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-combo-box>
+
+                                                                                </ng-container>
+
+                                                                                <ng-container
+                                                                                    *ngIf="containerFiled.type=='FILE'">
+
+                                                                                    <div class="row mb-4"
+                                                                                        [hidden]="containerFiled.hidden">
+
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label form-label">
+                                                                                            {{containerFiled.label}}
+
+                                                                                            <span class="text-danger"
+                                                                                                *ngIf="containerFiled.required">
+                                                                                                * </span>
+                                                                                        </label>
+
+                                                                                        <div class="col-sm-10">
+
+                                                                                            <table
+                                                                                                class="multiple-input-list table table-condensed table-renderer">
+                                                                                                <tbody>
+                                                                                                    <tr class="multiple-input-list__item"
+                                                                                                        data-index="0">
+
+                                                                                                        <td
+                                                                                                            class="list-cell__environmental_exsits_approval_file">
+
+                                                                                                            <div
+                                                                                                                class="field-dynamicmodel-environmental_exsits_approval_file-0 form-group">
+
+                                                                                                                <input
+                                                                                                                    [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
+                                                                                                                    formControlName="{{containerFiled.id}}#{{container.index}}"
+                                                                                                                    [multiple]="containerFiled.multiSelect"
+                                                                                                                    class="form-control"
+                                                                                                                    type="file"
+                                                                                                                    (change)="onUploadFile(containerFiled.id+'#'+container.index,$event,containerFiled.multiSelect!)"
+                                                                                                                    [required]="containerFiled.required && getFiles(containerFiled.id+'#'+container.index).length==0">
+
+                                                                                                                <p class="pt-1"
+                                                                                                                    style="font-size: 13px !important;"
+                                                                                                                    *ngIf="containerFiled?.description">
+                                                                                                                    {{containerFiled?.description??""}}
+                                                                                                                </p>
+
+                                                                                                                <p class="pt-1 text-danger"
+                                                                                                                    style="font-size: 13px !important;"
+                                                                                                                    *ngIf="yourTurn && containerFiled?.approved == false">
+                                                                                                                    {{containerFiled?.comment??""}}
+                                                                                                                </p>
+
+
+
+                                                                                                                <div
+                                                                                                                    *ngIf="myForm.get(containerFiled.id+'#'+container.index)?.invalid && submitted">
+                                                                                                                    <span
+                                                                                                                        class="text-danger"
+                                                                                                                        *ngIf="myForm.get(containerFiled.id+'#'+container.index)?.errors?.['required']">
+                                                                                                                        حقل
+                                                                                                                        اجباري
+                                                                                                                        !
+                                                                                                                    </span>
+                                                                                                                </div>
+                                                                                                            </div>
+
+
+
+                                                                                                            <table
+                                                                                                                class="table text-center my-3"
+                                                                                                                *ngIf="getFiles(containerFiled.id+'#'+container.index).length>0">
+                                                                                                                <thead
+                                                                                                                    class="thead-light">
+                                                                                                                    <tr>
+                                                                                                                        <th>اسم
+                                                                                                                            الملف
+                                                                                                                        </th>
+                                                                                                                        <th>حذف
+                                                                                                                        </th>
+                                                                                                                    </tr>
+                                                                                                                </thead>
+
+                                                                                                                <tbody>
+
+                                                                                                                    <tr
+                                                                                                                        *ngFor="let item of getFiles(containerFiled.id+'#'+container.index)">
+                                                                                                                        <td>{{containerFiled.label}}
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            <i role="button"
+                                                                                                                                (click)="deleteFile(item.id)"
+                                                                                                                                class="fa-solid fa-trash text-danger"></i>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                </tbody>
+                                                                                                            </table>
+
+                                                                                                            <br>
+
+                                                                                                        </td>
+                                                                                                        <td
+                                                                                                            class="list-cell__button">
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+
+
+
+
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
-                                                
-                                                
+
+                                                                                </ng-container>
+
+                                                                                <ng-container
+                                                                                    *ngIf="containerFiled.type=='TEXT_VIEW'">
+
+                                                                                    <div class="row mb-4"
+                                                                                        [hidden]="containerFiled.hidden">
+
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label form-label">
+                                                                                            {{containerFiled.label}}
+                                                                                        </label>
+
+
+                                                                                        <div class="col-sm-10">
+
+                                                                                            <label class="pt-2">
+                                                                                                {{myForm.get(containerFiled.id+"#"+container.index)?.value}}
+                                                                                            </label>
+
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </ng-container>
+
+                                                                                <ng-container
+                                                                                    *ngIf="containerFiled.type=='PREDEFINED_COMBO_BOX'">
+
+
+                                                                                    <app-predefined-combo-box
+                                                                                        [formGroup]="myForm"
+                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
+                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
+                                                                                        [field]="containerFiled"
+                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                                                                        [submitted]="submitted"
+                                                                                        [yourTurn]="yourTurn"
+                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-predefined-combo-box>
+
+
+
+                                                                                    <!-- <div class="row mb-4">
+                                                                                        <label
+                                                                                            class="col-sm-2 col-form-label form-label">
+                                                                                            {{containerFiled.label}}
+                                                                                            <span class="text-danger"
+                                                                                                *ngIf="containerFiled.required && !field.hidden!">
+                                                                                                * </span>
+                                                                                        </label>
+
+                                                                                        <div class="col-sm-10">
+                                                                                            <select
+                                                                                                [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
+                                                                                                formControlName="{{containerFiled.id}}#{{container.index}}"
+                                                                                                class="form-control"
+                                                                                                [required]="containerFiled.required && !field.hidden!">
+                                                                                                <option value="">يرجى
+                                                                                                    الاختيار</option>
+                                                                                                <option
+                                                                                                    *ngFor="let item of containerFiled.options"
+                                                                                                    value="{{item.key}}">
+                                                                                                    {{item.label}}
+                                                                                                </option>
+                                                                                            </select>
+
+                                                                                            <p class="pt-1"
+                                                                                                style="font-size: 13px !important;"
+                                                                                                *ngIf="containerFiled?.description">
+                                                                                                {{containerFiled?.description??""}}
+                                                                                            </p>
+
+                                                                                            <p class="pt-1 text-danger"
+                                                                                                style="font-size: 13px !important;"
+                                                                                                *ngIf="yourTurn && containerFiled?.approved == false">
+                                                                                                {{containerFiled?.comment??""}}
+                                                                                            </p>
+
+                                                                                            <div
+                                                                                                *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
+                                                                                                <span
+                                                                                                    class="text-danger"
+                                                                                                    *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
+                                                                                                    حقل اجباري !
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div> -->
+
+                                                                                </ng-container>
+
                                                                             </ng-container>
-                                
-                                                                            <ng-container *ngIf="containerFiled.type=='CHECKBOX'">
-                                
-                                                            
-                                                                                <div class="form-group col-md-12 col-12 py-2">
-                                                
-                                                                                    <p-checkbox formControlName="{{containerFiled.id}}#{{container.index}}" [binary]="true"></p-checkbox>
-                                                                                    <label class="mx-2">{{containerFiled.label}}</label>
-                                                
-                                                                                </div>
-                                                
-                                                                            </ng-container>
-                        
+
+                                                                            <hr
+                                                                                *ngIf="GetContainerItems(field.id).length>1">
+
                                                                         </ng-container>
-                                                                        
-                            
-                                                                    </ng-container>
-                            
-                            
-                                                                    <div class="col-12 text-center py-3">
-                                                                        <button id="submit-button" class="btn btn-primary" (click)="addContainerItems(field.id)">اضافة</button>
+
+
+                                                                        <div class="col-12 text-center py-3"
+                                                                            *ngIf="field.modifiable==true">
+                                                                            <button id="submit-button"
+                                                                                class="btn btn-primary"
+                                                                                (click)="addContainerItems(field)">اضافة</button>
+                                                                        </div>
+
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <div *ngIf="field.designType=='TABLE'">
+                                                    <div *ngIf="field.designType=='TABLE'">
 
 
-                                                    <table class="table text-center my-3">
-                                                        <thead class="thead-light">
+                                                        <table class="table text-center my-3">
+                                                            <thead class="thead-light">
 
-                                                            <tr>
-                                                                <th *ngFor="let containerTableHeader of field.fields"> {{containerTableHeader.label}} </th>
-                                                            </tr>
+                                                                <tr>
+                                                                    <th
+                                                                        *ngFor="let containerTableHeader of field.fields">
+                                                                        {{containerTableHeader.label}} </th>
+                                                                </tr>
 
-                                                        </thead>
+                                                            </thead>
 
-                                                        <tbody>
+                                                            <tbody>
 
-                                                            <tr *ngFor="let containerTableBody of field.value">
+                                                                <tr *ngFor="let containerTableBody of field.value">
 
-                                                                <td *ngFor="let containerTableBodyValue of containerTableBody">{{containerTableBodyValue.value}}</td>
+                                                                    <td
+                                                                        *ngFor="let containerTableBodyValue of containerTableBody">
+                                                                        {{containerTableBodyValue.value}}</td>
 
-                                                            </tr>
-                                                            
-                                                        </tbody>
-                                                    </table>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
                                                 </div>
 
                                                 <br>
-            
+
                                             </ng-container>
 
                                         </ng-container>
@@ -432,14 +813,18 @@
                                         <p class="text-danger">
                                             (*) متطلبات إلزامية </p>
                                         <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-ghost-secondary ms-4"
+                                            <!-- <button type="button" class="btn btn-ghost-secondary ms-4"
                                                 data-hs-step-form-prev-options="{
                  &quot;targetSelector&quot;: &quot;#basicStepDetails&quot;
                }">
                                                 <i class="bi-chevron-right small"></i>
-                                                الشروط </button>
-                                            <button (click)="Save()" id="submit-button"
-                                                class="btn btn-primary btn-lg">تقديم الطلب</button>
+                                                الشروط </button> -->
+
+                                            <ng-container>
+                                                <button (click)="Save()" id="submit-button"
+                                                    class="btn btn-primary btn-lg">تقديم الطلب</button>
+                                            </ng-container>
+
                                         </div>
                                     </form>
                                 </div>
@@ -453,18 +838,27 @@
             </div>
         </div>
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-body text-center" id="modalContent" dir="rtl">
-                        <div id="loader" class="lds-dual-ring me-auto" style="position:relative;left:initial;"></div>
-                        <p class="lead">يرجى الانتظار نقوم حاليا بمعالجة طلبك، لا تغلق الصفحة...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 </main>
+<!-- 
+<div class="modal fade flashModal" id="exampleModal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+    
+        <div class="modal-content">
+        <div class="modal-header mx-auto">
+                <img width="40" src="../../../assets/images/success.png" alt="success">
+            </div>
+            <div class="modal-body text-center text-black lead">
+                {{message}}
+            </div>
+            <div class="modal-footer">
+                <a href="/Investment/Dashboard" class="btn btn-secondary btn-sm m-auto">إغلاق</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="exampleModalBtn" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+</button> -->

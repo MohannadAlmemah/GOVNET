@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/services/apiService';
 import { SweetAlertService } from 'src/services/sweetAlertService';
@@ -7,7 +7,8 @@ import { Field } from '../models/field';
 import {Container} from '../models/ContainerField';
 import { formBody } from '../models/formBody';
 import { FileModel } from '../models/file';
-
+import {ConditionType} from '../models/enum/conditionType';
+import { AuthService } from 'src/services/auth.service';
 
 export class FieldInfo{
   filedValue:any|undefined;
@@ -18,9 +19,8 @@ export class FieldInfo{
     this.fieldType=fieldType;
     this.filedValue=filedValue;
   }
-
-
 }
+
 
 @Component({
   selector: 'app-form',
@@ -31,8 +31,6 @@ export class FieldInfo{
 
 export class FormComponent implements OnInit {
 
-  @ViewChild('myPond') myPond: any;
-
   fields:Field[];
 
   myForm:UntypedFormGroup; 
@@ -40,16 +38,21 @@ export class FormComponent implements OnInit {
   serviceId:string|undefined;
   BluePrintId:string|undefined;
   isLoading=true;
-  pondFiles: string[] = [];
   service:any;
-  nationalId:string="9831025503";
   submitted = false;
   currentIndex=0;
   containers:Container[]=[];
   serviceName:string|undefined;
+  yourTurn=false;
+  payment=false;
+
+  showSubmit=true;
+  textViewItemArr:any[]=[];
+  message:string|undefined;
+
   //9861049531
   constructor(private apiService:ApiService,private route: ActivatedRoute,
-    private sweetAlertService:SweetAlertService
+    private sweetAlertService:SweetAlertService,private authService:AuthService
     ) {
     this.myForm=new UntypedFormGroup({});
     this.files=[];
@@ -57,37 +60,6 @@ export class FormComponent implements OnInit {
     
   }
 
-  onUploadFile(controlName:string,event:any){
-
-    const reader = new FileReader();
-    var file=event.target.files[0];
-    reader.readAsDataURL(file);
-
-    reader.onload = () => {
-      const base64String = reader.result as string;
-
-      const base64WithoutPrefix = base64String?.substring(base64String.indexOf(',') + 1);
-
-      this.files.push(new FileModel(this.files.length+1,controlName,base64WithoutPrefix,file.name));
-
-    };
-
-    console.log(this.files);
-
-  }
-
-  GetContainerItems(containerId:string):Container[]{
-    var filterdContainer=this.containers.filter(x=>x.containerId==containerId);
-    return filterdContainer;
-  }
-
-  getFiles(controlName:string):FileModel[]{
-    return this.files.filter(x=>x.controlName==controlName);
-  }
-
-  deleteFile(fileId:number){
-    this.files=this.files.filter(x=>x.id!=fileId);
-  }
 
   ngOnInit(): void {
 
@@ -121,7 +93,7 @@ export class FormComponent implements OnInit {
                 return{
                   "fieldId": x.fieldId,
                   "keyValue": x.keyValue,
-                  "value": this.nationalId
+                  "value":this.authService.getNationalNumber(),
                 }
               })
           };
@@ -142,85 +114,143 @@ export class FormComponent implements OnInit {
 
       this.serviceId = this.route.snapshot.queryParamMap.get('serviceId')!;
 
+      this.yourTurn=true;
+
+      const serviceName = this.route.snapshot.queryParamMap.get('serviceName');
+
+      this.serviceName=serviceName??"-";
+
       this.GetStepForConsumer();
+     
+    }
+
+  }
+
+  getTextFieldType(tpye:string):string{
+
+    if(tpye=="text"){
+      return "text";
+    }
+    else if(tpye=="integer"){
+      return "number";
+    }
+    else if(tpye=="decimal"){
+      return "number";
+    }
+    else if(tpye=="password"){
+      return "password";
+    }
+    else if(tpye=="date"){
+      return "date";
+    }else{
+      return "text";
+    }
+
+  }
+
+  deleteContainer(indexId: number, containerId: string) {
+
+    if (window.confirm("هل انت متأكد ؟")) {
+      const indexToDelete = this.containers.findIndex(
+        x => x.containerId === containerId && x.index === indexId
+      );
+  
+      if (indexToDelete !== -1) {
+        this.containers.splice(indexToDelete, 1);
+      }
+
+      Object.keys(this.myForm.controls).forEach(controlName => {
+        if (controlName.startsWith(containerId) && controlName.endsWith(`#${indexId}`)) {
+          this.myForm.removeControl(controlName);
+        }
+      });
+
+    }
+  }
+
+  addContainerItems(containerUi:Field){
+
+    var containerId=containerUi.id;
+
+    if(this.containers.length>0){
+      var maxIndex=Math.max(...this.containers.filter(y=>y.containerId==containerId).map(item => item.index));
+  
+      var container=this.containers.filter(x=>x.containerId==containerId)[0];
+  
+      this.containers.push(new Container(containerId,container.containerFields,maxIndex+1));
+  
+      container.containerFields.map(containerField=>{
+        this.myForm.addControl(containerField.id+`#${maxIndex+1}`,new FormControl(containerField.value??""));
+      });
+    }
+
+  }
+
+
+  generateContainer(containerUI:Field){
+
+    this.myForm.addControl(containerUI.id, new FormControl(""));
+    
+
+    var fieldValuesArr=containerUI.value as any[];
+
+    if(fieldValuesArr.length>0){
+
+      fieldValuesArr.map((fieldValue,fieldValueindex)=>{
+
+        var index=this.containers.filter(x=>x.containerId==containerUI.id).length+1;
+
+        this.containers.push(new Container(containerUI.id,containerUI.fields!,index));
+
+        var fieldValueItems=fieldValue as any[];
+
+        fieldValueItems.map(item=>{
+
+          containerUI.fields?.map((fieled)=>{
+
+            if(item.fieldId==fieled.id){
+
+              this.addField(fieled,fieled.id+`#${index}`,item.value);
+            }
+
+          });
+
+
+        })
+
+
+      });
+
+    }else{
+
+
+      var containerFields = containerUI.fields;
+
+      this.containers?.push(new Container(containerUI.id, containerFields!, 1));
+  
+      containerFields!.forEach((containerField) => {
+
+  
+        this.addField(containerField,containerField.id+"#1",containerField.value);
+        
+      });
+  
+      this.myForm.addControl(containerUI.id, new FormControl(containerUI.value ?? ""));
 
     }
 
   }
 
-  addContainerItems(containerId:string){
-
-    var maxIndex=Math.max(...this.containers.filter(y=>y.containerId==containerId).map(item => item.index));
-
-    var container=this.containers.filter(x=>x.containerId==containerId && x.index==1)[0];
-
-    this.containers.push(new Container(containerId,container.containerFields,maxIndex+1));
-
-    container.containerFields.map(containerField=>{
-      this.myForm.addControl(containerField.id+`#${maxIndex+1}`,new FormControl(containerField.value??""));
-    });
-
-  }
-
   GetStepForConsumer(){
-    var request=this.apiService.get(`carboncopies/GetStepForConsumer?userId=${this.nationalId}&serviceId=${this.serviceId}`)
+    
+    var request=this.apiService.get(`carboncopies/GetStepForConsumer?serviceId=${this.serviceId}`)
     request.subscribe(res=>{
 
       if(res.statusCode==200){
-        var apiFields=res.data.fields as any[];
 
-        apiFields.map( x =>{
-          const field = <Field>x;
-          this.fields.push(field);
-        });
+        this.generateField(res,false);
+        this.onParentChange();
 
-  
-        this.fields.map(field=>{
-          if(field.type=='CHECBOX'){
-            this.myForm.addControl(field.id,new FormControl(Boolean(field.value)));
-          }
-          else if(field.type=='PREDEFINED_COMBO_BOX'){
-            this.myForm.addControl(field.id,new FormControl(field.value??""));
-          }
-          else if(field.type=='COMBO_BOX'){
-            this.myForm.addControl(field.id,new FormControl(field.value??""));
-          }
-          else if(field.type=='EFAWATEERCOM'){
-
-            var fields=field.fields!;
-
-            this.myForm.addControl(field.id,new FormControl(field.value??""));
-
-            fields.forEach(ef_field => {
-
-              this.myForm.addControl(ef_field.id,new FormControl(ef_field.value??""));
-              
-
-            });
-
-          }
-          else if(field.type=='CONTAINER'){
-
-            var containerFields=field.fields as any[];
-
-            this.containers?.push(new Container(field.id,containerFields,1));
-
-            containerFields.forEach((containerField)  => {
-      
-              var controlName=containerField.id+"#1";
-
-              this.myForm.addControl(controlName,new FormControl(containerField.value??""));
-            });
-
-            this.myForm.addControl(field.id,new FormControl(field.value??""));
-          }
-
-          else{
-            this.myForm.addControl(field.id,new FormControl(field.value));
-          }
-          
-        });
-  
         this.isLoading=false;
       }else{
         this.isLoading=false;
@@ -229,14 +259,131 @@ export class FormComponent implements OnInit {
 
     });
 
-    console.log(this.myForm);
+  }
+
+  private generateField(res: any,refresh:boolean) {
+    var apiFields = res.data.fields as any[];
+
+    apiFields.map(x => {
+      const field = <Field>x;
+
+      field.oldRequired=field.required;
+      field.oldEditable=field.editable;
+      field.oldHidden=field.hidden;
+      field.oldModifiable=field.modifiable;
+      
+      this.fields.push(field);
+    });
+
+    this.fields.map(field => {
+      this.addField(field,field.id,field.value);
+    });
 
   }
 
+
+
+  private addField(field: Field,fieldId:string,value:any) {
+    if (field.type == 'CHECBOX') {
+      this.generateCheckbox(field,fieldId,value);
+    }
+    else if (field.type == 'PREDEFINED_COMBO_BOX') {
+      this.generatePredefinedComboBox(field,fieldId,value);
+    }
+    else if (field.type == 'COMBO_BOX') {
+      this.generateComboBox(field,fieldId,value);
+    }
+    else if (field.type == 'TEXT_FIELD') {
+      this.generateTextField(field,fieldId,value);
+    }
+    else if (field.type == 'FILE') {
+      this.generateFile(field,fieldId,value);
+    }
+    else if (field.type == 'EFAWATEERCOM') {
+
+      this.generateEfawateercom(field);
+
+    }
+    else if (field.type == 'CONTAINER') {
+
+      this.generateContainer(field);
+
+    }
+    else if (field.type == 'WEBVIEW') {
+
+      this.showSubmit=false;
+      this.generateOther(field,fieldId,field.value);
+
+    }
+    else {
+      this.generateOther(field,fieldId,value);
+    }
+  }
+
+
+  
+
+  private generateEfawateercom(field: Field) {
+    var fields = field.fields!;
+
+    this.payment = true;
+
+    this.myForm.addControl(field.id, new FormControl(field.value ?? ""));
+
+    fields.forEach(field => {
+
+      this.myForm.addControl(field.id, new FormControl(field.value ?? ""));
+
+    });
+
+    var x=this.myForm.get('') as FormControl;
+  }
+
+  private generateFile(field: Field,fieldId:string,value:any[]|null) {
+
+
+    this.myForm.addControl(fieldId, new FormControl());
+
+    if(value!=null){
+      var files=value as any[];
+  
+      if(files.length>0){
+        files.map(file=>{
+          this.pubshFile(fieldId,file,"");
+        });
+      }
+    }
+  }
+
+  private generateComboBox(field: Field,fieldId:string,value:any) {
+    this.myForm.addControl(fieldId, new FormControl(value ?? null));
+  }
+
+  private generateTextField(field: Field,fieldId:string,value:any) {
+
+    this.myForm.addControl(fieldId, new FormControl(value ?? null));
+  }
+
+  private generateOther(field: Field,fieldId:string,value:any) {
+    this.myForm.addControl(fieldId, new FormControl(value ?? null));
+  }
+
+  private generatePredefinedComboBox(field: Field,fieldId:string,value:any) {
+    this.myForm.addControl(fieldId, new FormControl(value ?? null));
+  }
+
+  private generateCheckbox(field: Field,fieldId:string,value:any) {
+    this.myForm.addControl(fieldId, new FormControl(Boolean(value)));
+  }
+
   Save() {
+
+
+    console.log(this.myForm);
+
     this.submitted = true;
 
-    if(this.route.snapshot.queryParams['serviceId']){
+    if(this.route.snapshot.queryParams['serviceId'] && this.payment==true){
       var body={
         "serviceId": this.serviceId,
         "status": true
@@ -246,7 +393,7 @@ export class FormComponent implements OnInit {
 
       request.subscribe(res=>{
         if(res.statusCode==200){
-          this.sweetAlertService.ShowAlert('success', res.message ?? "paymet success");
+          this.sweetAlertService.ShowAlertThenRedirect('success', res.message ?? "paymet success", '/Investment/Dashboard');
         }
       })
 
@@ -261,11 +408,11 @@ export class FormComponent implements OnInit {
       const formValues = this.getFormValues();
   
       const body = {
-        userId: this.nationalId,
+        userId: this.authService.getNationalNumber(),
         serviceId: `${this.serviceId}`,
         values: formValues,
       };
-  
+
       this.apiService.post('carboncopies/PostDataForConsumer', body)
         .subscribe(response => {
           const data = response.data;
@@ -274,19 +421,75 @@ export class FormComponent implements OnInit {
             this.isLoading = false;
   
             if (data.continue === false) {
-              this.sweetAlertService.ShowAlertThenRedirect('success', response.message, '/');
+
+              this.message=response.message;
+              //$("#exampleModalBtn").click();
+
+              this.sweetAlertService.ShowAlertThenRedirect('success', response.message, '/Investment/Dashboard');
             } else {
               this.removeFormControls();
               this.GetStepForConsumer();
             }
           }
-  
-          console.log(response);
+          else{
+
+            this.isLoading = false;
+
+            this.sweetAlertService.ShowAlertThenRedirect('error','حدث خطأ ما يرجى المحاولة مره اخرى','Investment/Dashboard');
+
+          }
         });
-    } else {
+    } else {      
+
       console.log(this.myForm);
     }
   }
+
+  updateValidation(): void {
+    Object.keys(this.myForm.controls).forEach(controlName => {
+      const control = this.myForm.controls[controlName];
+      // Mark the control as untouched and update its validity
+      control.markAsUntouched();
+      control.updateValueAndValidity();
+    });
+  }
+
+  // validateCheckbox(control: AbstractControl): ValidationErrors | null {
+  //   if (control.value === true) {
+    
+  //     return null; // Checkbox is checked, no error
+  //   } else {
+  //     return { checkboxRequired: true }; // Checkbox is not checked, return an error
+  //   }
+  // }
+
+  hasRequiredValidator(controlName: string): boolean {
+    const control = this.myForm.get(controlName);
+    if (control) {
+      const validators = control.validator && control.validator({} as AbstractControl);
+      return validators ? validators.hasOwnProperty('required') : false;
+    }
+    return false;
+  }
+
+  getFormControl(fieldId: string): FormControl | null {
+    const control = this.myForm.get(fieldId);
+    if (control instanceof FormControl) {
+      return control;
+    }
+    return null;
+  }
+
+  getFormControlErrors(fieldId: string): ValidationErrors {
+    const control = this.myForm.get(fieldId);
+    return control?.errors!;
+  }
+
+  getFormControlValidation(fieldId: string): boolean {
+    const control = this.myForm.get(fieldId);
+    return control?.invalid!;
+  }
+
   
   getFormValues(): formBody[] {
     const formValues: formBody[] = [];
@@ -307,6 +510,7 @@ export class FormComponent implements OnInit {
   }
   
   getControlValue(field: Field): FieldInfo {
+
     const control = this.myForm.get(field.id);
     let controlValue = null;
 
@@ -318,9 +522,18 @@ export class FormComponent implements OnInit {
         controlValue = String(control!.value);
         break;
 
+      case 'MULTI_COMBO_BOX':
+
+        controlValue = control!.value as any[];
+
+        fieldType="LIST_OF_STRING";
+
+        break;
+
       case 'FILE':
 
-        controlValue = this.getFileValue(field);
+        controlValue = this.getFileValue(field.id) as any[]|null;
+
         fieldType="FILE";
 
         break;
@@ -336,6 +549,7 @@ export class FormComponent implements OnInit {
         fieldType="CONTAINER";
 
         break;
+
       default:
         controlValue = control!.value;
     }
@@ -343,49 +557,53 @@ export class FormComponent implements OnInit {
     return new FieldInfo(controlValue,fieldType);
   }
   
-  getFileValue(field: Field): any[] | null {
-    const file = this.files.find(x => x.controlName === field.id);
-    return file ? [file.fileBase64 ?? null] : [];
+  getFileValue(fieldId: string): string[] {
+    const filesBase64: string[] = this.files
+      .filter(file => file.controlName === fieldId)
+      .map(file => file.fileBase64);
+  
+    return filesBase64;
+  }
+
+  goToUrl(url:string){
+    window.open(url, '_blank');
   }
   
-  getContainerValue(field: Field): any[] {
+  getContainerValue(field: Field): formBody[][] {
     const containerItems = this.containers.filter(x => x.containerId === field.id);
-    const containerValue: any[] = [];
+    const containerValue: formBody[][] = [];
   
     containerItems.forEach(containerItem => {
       const fields: formBody[] = [];
   
       containerItem.containerFields.forEach(field => {
         const formField = this.myForm.get(`${field.id}#${containerItem.index}`);
+        let fieldType = this.getFieldType(field.type);
+  
+        let fieldValue: any;
 
-
-        var fieldType=this.getFieldType(field.type);
+        console.log(field);
   
         switch (field.type) {
+          case 'MULTI_COMBO_BOX':
 
-          case 'TEXT_FIELD':
-            break;
-
-          case 'FILE':
-
-            fieldType="FILE";
-
+            fieldType = "LIST_OF_STRING";
+            fieldValue = formField?.value;
+            
             break;
           case 'CHECKBOX':
-
-            fieldType="BOOLEAN";
-
+            fieldType = "BOOLEAN";
+            fieldValue = this.checkCbValue(field.id);
             break;
-          case 'CONTAINER':
-
-            fieldType="CONTAINER";
-
+          case 'FILE':
+            fieldType = "FILE";
+            fieldValue = this.getFileValue(`${field.id}#${containerItem.index}`);
             break;
+          // Add more cases for other field types if needed
           default:
+            fieldValue = formField?.value;
         }
-
-        const fieldValue = field.type === 'CHECKBOX' ? this.checkCbValue(field.id) : formField?.value;
-
+  
         fields.push(new formBody(fieldType, field.id, fieldValue));
       });
   
@@ -393,15 +611,20 @@ export class FormComponent implements OnInit {
     });
   
     return containerValue;
-  }
-  
+  }  
 
   getFieldType(basicType:string):string{
+
+    
     switch (basicType) {
 
       case 'TEXT_FIELD':
 
         return 'STRING';
+
+      case 'MULTI_COMBO_BOX':
+
+        return "LIST_OF_STRING";
 
       case 'FILE':
 
@@ -429,6 +652,10 @@ export class FormComponent implements OnInit {
       this.fields = [];
       this.myForm.removeControl(controlName);
     });
+
+    this.containers=[];
+    this.files=[];
+
   }
 
 
@@ -443,5 +670,238 @@ export class FormComponent implements OnInit {
   }
 
 
+  refreshForm(fieldId: string, shouldRefresh: boolean): void {
+
+    if (shouldRefresh) {
+      this.isLoading = true;
+  
+      const formValues = this.getFormValues();
+  
+      const filteredFormValues = formValues.filter(x => x.value !== null && x.value !== undefined && x.value !== "" && x.value !== "null");
+  
+      const body = {
+        userId: this.authService.getNationalNumber(),
+        serviceId: this.serviceId,
+        fieldId,
+        values: filteredFormValues,
+      };
+  
+      this.apiService.post('carboncopies/RefreshStep', body).subscribe(
+        (res: any) => {
+  
+          if (res.statusCode === 200) {
+            this.removeFormControls();
+
+            this.generateField(res, true);
+            
+          } else {
+
+            alert(res.message);
+          }
+  
+          this.isLoading = false;
+          this.onParentChange();
+
+        },
+        (error: any) => {
+          this.isLoading = false;
+          console.error('Error refreshing form:', error);
+        }
+      );
+    } else {
+      this.onParentChange();
+    }
+  }
+
+  refreshForm2(event:any): void {
+
+    if (event.shouldRefresh) {
+      this.isLoading = true;
+  
+      const formValues = this.getFormValues();
+  
+      const filteredFormValues = formValues.filter(x => x.value !== null && x.value !== undefined && x.value !== "" && x.value !== "null");
+  
+      const body = {
+        userId: this.authService.getNationalNumber(),
+        serviceId: this.serviceId,
+        fieldId:event.fieldId,
+        values: filteredFormValues,
+      };
+  
+      this.apiService.post('carboncopies/RefreshStep', body).subscribe(
+        (res: any) => {
+  
+          if (res.statusCode === 200) {
+            this.removeFormControls();
+
+            this.generateField(res, true);
+            
+          } else {
+
+            alert(res.message);
+          }
+  
+          this.isLoading = false;
+          this.onParentChange();
+
+        },
+        (error: any) => {
+          this.isLoading = false;
+          console.error('Error refreshing form:', error);
+        }
+      );
+    } else {
+      this.onParentChange();
+    }
+  }
+
+  
+  onParentChange(): void {
+
+    this.updateValidation();
+    
+    this.fields.filter((field) => field.parent != null).map((field) => {
+      const data = this.getConditionType(field.parent!.condition);
+
+
+      if (data === true) {
+        field.hidden = field.parent?.hidden;
+        field.required = field.parent?.required!;
+        field.editable = field.parent?.editable;
+
+        if(field.type=="CONTAINER"){
+          field.modifiable=field.parent?.editable;
+        }
+        
+      } else {
+        field.hidden = field.oldHidden;
+        field.required = field.oldRequired!;
+        field.editable = field.oldEditable!;
+
+        if(field.type=="CONTAINER"){
+          field.modifiable = field.oldModifiable!;
+        }
+
+      }
+
+    });
+  }
+  
+  
+  getConditionType(condition: any): any {
+    switch (condition.type) {
+      case ConditionType.Operation:
+        return this.conditionLogicOperation(condition);
+      case ConditionType.Input:
+        return this.inputLogicOperation(condition);
+      case ConditionType.UI:
+        return this.uiLogicOperation(condition);
+      default:
+        return false;
+    }
+  }
+
+  //good code
+  conditionLogicOperation(data:any):boolean{
+
+    var right=this.getConditionType(data.right);
+    var left=this.getConditionType(data.left);
+
+    switch (data.operation) {
+      case "AND":
+        return right && left;
+      case "OR":
+        return right || left;
+      case "EQUAL":
+
+        return right == left;
+
+      case "NOT_EQUAL":
+        
+      return right != left;
+
+      case "GREATER_THAN":
+          return left >= right;
+        case "GREATER":
+          return left > right;
+        case "LESS_THAN":
+          return left <= right;
+        case "LESS":
+          return left < right;
+
+      default:
+        return false;
+    }
+  }
+
+//good code
+  inputLogicOperation(conditionLogicInput:any):any{
+
+    switch (conditionLogicInput.inputType) {
+      case "integer":
+        return parseInt(conditionLogicInput.input);
+      case "number":
+        return parseFloat(conditionLogicInput.input);
+      case "boolean":
+        return conditionLogicInput.input.toLowerCase() === 'true';
+      case "string":
+        return conditionLogicInput.input;
+      default:
+        return conditionLogicInput.input;
+    }
+
+  }
+
+//good code
+  uiLogicOperation(conditionLogicUI:any):any{
+    
+    var controlValue=this.myForm.get(conditionLogicUI.fieldId!);
+
+
+    return controlValue?.value;
+  }
+
+  GetContainerItems(containerId:string):Container[]{
+
+    var filterdContainer=this.containers.filter(x=>x.containerId==containerId);
+    return filterdContainer;
+  }
+
+  onUploadFile(controlName:string,event:any,multi:boolean){
+
+    if(multi==false && this.getFiles(controlName).length>0){
+      this.sweetAlertService.ShowAlert('error','you can upload 1 file only');
+      return;
+    }
+
+  
+    const reader = new FileReader();
+    var file=event.target.files[0];
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      const base64String = reader.result as string;
+
+      const base64WithoutPrefix = base64String?.substring(base64String.indexOf(',') + 1);
+
+      this.pubshFile(controlName, base64WithoutPrefix, file);
+
+    };
+
+    event.target.value='';
+  }
+
+  private pubshFile(controlName: string, base64WithoutPrefix: string, fileName: string) {
+    this.files.push(new FileModel(this.files.length + 1, controlName, base64WithoutPrefix, fileName));
+  }
+
+  getFiles(controlName:string):FileModel[]{
+    return this.files.filter(x=>x.controlName==controlName);
+  }
+
+  deleteFile(fileId:number){
+    this.files=this.files.filter(x=>x.id!=fileId);
+  }
 
 }

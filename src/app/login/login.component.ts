@@ -2,6 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/services/apiService';
+import { AuthService } from 'src/services/auth.service';
 import { SweetAlertService } from 'src/services/sweetAlertService';
 
 @Component({
@@ -15,7 +16,7 @@ export class LoginComponent {
   password: string|undefined;
 
   constructor(private apiService:ApiService,private route: ActivatedRoute,
-    private sweetAlertService:SweetAlertService
+    private sweetAlertService:SweetAlertService,private authService: AuthService
     ) {
       
     }

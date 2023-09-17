@@ -1,193 +1,204 @@
+<div class="overlay-wrapper" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
 <main id="content" role="main" class="main">
 
     <div class="content container">
-    <div dir="rtl">
+        <div dir="rtl">
+        </div>
+        <div class="row" dir="rtl">
+
+
+            <div class="col-lg-4 mb-3 mb-lg-5">
+
+                <div class="card h-100">
+
+                    <div class="card-header card-header-content-between">
+                        <h3 class="card-header-title fw-normal">الشركات</h3>
+
+                        <div class="dropdown">
+                            <a class="btn btn-white btn-sm" href="/Form?BluePrintId=64f456164b6d4c716b97d8f3&SectionId=64f0e1dc666ecc198cf6cbed"><i class="bi-plus-lg"></i> إضافة
+                                شركة</a>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+                        <p>أضف شركة لملفك الشخصي للإستفادة من الخدمات الإلكترونية</p>
+                        <ul class="list-group list-group-flush list-group-no-gutters">
+
+                            <li class="list-group-item" *ngFor="let item of compaines">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <span class="avatar avatar-success avatar-circle">
+                                            <span class="avatar-initials fw-normal">فعالة</span>
+                                        </span>
+                                    </div>
+                                    <div class="flex-grow-1 me-3 ms-3" >
+                                        <div class="row align-items-center">
+                                            <div class="col" >
+                                                <h5 class="mb-0"> {{item?.value}}</h5>
+                                                <span class="d-block fs-6 text-body">ذات مسؤولية محدودة</span>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <a class="btn fw-bold btn-primary btn-sm"
+                                                    href="/Investment/CompanyInfo?id={{item?.key}}">عرض <i
+                                                        class="bi-box-arrow-up-left ms-1"></i></a>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-8 mb-3 mb-lg-5">
+                <div class="card h-100">
+
+                    <div class="card-header card-header-content-between">
+                        <h3 class="card-header-title fw-normal">آخر الطلبات المقدمة </h3>
+
+                        <div class="dropdown">
+                            <a class="btn btn-white btn-sm" href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a"><i
+                                    class="bi-plus-lg"></i> طلب جديد</a>
+                        </div>
+
+                    </div>
+
+                    <div class="tabs-wrapper">
+                        <ul class="nav-tabs justify-content-center pb-2">
+                          <li class="nav-item tab is-active" data-role="tab" data-target="#tabs-home3">
+                            الطلبات غير المنتهية
+                          </li>
+                      
+                          <li class="nav-item tab" data-role="tab" data-target="#tabs-profile3">
+                            الطلبات المنتهية
+                          </li>
+        
+                        </ul>
+                      
+                        <div class="tab-content">
+                          <div class="tab-panel is-active" id="tabs-home3">
+                            
+                            <div class="card-body card-body-height p-0">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr class="text-center">
+                                                <th class="fs-5">رقم المعاملة</th>
+                                                <th class="fs-5">الطلب</th>
+                                                <th class="fs-5">الحالة</th>
+                                                <th class="fs-5">تاريخ الإستلام</th>
+                                                <th class="fs-5"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            <tr class="" *ngFor="let item of currentServices">
+                                                <td class="order-md-1">
+                                                    <span class="mb-0">{{item?.applicationNumber}}</span>
+                                                </td>
+                                                <td class="order-md-2">
+                                                    <h5 style="white-space: pre-line;width: 100px; ">
+                                                        {{item?.name}}
+                                                    </h5>
+                                                </td>
+                                                <td class="order-md-3">
+                                                    <span style="white-space: pre-line;width: 100px; " class="badge bg-soft-warning text-warning rounded-pill fs-5">
+                                                        {{item?.status}}
+                                                    </span>
+                                                </td>
+                                                <td class="order-md-4">
+                                                    <span>
+                                                        {{item?.createdDate|date:'dd/MM/yyyy'}}
+                                                     </span>
+                                                </td>
+                                                <td class="order-md-4">
+        
+                                                    <ng-container *ngIf="item.yourTurn==true" >
+                                                        <a class="btn btn-white btn-sm py-1 px-4"
+                                                            href="/Form?serviceId={{item?.id}}&serviceName={{item?.name}}">استكمال</a>
+        
+                                                    </ng-container>
+        
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                          </div>
+                          <div class="tab-panel" id="tabs-profile3">
+                            
+                            <div class="card-body card-body-height p-0">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr class="text-center">
+                                                <th class="fs-5">رقم المعاملة</th>
+                                                <th class="fs-5">الطلب</th>
+                                                <th class="fs-5">الحالة</th>
+                                                <th class="fs-5">تاريخ الإستلام</th>
+                                                <th class="fs-5"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            <tr class="justify-content-center align-middle" *ngFor="let item of archiveService">
+                                                <td class="order-md-1">
+                                                    <span class="mb-0">{{item?.applicationNumber}}</span>
+                                                </td>
+                                                <td class="order-md-2">
+                                                    <h5 style="white-space: pre-line;width: 100px; ">
+                                                        {{item?.name}}
+                                                    </h5>
+                                                </td>
+                                                <td class="order-md-3">
+                                                    <span style="white-space: pre-line;width: 100px; " [ngClass]="item.typeStatus==2?'bg-soft-danger text-danger':'bg-soft-success text-success'" class="badge rounded-pill fs-5">
+                                                        {{item?.status}}
+                                                    </span>
+                                                </td>
+                                                <td class="order-md-4">
+                                                    <span >
+                                                        {{item?.createdDate|date:"dd/MM/yyyy"}}
+                                                     </span>
+                                                </td>
+                                                <td class="order-md-4">
+        
+                                                    <span *ngIf="item.typeStatus==2">
+                                                        <i class="fa fa-eye text-primary" role="button" (click)="showRejectedType(item.id)"></i>
+                                                    </span>
+        
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                          </div>
+        
+                        </div>
+                      
+                      </div>
+
+
+                  
+
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="row" dir="rtl">
-    <div class="col-lg-5 mb-3 mb-lg-5">
-    
-    <div class="card h-100">
-     
-    <div class="card-header card-header-content-between">
-    <h3 class="card-header-title fw-normal">الشركات</h3>
-    
-    <div class="dropdown">
-    <a class="btn btn-white btn-sm" href="/ar/companies/create"><i class="bi-plus-lg"></i> إضافة شركة</a> </div>
-    
-    </div>
-    
-    
-    <div class="card-body">
-    <p>أضف شركة لملفك الشخصي للإستفادة من الخدمات الإلكترونية</p>
-    <ul class="list-group list-group-flush list-group-no-gutters">
-    
-    <li class="list-group-item">
-    <div class="d-flex">
-    <div class="flex-shrink-0">
-    <span class="avatar avatar-success avatar-circle">
-    <span class="avatar-initials fw-normal">فعالة</span>
-    </span>
-    </div>
-    <div class="flex-grow-1 me-3 ms-3">
-    <div class="row align-items-center">
-    <div class="col">
-    <h5 class="mb-0"> اراس للبرمجة </h5>
-    <span class="d-block fs-6 text-body">ذات مسؤولية محدودة</span>
-    </div>
-    
-    <div class="col-auto">
-    <a class="btn fw-bold btn-primary btn-sm" href="/ar/companies/view?id=2056">عرض <i class="bi-box-arrow-up-left ms-1"></i></a>
-    </div>
-    
-    </div>
-    
-    </div>
-    </div>
-    </li>
-    
-     </ul>
-    </div>
-    
-    </div>
-    
-    </div>
-    
-    <div class="col-lg-7 mb-3 mb-lg-5">
-    <div class="card h-100">
-    
-    <div class="card-header card-header-content-between">
-    <h3 class="card-header-title fw-normal">آخر الطلبات المقدمة </h3>
-    
-    <div class="dropdown">
-    <a class="btn btn-white btn-sm" href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a"><i class="bi-plus-lg"></i> طلب جديد</a> </div>
-    
-    </div>
-    
-    
-    <div class="card-body card-body-height p-0">
-    <div class="table-responsive">
-    <table class="table">
-    <thead class="thead-light">
-    <tr class="text-center">
-    <th class="fs-5">رقم المعاملة</th>
-    <th class="fs-5">الطلب</th>
-    <th class="fs-5">الحالة</th>
-    <th class="fs-5">تاريخ الإستلام</th>
-    <th class="fs-5"></th>
-    </tr>
-    </thead>
-    <tbody class="text-center">
-    <tr class="justify-content-center align-middle">
-    <td class="col-md-2 order-md-1">
-    <span class="mb-0">2023150031</span>
-    </td>
-    <td class="col-md-6 order-md-2">
-    <span>خدمة إعفاء مدخلات الإنتاج للمؤسسات المسجلة خارج المناطق التنموية اعفاء اول مرة (جديد)</span>
-    </td>
-    <td class="col-md-2 order-md-3">
-    <span class="badge bg-soft-warning text-warning rounded-pill fs-6">قيد المراجعة</span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <span>
-    - </span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <a class="btn btn-ghost-primary py-1 px-4" href="/ar/requests/view?id=2023150031">عرض</a> </td>
-    </tr>
-    <tr class="justify-content-center align-middle">
-    <td class="col-md-2 order-md-1">
-    <span class="mb-0">2023150030</span>
-    </td>
-    <td class="col-md-6 order-md-2">
-    <span>الحصول على طلب الاستفادة من الاعفاء من الرسوم الجمركية بالاستناد إلى المادة (9/أ) من القانون</span>
-    </td>
-    <td class="col-md-2 order-md-3">
-    <span class="badge bg-soft-warning text-warning rounded-pill fs-6">قيد المراجعة</span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <span>
-    - </span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <a class="btn btn-ghost-primary py-1 px-4" href="/ar/requests/view?id=2023150030">عرض</a> </td>
-    </tr>
-     <tr class="justify-content-center align-middle">
-    <td class="col-md-2 order-md-1">
-    <span class="mb-0">2023150029</span>
-    </td>
-    <td class="col-md-6 order-md-2">
-    <span>الحصول على طلب الاستفادة من الإخضاع لضريبة المبيعات بنسبة الصفر بالاستناد إلى الجدول الصادر بموجب المادة (9/ب) من القانون</span>
-    </td>
-    <td class="col-md-2 order-md-3">
-    <span class="badge bg-soft-warning text-warning rounded-pill fs-6">قيد المراجعة</span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <span>
-    - </span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <a class="btn btn-ghost-primary py-1 px-4" href="/ar/requests/view?id=2023150029">عرض</a> </td>
-    </tr>
-    <tr class="justify-content-center align-middle">
-    <td class="col-md-2 order-md-1">
-    <span class="mb-0">2023150028</span>
-    </td>
-    <td class="col-md-6 order-md-2">
-    <span>خدمة اعفاءات للمؤسسات المسجلة في المناطق التنموية والمناولة</span>
-    </td>
-    <td class="col-md-2 order-md-3">
-    <span class="badge bg-soft-warning text-warning rounded-pill fs-6">قيد المراجعة</span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <span>
-    - </span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <a class="btn btn-ghost-primary py-1 px-4" href="/ar/requests/view?id=2023150028">عرض</a> </td>
-    </tr>
-    <tr class="justify-content-center align-middle">
-    <td class="col-md-2 order-md-1">
-    <span class="mb-0">2023150027</span>
-    </td>
-    <td class="col-md-6 order-md-2">
-    <span>خدمة التحويل من مستورد الى محلي أو بالعكس بموجب قرارات مجلس الوزراء بالاستناد للمادة( 8/أ )من قانون الاستثمار</span>
-    </td>
-    <td class="col-md-2 order-md-3">
-    <span class="badge bg-soft-warning text-warning rounded-pill fs-6">قيد المراجعة</span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <span>
-    - </span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <a class="btn btn-ghost-primary py-1 px-4" href="/ar/requests/view?id=2023150027">عرض</a> </td>
-    </tr>
-    <tr class="justify-content-center align-middle">
-    <td class="col-md-2 order-md-1">
-    <span class="mb-0">2023150026</span>
-    </td>
-    <td class="col-md-6 order-md-2">
-    <span>الحصول على إعفاءات و الحوافز الممنوحة بموجب قرارات مجلس الوزراء بالاستناد للمادة (8/أ) من قانون الاستثمار إضافي</span>
-    </td>
-    <td class="col-md-2 order-md-3">
-    <span class="badge bg-soft-warning text-warning rounded-pill fs-6">قيد المراجعة</span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <span>
-    - </span>
-    </td>
-    <td class="col-md-2 order-md-4">
-    <a class="btn btn-ghost-primary py-1 px-4" href="/ar/requests/view?id=2023150026">عرض</a> </td>
-    </tr>
-    </tbody>
-    </table>
-    </div>
-    </div>
-    
-    </div>
-    </div>
-    
-    </div>
-    </div>
-    
-    </main>
+
+</main>
+

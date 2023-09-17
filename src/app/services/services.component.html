@@ -1,38 +1,4 @@
-<!-- <div class="container-fluid dashboard-content ">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <h3 class="card-header"> الخدمات </h3>
-                <div class="card-body row">
 
-                    <div class="our_solution_category">
-                        <div class="solution_cards_box row">
-                            <ng-container *ngFor="let item of services">
-                                
-                                <div class="col-md-4 col-12">
-                                    <div role="button" (click)="goToForm(item.id)">
-                                        <div class="solution_card">
-                                            <div class="hover_color_bubble"></div>
-                                            <div class="so_top_icon">
-                                                <img  id="Layer_1" src="../../assets/images/royal.png">
-                                            </div>
-                                            <div class="solu_title">
-                                              <h3>{{item.name}}</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                  
-                            </ng-container>
-                            
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 
 <main id="content" role="main" class="main">
@@ -42,20 +8,22 @@
             <nav aria-label="breadcrumb">
                 <ol id="w0" class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
-                    <li class="breadcrumb-item"><a href="/ar/services">الخدمات الإلكترونية</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">التسجيل والترخيص</li>
+                    <li class="breadcrumb-item"><a href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a">الخدمات الإلكترونية</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{sectionName}}
+                    </li>
                 </ol>
             </nav>
         </div>
         <div class="row row-cols-md-4 mb-10" dir="rtl">
             <div class="col mb-3 mb-lg-5" *ngFor="let item of services">
 
-                <div (click)="goToForm(item.id)" >
+                <div >
                     <div class="card card-hover-shadow text-center h-100">
 
                         <div class="card-progress-wrap">
                             <div class="progress card-progress">
-                                <div class="progress-bar bg-gold-2" role="progressbar" style="width: 100%"
+                                <div class="progress-bar {{colorArr[index]}}" role="progressbar" style="width: 100%"
                                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
@@ -69,16 +37,16 @@
                             </div>
                             <div class="d-flex justify-content-center mb-2">
 
-                                <img class="avatar avatar-lg" src="../../assets/images/window.png" alt="Image Description">
+                                <img class="avatar avatar-lg" [src]="imagesArr[index]" alt="Image Description">
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-2 {{textColorArr[index]}}">
                                 <h4 class="mb-1">{{item.name}}</h4>
                             </div>
                         </div>
 
                         <div class="card-footer">
 
-                            <button class="btn btn-outline-dark" (click)="goToForm(item.id)"  >تقديم طلب </button>
+                            <button  data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-outline-dark" (click)="openDialog(item.id,item.serviceCard.shouldShow)"  >تقديم طلب </button>
                         </div>
                     </div>
                 </div>
@@ -86,5 +54,25 @@
             </div>
         </div>
     </div>
+
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{serviceCard?.title}}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+              <p [innerHTML]="serviceCard?.description"></p>
+            </div>
+            <div class="modal-footer" style="margin-right: auto;">
+                <button (click)="goToForm(selectedServiceId)" class="btn btn-primary">تقديم الطلب</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 </main>

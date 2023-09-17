@@ -1,30 +1,98 @@
+<div class="overlay-wrapper" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
 <main id="content" role="main" class="main">
-
+    <!-- Content -->
     <div class="content container">
         <div dir="rtl">
-            <nav aria-label="breadcrumb">
-                <ol id="w0" class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">الطلبات</li>
-                </ol>
-            </nav>
-        </div>
-        <div class="row mb-10" dir="rtl">
-            <div class="col-lg-12 mb-3 mb-lg-5">
-                <div class="card h-100">
+            <nav aria-label="breadcrumb"><ol id="w0" class="breadcrumb"><li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
+<li class="breadcrumb-item active" aria-current="page">الطلبات</li>
+</ol></nav>        </div>
+                <div class="row mb-10" dir="rtl">
+    <div class="col-lg-12 mb-3 mb-lg-5">
+        <div class="card h-100">
+            <!-- Header -->
+            <div class="card-header card-header-content-between">
+                <h3 class="card-header-title">الطلبات المقدمة</h3>
 
-                    <div class="card-header card-header-content-between">
-                        <h3 class="card-header-title">الطلبات المقدمة</h3>
+                <!-- Dropdown -->
+                <div class="dropdown">
+                    <a class="btn btn-white btn-sm" href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a"><i
+                        class="bi-plus-lg"></i> طلب جديد</a>
+                </div>
+                <!-- End Dropdown -->
+            </div>
+            <!-- End Header -->
 
-                        <div class="dropdown">
-                            <a class="btn btn-white btn-sm" href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a"> <i class="bi-plus-lg"></i>طلب جديد</a>
-                        </div>
+            <!-- Body -->
 
-                    </div>
+            <div class="tabs-wrapper">
+                    <ul class="nav-tabs justify-content-center pb-2">
+                    <li class="nav-item tab is-active" data-role="tab" data-target="#tabs-home3">
+                      الطلبات غير المنتهية
+                    </li>
+                
+                    <li class="nav-item tab" data-role="tab" data-target="#tabs-profile3">
+                      الطلبات المنتهية
+                    </li>
+  
+                  </ul>
 
-
-                    <div class="card-body p-0">
+                  <div class="tab-content">
+                    <div class="tab-panel card-body p-0  is-active"  id="tabs-home3">
                         <div class="table-responsive">
+                            <table class="table" >
+                                <thead class="thead-light">
+                                <tr class="text-center">
+                                    <th class="fs-5">رقم المعاملة</th>
+                                    <th class="fs-5">الطلب</th>
+                                    <th class="fs-5">الحالة</th>
+                                    <th class="fs-5">تاريخ الإستلام</th>
+                                    <th class="fs-5"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="text-center">
+                               
+                                 <tr class="justify-content-center align-middle" *ngFor="let item of currentServices">
+                                    <td class="col-md-2 order-md-1">
+                                        <span class="mb-0">
+                                            {{item?.applicationNumber}}
+                                        </span>
+                                    </td>
+        
+                                    <td class="col-md-6 order-md-2">
+                                        <h5>
+                                            {{item?.name}}
+                                        </h5>
+                                    </td>
+        
+                                    <td class="col-md-2 order-md-3">
+                                        <span class="badge bg-soft-info text-info rounded-pill fs-5">
+                                            {{item?.status}}
+                                        </span>
+                                    </td>
+        
+                                    <td class="col-md-2 order-md-4">
+                                        <span>
+                                            {{item?.createdDate|date}}          
+                                         </span>
+                                    </td>
+                                    <td class="col-md-2 order-md-4">
+                                        <ng-container *ngIf="item.yourTurn==true" >
+                                            <a class="btn btn-white btn-sm py-1 px-4"
+                                                href="/Form?serviceId={{item?.id}}">استكمال</a>
+        
+                                        </ng-container>
+                                  </td>
+                                </tr>
+                                </tbody>
+                            </table>
+    
+                        </div>
+                    </div>
+    
+                    <div class="tab-panel card-body p-0"  id="tabs-profile3">
+                        <div  class="table-responsive">
                             <table class="table">
                                 <thead class="thead-light">
                                     <tr class="text-center">
@@ -36,44 +104,49 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
-                                    <tr class="justify-content-center align-middle" *ngFor="let item of requests">
+                                    <tr class="justify-content-center align-middle" *ngFor="let item of archiveService">
                                         <td class="col-md-2 order-md-1">
-                                            <span class="mb-0">{{item.id}}</span>
+                                            <span class="mb-0">{{item.applicationNumber}}</span>
                                         </td>
                                         <td class="col-md-6 order-md-2">
                                             <h5>
-                                                {{item.name}}
+                                                {{item?.name}}
                                             </h5>
                                         </td>
                                         <td class="col-md-2 order-md-3">
-                                            <span class="badge bg-soft-warning text-warning rounded-pill fs-5">
-                                                {{item.status}}
+                                            <span [ngClass]="item.typeStatus==2?'bg-soft-danger text-danger':'bg-soft-success text-success'" class="badge rounded-pill fs-5">
+                                                {{item?.status}}
                                             </span>
                                         </td>
                                         <td class="col-md-2 order-md-4">
                                             <span>
-                                                {{item.createdDate|date}}
+                                                {{item?.createdDate|date}}
                                              </span>
                                         </td>
                                         <td class="col-md-2 order-md-4">
-
-                                            <ng-container *ngIf="item.status=='Service under process'" >
+    
+                                            <ng-container *ngIf="item.yourTurn==true" >
                                                 <a class="btn btn-white btn-sm py-1 px-4"
-                                                    href="/Form?serviceId={{item.id}}">عرض</a>
-
+                                                    href="/Form?serviceId={{item?.id}}">استكمال</a>
+    
                                             </ng-container>
-
+    
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
-                </div>
+                  </div>
+               
             </div>
 
+           
+            <!-- End Body -->
         </div>
     </div>
-
+    <!-- End Col -->
+</div>
+    </div>
+    <!-- End Content -->
 </main>

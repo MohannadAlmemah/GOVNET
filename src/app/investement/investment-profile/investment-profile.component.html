@@ -1,3 +1,7 @@
+<div class="overlay-wrapper" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
 <main id="content" role="main" class="main">
 
     <div class="content container">
@@ -10,7 +14,7 @@
     
     <div class="profile-cover">
     <div class="profile-cover-img-wrapper">
-    <img id="profileCoverImg" class="profile-cover-img" src="/img/1920x400/img2.jpg" alt="Image Description">
+    <img id="profileCoverImg" class="profile-cover-img" src="../../../assets/images/profileBackground.jpg" alt="Image Description">
     </div>
     </div>
     
@@ -18,10 +22,12 @@
     <div class="text-center">
     
     <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="editAvatarUploaderModal">
-    <img id="editAvatarImgModal" class="avatar-img" src="/img/160x160/img1.jpg" alt="Image Description">
+    <img id="editAvatarImgModal" class="avatar-img" src="../../../assets/images/user.jpg" alt="Image Description">
     </label>
     
-    <h1 class="page-header-title">احمد ماجد عبد الله ابو طه <i class="bi-patch-check-fill fs-2 text-primary"></i></h1>
+    <h1 class="page-header-title">
+        {{userInfo.fullName}}    
+    <i class="bi-patch-check-fill fs-2 text-primary"></i></h1>
     </div>
     
     
@@ -40,10 +46,10 @@
      <li class="nav-item">
     <a class="nav-link active disabled" href="#">المعلومات الشخصية</a>
     </li>
-    <li class="nav-item me-auto">
+    <!-- <li class="nav-item me-auto">
     <div class="d-flex gap-2">
     <a class="btn btn-white btn-sm" href="/ar/profile/edit"><i class="bi-at me-1"></i> تعديل المعلومات</a> <a class="btn btn-white btn-sm" href="/ar/profile/update"><i class="bi-pencil-square me-1"></i> تغيير كلمة السر</a> </div>
-    </li>
+    </li> -->
     </ul>
     </div>
     
@@ -58,16 +64,23 @@
     <ul class="list-unstyled list-py-2 text-dark mb-0 fs-3">
     <li class="pb-0"><span class="card-subtitle">المعلومات الاساسية</span></li>
     <li><i class="bi-person dropdown-item-icon"></i>
-    احمد ماجد عبد الله ابو طه AHMAD MAJED ABDALLAH ABUTAHA </li>
-    <li><i class="bi-briefcase dropdown-item-icon"></i> 9941051697 </li>
+        {{userInfo?.fullName}}    
+    </li>
+    <li><i class="bi-briefcase dropdown-item-icon"></i> 
+        {{userInfo?.userName}}    
+    </li>
     <li><i class="bi-building dropdown-item-icon"></i> اردني </li>
     </ul>
     </div>
     <div class="col-md-6">
     <ul class="list-unstyled list-py-2 text-dark mb-0 fs-3">
     <li class="pt-4 pb-0"><span class="card-subtitle">معلومات الاتصال</span></li>
-    <li><i class="bi-at dropdown-item-icon"></i> </li>
-    <li><i class="bi-phone dropdown-item-icon"></i> +962770177170</li>
+    <li><i class="bi-at dropdown-item-icon"></i> 
+        {{userInfo?.email}}   
+    </li>
+    <li><i class="bi-phone dropdown-item-icon"></i> 
+        {{userInfo?.phoneNumber}}   
+    </li>
     </ul>
     </div>
     </div>

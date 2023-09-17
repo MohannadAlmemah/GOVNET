@@ -70,13 +70,9 @@
 
 
                     <li class="nav-item me-2 text-end">
-                        <form class="d-flex" action="/ar/site/logout" method="post">
-                            <input type="hidden" name="_csrf-frontend"
-                                value="AoS6eFZQ40hw22WfQ74Ya1q0u-beuJXUb83FS4p6z5Fm7_E0JSOlGByLH8kK7V9eLMbqjofP87wfpqEe4j6l_w=="><button
-                                type="submit" class="hs-mega-menu-invoker nav-link bg-blue border-0"><i
-                                    class="bi-box-arrow-left dropdown-item-icon text-white-50"></i>
-                                تسجيل خروج</button>
-                        </form>
+                        <button (click)="logout()" class="hs-mega-menu-invoker nav-link bg-blue border-0"><i
+                                class="bi-box-arrow-left dropdown-item-icon text-white-50"></i>
+                            تسجيل خروج</button>
                     </li>
 
                 </ul>
@@ -88,8 +84,6 @@
 
 
 <router-outlet></router-outlet>
-
-
 
 
 <footer class="container-fluid text-center bg-blue navbar-dark pt-5 pb-10">

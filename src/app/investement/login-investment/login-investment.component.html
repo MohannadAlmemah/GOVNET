@@ -28,31 +28,31 @@
             <div class="col-lg-6 d-flex justify-content-center align-items-center min-vh-lg-100">
                 <div class="w-100 content-space-t-4 content-space-t-lg-2 content-space-b-1" style="max-width: 25rem;">
 
-                    <form id="login-form" action="/ar/site/login" method="post" dir="rtl">
+                    <form #myForm="ngForm" dir="rtl">
                         <input type="hidden" name="_csrf-frontend"
                             value="sZ9ONHk_X0BSkIisIu4MTD5v44pzUqj8HGR9eMOQ6pPipzh7EkwNBTzm5thrg1g9VyuK3Rc36qxpMDEMreeg1g==">
                         <div class="text-center">
                             <div class="mb-5">
                                 <h1 class="display-4">تسجيل الدخول</h1>
-                                <p>هل أنت مستخدم جديد؟ <a class="link" href="/Investment/SignUp">إنشاء حساب</a> </p>
+                                <p >هل أنت مستخدم جديد؟ <a class="link" href="/Investment/SignUp">إنشاء حساب</a> </p>
                             </div>
                         </div>
 
-                        <div class="mb-4 text-end">
-                            <div class="mb-3 field-loginform-username required">
-                                <label class="form-label" for="loginform-username">الرقم الوطني/الشخصي</label>
-                                <input type="text" id="loginform-username" class="form-control is-invalid"
-                                    name="LoginForm[username]" autofocus="" aria-required="true" aria-invalid="true">
-                                <div class="invalid-feedback">Username لا يمكن تركه فارغًا.</div>
+                        
+
+                        <div class="mb-4">
+                            <div class="mb-3 field-loginform-password required">
+                                <label class="form-label" for="loginform-password">الرقم الوطني</label>
+                                <input type="text" name="username" id="username" [(ngModel)]="username" #username_field="ngModel" class="form-control"  required="true" >
+                                <span class="text-danger" *ngIf="myForm.submitted && !username_field.valid">حقل اجباري!</span>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <div class="mb-3 field-loginform-password required">
                                 <label class="form-label" for="loginform-password">كلمة السر</label>
-                                <input type="password" id="loginform-password" class="form-control"
-                                    name="LoginForm[password]" value="" aria-required="true">
-                                <div class="invalid-feedback"></div>
+                                <input type="password" name="password" id="password" [(ngModel)]="password" #password_field="ngModel" required="true" class="form-control">
+                                <span class="text-danger" *ngIf="myForm.submitted && !password_field.valid">حقل اجباري!</span>
                             </div>
                         </div>
                         <div class="mb-4">
@@ -68,8 +68,8 @@
                         </div>
                         <div class="my-1 mx-0" style="color:#999;">
                             لإستعادة كلمة السر يرجى <a href="Investment/ForgetPassword">طلب إستعادة كلمة السر</a>.
-                            <br>
-                            لم تصلني رسالة التوثيق <a href="/ar/site/resend-verification">إعادة إرسالها</a>
+                            <!-- <br>
+                            لم تصلني رسالة التوثيق <a href="/ar/site/resend-verification">إعادة إرسالها</a> -->
                         </div>
                         <div class="d-grid gap-2 mt-3">
                             <div>
@@ -85,9 +85,11 @@
                                         name="g-recaptcha-response" class="g-recaptcha-response"
                                         style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea>
                                 </div><iframe style="display: none;"></iframe>
-                            </div><button type="submit" class="btn btn-primary btn-lg g-recaptcha" name="login-button"
+                            </div>
+                            <button (click)="login()" class="btn btn-primary btn-lg g-recaptcha" name="login-button"
                                 data-sitekey="6LerqC8kAAAAAL0zr64D5T6_bXZYcbbIOkAQw71y" data-callback="onSubmit"
                                 data-action="submit">تسجيل دخول</button>
+                                
                         </div>
                     </form>
                 </div>

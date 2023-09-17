@@ -1,0 +1,109 @@
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div dir="rtl">
+            <nav aria-label="breadcrumb">
+                <ol id="w1" class="breadcrumb">
+                    <li class="breadcrumb-item">الرئيسية</li>
+                    <li class="breadcrumb-item active" aria-current="page">الطلبات</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="requests-index" dir="rtl">
+
+            <h1>الطلبات</h1>
+
+            <a href="/requests/excel-export">طباعة</a>
+            <div id="w0" class="grid-view">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><a href="/requests/index?requests=&amp;sort=id" data-sort="id">Application Number</a>
+                            </th>
+                            <!-- <th><a href="/requests/index?requests=&amp;sort=categoryTitle"
+                                    data-sort="categoryTitle">المديرية</a></th> -->
+                            <th><a href="/requests/index?requests=&amp;sort=title" data-sort="title">Application
+                                    Type</a></th>
+                            <th><a href="/requests/index?requests=&amp;sort=companyTitle"
+                                    data-sort="companyTitle">المنشأة</a></th>
+                            <!-- <th><a href="/requests/index?requests=&amp;sort=formLabel" data-sort="formLabel">تصنيف
+                                    الخدمة</a></th> -->
+                            <th><a class="desc" href="/requests/index?requests=&amp;sort=status"
+                                    data-sort="status">الحالة</a></th>
+                            <th><a href="/requests/index?requests=&amp;sort=created_at" data-sort="created_at">تاريخ
+                                    التقديم</a></th>
+                            <th><a href="/requests/index?requests=&amp;sort=received_at" data-sort="received_at">تاريخ
+                                    الإستلام</a></th>
+                            <th class="action-column">&nbsp;</th>
+                        </tr>
+                        <tr id="w0-filters" class="filters">
+                            <td><input type="text" class="form-control" name="RequestsSearch[id]"></td>
+                            <td><select class="form-control" name="RequestsSearch[categoryTitle]">
+                                    <option value="">عرض الجميع</option>
+                                    <!-- <option value="" selected="">اسم المديرية</option> -->
+                                    <option value="التسجيل والترخيص">التسجيل والترخيص</option>
+                                    <option value="بطاقة مستثمر">بطاقة مستثمر</option>
+                                    <option value="الحوافز والاعفاءات">الحوافز والاعفاءات</option>
+                                    <option value="المناطق التنموية والحرة">المناطق التنموية والحرة</option>
+                                    <option value="الإقامة والتأشيرات">الإقامة والتأشيرات</option>
+                                    <option value="منح الجنسية الأردنية">منح الجنسية الأردنية</option>
+                                    <option value="المديرية القانونية">المديرية القانونية</option>
+                                    <option value="الموافقة الواحدة">الموافقة الواحدة</option>
+                                    <option value="الصندوق الإستثماري">الصندوق الإستثماري</option>
+                                </select></td>
+                            <td><input type="text" class="form-control" [(ngModel)]="comapny" name="comapny" (input)="search()"></td>
+                            <td><input type="text" class="form-control" name="RequestsSearch[companyTitle]"></td>
+                            <!-- <td><input type="text" class="form-control" name="RequestsSearch[formLabel]"></td> -->
+                            <!-- <td><select class="form-control" name="RequestsSearch[status]">
+                                    <option value="">عرض الجميع</option>
+                                    <option value="" selected="">الحالة</option>
+                                    <option value="9">مكتمل</option>
+                                    <option value="0">مرفوض</option>
+                                    <option value="12">قيد الدراسة</option>
+                                    <option value="13">قيد المراجعة</option>
+                                    <option value="11">بإنتظار الدفع</option>
+                                    <option value="8">بإنتظار الكشف</option>
+                                    <option value="14">مدفوع</option>
+                                </select></td> -->
+                            <td><input type="date" class="form-control" (change)="search()"
+                                    name="createdDate" [(ngModel)]="createdDate" >
+                            </td>
+                            <td><input type="date"  class="form-control" (change)="search()"
+                                    name="endDate" [(ngModel)]="endDate" >
+                            </td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                        <tr *ngFor="let item of requests">
+                            <td>{{item.carbonCopyId}}</td>
+                            <!-- <td>-</td> -->
+                            <td>{{item.serviceName??"(not set)"}}</td>
+                            <td>{{item.establishmentName??"(not set)"}}</td>
+                            <!-- <td>إلكتروني</td> -->
+                            <td><span class="badge bg-soft-success text-dark">
+                                    <span class="legend-indicator bg-success mr-2"></span> 
+                                    {{item.stetus}}
+                                </span></td>
+                            <td>{{item.created|date:"dd/MM/yyyy"}}</td>
+                            <td>{{item.endDate|date:"dd/MM/yyyy"}}</td>
+                            <td><a href="/requests/view?id=2023150423" title="View" aria-label="View" data-pjax="0">
+                                <i class="fa fa-eye text-primary"></i>
+                            </a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <ul class="pagination">
+                    <li class="prev"><span (click)="goPrevIndex()">«</span></li>
+                   
+                    <li [ngClass]="item==currentIndex?'active':null" *ngFor="let item of pages| slice:currentIndex-1:currentIndex+9"><a (click)="updatePagination(item)">{{item}}</a></li>
+                    <li class="next"><a (click)="goNextIndex()" data-page="1">»</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <!-- End Content -->
+</main>

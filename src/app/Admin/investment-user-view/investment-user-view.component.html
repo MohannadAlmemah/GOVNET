@@ -1,0 +1,169 @@
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div dir="rtl">
+            <nav aria-label="breadcrumb">
+                <ol id="w0" class="breadcrumb">
+                    <li class="breadcrumb-item">الرئيسية</li>
+                    <li class="breadcrumb-item"><a href="/Investment/Admin/Users">المستثمرين</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{userInfo?.ar_FullName}}
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div id="create-form" class="row justify-content-center py-7" style="background:url(/img/bg-green-full.png);">
+            <div class="col-md-8 col-12">
+                <div dir="rtl" class="card">
+                    <div class="card-header">
+                        <h2 class="card-title h2">
+                            {{userInfo?.ar_FullName}}
+                        </h2>
+                        <span class="text-start">{{userInfo?.en_FullName}}
+                        </span>
+                        <a class="btn btn-sm btn-warning" href="/user/update?id=45">تعديل</a> <a href="#"
+                            class="float-start" onclick="window.print();">طباعة</a>
+                    </div>
+                    <!-- Body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 mb-4">
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>الرقم الوطني </label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="username"
+                                            value="{{userInfo?.nationalID}}" disabled="disabled">
+                                    </div>
+
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>رقم الهوية</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="national_cardId"
+                                            value="{{userInfo?.idCardNumber}}" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>رقم دفتر العائلة</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="family_no" value="E912799"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>الإقامة</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="resd_info" value="{{userInfo?.residencyPlace}}"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>الحالة الاجتماعية</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="relationship"
+                                            value="{{userInfo?.maritalStatus}}" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>رقم الهاتف</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="mobile" value="+962795404862"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>البريد الإلكتروني</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="email" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-4">
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>تاريخ الميلاد</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="birthdate" value="{{userInfo?.dateOfBirth}}"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>الجنسية</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="nationality" value="{{userInfo?.nationalty}}"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>الجنس</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" value="{{userInfo?.gender}}"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>مكان الولادة</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="birth_city"
+                                            value="{{userInfo?.govOfBirth}}" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>اسم الأم</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="mother" value="{{userInfo?.motherName}}"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>تاريخ الإنتهاء</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="expiry"
+                                            value="{{userInfo?.expiryDate}}" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-sm-4">
+                                        <label>رقم القيد</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="qualifier_id" value="{{userInfo?.recordID}}"
+                                            disabled="disabled">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Body -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Content -->
+</main>
