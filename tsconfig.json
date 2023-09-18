@@ -8,7 +8,7 @@
     "strict": true,
     "noImplicitOverride": true,
     "allowJs": true,
-    "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,

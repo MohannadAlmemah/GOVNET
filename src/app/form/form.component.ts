@@ -43,13 +43,14 @@ export class FormComponent implements OnInit {
   currentIndex=0;
   containers:Container[]=[];
   serviceName:string|undefined;
+  serviceCard:any;
   yourTurn=false;
   payment=false;
 
   showSubmit=true;
   textViewItemArr:any[]=[];
   message:string|undefined;
-
+  showStep="1";
   //9861049531
   constructor(private apiService:ApiService,private route: ActivatedRoute,
     private sweetAlertService:SweetAlertService,private authService:AuthService
@@ -58,6 +59,10 @@ export class FormComponent implements OnInit {
     this.files=[];
     this.fields=[];
     
+  }
+
+  goStep2(){
+    this.showStep="2";
   }
 
 
@@ -83,7 +88,14 @@ export class FormComponent implements OnInit {
   
         var service=data.filter(x=>x.id==this.BluePrintId)[0];
 
+        console.log(service);
+
         this.serviceName=service.name;
+        this.serviceCard=service.serviceCard;
+
+        if(!service.serviceCard.shouldShow){
+          this.goStep2();
+        }
   
         var rootValues=service.rootValues as any[];
   
@@ -115,6 +127,8 @@ export class FormComponent implements OnInit {
       this.serviceId = this.route.snapshot.queryParamMap.get('serviceId')!;
 
       this.yourTurn=true;
+
+      this.goStep2();
 
       const serviceName = this.route.snapshot.queryParamMap.get('serviceName');
 
@@ -327,6 +341,7 @@ export class FormComponent implements OnInit {
     var fields = field.fields!;
 
     this.payment = true;
+    this.goStep2();
 
     this.myForm.addControl(field.id, new FormControl(field.value ?? ""));
 
@@ -349,7 +364,7 @@ export class FormComponent implements OnInit {
   
       if(files.length>0){
         files.map(file=>{
-          this.pubshFile(fieldId,file,"");
+          this.pubshFile(fieldId,file,"","");
         });
       }
     }
@@ -377,9 +392,6 @@ export class FormComponent implements OnInit {
   }
 
   Save() {
-
-
-    console.log(this.myForm);
 
     this.submitted = true;
 
@@ -581,8 +593,6 @@ export class FormComponent implements OnInit {
         let fieldType = this.getFieldType(field.type);
   
         let fieldValue: any;
-
-        console.log(field);
   
         switch (field.type) {
           case 'MULTI_COMBO_BOX':
@@ -868,32 +878,44 @@ export class FormComponent implements OnInit {
     return filterdContainer;
   }
 
-  onUploadFile(controlName:string,event:any,multi:boolean){
-
-    if(multi==false && this.getFiles(controlName).length>0){
-      this.sweetAlertService.ShowAlert('error','you can upload 1 file only');
+  async onUploadFile(controlName: string, event: any, multi: boolean) {
+    const objectName: string = await this.uploadFileAndGetObjectName(event);
+    
+    if (multi === false && this.getFiles(controlName).length > 0) {
+      this.sweetAlertService.ShowAlert('error', 'you can upload 1 file only');
       return;
     }
-
   
     const reader = new FileReader();
-    var file=event.target.files[0];
+    const file = event.target.files[0];
     reader.readAsDataURL(file);
-
+  
     reader.onload = () => {
       const base64String = reader.result as string;
-
       const base64WithoutPrefix = base64String?.substring(base64String.indexOf(',') + 1);
-
-      this.pubshFile(controlName, base64WithoutPrefix, file);
-
+      this.pubshFile(controlName, base64WithoutPrefix, file, objectName);
     };
-
-    event.target.value='';
+  
+    event.target.value = '';
+    console.log(this.files);
   }
-
-  private pubshFile(controlName: string, base64WithoutPrefix: string, fileName: string) {
-    this.files.push(new FileModel(this.files.length + 1, controlName, base64WithoutPrefix, fileName));
+  
+  async uploadFileAndGetObjectName(event: any): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      this.apiService.uploadFile(event.target.files[0], this.serviceId!).subscribe(
+        (response: any) => {
+          const objectName = response.data.objectName;
+          resolve(objectName);
+        },
+        (error: any) => {
+          reject(error);
+        }
+      );
+    });
+  }
+  
+  private pubshFile(controlName: string, base64WithoutPrefix: string, fileName: string,objectName:string) {
+    this.files.push(new FileModel(this.files.length + 1, controlName, base64WithoutPrefix, fileName,objectName));
   }
 
   getFiles(controlName:string):FileModel[]{

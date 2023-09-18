@@ -56,6 +56,7 @@ import { CHECKBOXComponent } from './form/fields/checkbox/checkbox.component';
 import { TextFieldPhoneComponent } from './form/fields/text-field-phone/text-field-phone.component';
 import { MultiSelectComponent } from './form/fields/multi-select/multi-select.component';
 import { FileComponent } from './form/fields/file/file.component';
+import { TextViewComponent } from './form/fields/text-view/text-view.component';
 // import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 // import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -102,6 +103,7 @@ registerPlugin(FilePondPluginFileValidateType);
     TextFieldPhoneComponent,
     MultiSelectComponent,
     FileComponent,
+    TextViewComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

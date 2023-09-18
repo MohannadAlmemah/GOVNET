@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 // import { AuthService } from 'src/app/auth.service';
 
@@ -58,6 +58,55 @@ export class ApiService {
     return this.http.post(url, data, { headers });
   }
 
+  uploadFile(file: File,carbonCopyId:string){
 
-  
-}
+    const formData = new FormData();
+
+    console.log(file);
+    formData.append('CarbonCopyId',carbonCopyId);
+    formData.append('File', file);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'enctype': 'multipart/form-data',
+        'Accept-Language':'en-US',
+        'Authorization': this.token!=undefined ? `Bearer ${this.token}` :'',
+      })
+    };
+
+    return this.http.post('https://stagingapp.sanad.gov.jo/api/Minio/UploadFile', formData, httpOptions)
+      .pipe(
+        map(response => {
+          // Handle your response here
+          return response;
+        }),
+        catchError(error => {
+          console.error(error);
+          return [false];
+        })
+      );
+  }
+
+    // const url = 'https://stagingapp.sanad.gov.jo/api/Minio/UploadFile';
+
+
+    // const formData = new FormData();
+
+    // formData.append('carbonCopyId','12');
+    // formData.append('file',file,file.name);
+
+    // const headers = new HttpHeaders({
+    //   // Ensure you set the 'Content-Type' header to 'multipart/form-data'.
+    //   'Content-Type': 'multipart/form-data',
+    //   'Accept-Language':'ar-JO',
+    //   'Authorization': this.token!=undefined ? `Bearer ${this.token}` :'',
+    // });
+
+    // this.http.post(url, formData ,{headers}).subscribe(
+    //   (response) => {
+    //     console.log(response);
+    //   }
+    // );
+  }
+
+

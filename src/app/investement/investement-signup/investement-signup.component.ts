@@ -1,5 +1,6 @@
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 import { ApiService } from 'src/services/apiService';
 import { SweetAlertService } from 'src/services/sweetAlertService';
 // import intlTelInput from 'intl-tel-input';
@@ -12,10 +13,21 @@ import { SweetAlertService } from 'src/services/sweetAlertService';
 export class InvestementSignupComponent {
 
   @ViewChild('myForm', { static: true }) myForm: NgForm | undefined;
-  @ViewChild('phoneInput') phoneInput!: ElementRef;
-  /**
-   *
-   */
+
+
+  separateDialCode = true;
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+ 
+  preferredCountries: CountryISO[] = [CountryISO.UnitedStates, 
+   CountryISO.UnitedKingdom];
+ 
+  phoneForm = new FormGroup({
+     phone: new FormControl(undefined, [Validators.required])
+  });
+  
+
   constructor(private apiService:ApiService,private sweetAlert:SweetAlertService,
     private renderer: Renderer2) {
 
@@ -57,7 +69,7 @@ export class InvestementSignupComponent {
   disableSendEmailBtn:boolean=false;
   disableSendPhoneBtn:boolean=false;
 
-  
+
 
   register(){
     if(this.myForm?.valid){

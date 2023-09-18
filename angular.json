@@ -26,6 +26,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/intl-tel-input/build/css/intlTelInput.css",
               "src/assets/css/multiple-input.css",
               "src/assets/css/bootstrap-icons.css",
               "src/assets/css/bootstrap.css",
