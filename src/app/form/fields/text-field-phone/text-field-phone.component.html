@@ -8,10 +8,42 @@
     <div class="col-sm-10">
 
 
-        <input class="form-control"
+        <!-- <input class="form-control"
             [ngClass]="isInvalid && submitted ? 'is-invalid':null"
             formControlName="{{field.id}}" [readOnly]="!field.editable"
-            type="text" [required]="field.required && !field.hidden!">
+            type="text" [required]="field.required && !field.hidden!"> -->
+
+            <div class="wrapper" style="direction: ltr;">
+                <ngx-intl-tel-input
+                  [cssClass]="'form-control form-control-lg input-country-code'"
+                  [preferredCountries]="preferredCountries"
+                  [ngClass]="isInvalid && submitted ? 'is-invalid':null"
+                  [enableAutoCountrySelect]="true"
+                  [enablePlaceholder]="true"
+                  [searchCountryFlag]="true"
+                  [searchCountryField]="[
+                    SearchCountryField.Iso2,
+                    SearchCountryField.Name
+                  ]"
+                  [selectFirstCountry]="true"
+                  [selectedCountryISO]="CountryISO.Jordan"
+                  [phoneValidation]="true"
+                  [separateDialCode]="separateDialCode"
+                  [numberFormat]="PhoneNumberFormat.National"
+                  formControlName="{{field.id}}"
+                  [(ngModel)]="phoneNumber"
+                  [required]="field.required && !field.hidden!"
+                >
+
+                </ngx-intl-tel-input>
+
+              </div>
+<!-- 
+              <span *ngIf="(phoneNumber==null && submitted)" class="text-danger"  >
+
+                حقل اجباري !
+
+            </span> -->
 
         <p class="pt-1" style="font-size: 13px !important;"
             *ngIf="field?.description">

@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { SearchCountryField, CountryISO, PhoneNumberFormat } from 'ngx-intl-tel-input';
 import { ApiService } from 'src/services/apiService';
 import { SweetAlertService } from 'src/services/sweetAlertService';
 
@@ -34,6 +35,15 @@ export class InvestmentForgetPasswordComponent {
   forgotToken:string|undefined;
   selectedType:string|undefined;
 
+
+  separateDialCode = true;
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  phoneNumber:any|undefined;
+  PhoneNumberFormat = PhoneNumberFormat;
+  preferredCountries: CountryISO[] = [CountryISO.Jordan];
+  
+
   checkUsername(){
     if(this.myForm?.valid){
 
@@ -67,6 +77,7 @@ export class InvestmentForgetPasswordComponent {
     }
   }
 
+
   sendOtp(){
 
     if(this.sendOtpForm?.valid){
@@ -77,7 +88,7 @@ export class InvestmentForgetPasswordComponent {
       var body={
         "userName": this.username,
         "type": this.selectedType,
-        "input": this.checkStr,
+        "input": this.checkType == 1 ? this.checkStr:this.phoneNumber.e164Number,
       };
   
       var request=this.apiService.post('auth/ForgotPasswordSendOtp',body);
@@ -102,6 +113,8 @@ export class InvestmentForgetPasswordComponent {
 
       });
 
+    }else{
+      console.log(this.sendOtpForm);
     }
 
   }

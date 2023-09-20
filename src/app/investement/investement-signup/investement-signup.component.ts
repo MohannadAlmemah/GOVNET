@@ -18,16 +18,12 @@ export class InvestementSignupComponent {
   separateDialCode = true;
   SearchCountryField = SearchCountryField;
   CountryISO = CountryISO;
+  phoneNumber:any|undefined;
   PhoneNumberFormat = PhoneNumberFormat;
+  preferredCountries: CountryISO[] = [CountryISO.Jordan];
  
-  preferredCountries: CountryISO[] = [CountryISO.UnitedStates, 
-   CountryISO.UnitedKingdom];
- 
-  phoneForm = new FormGroup({
-     phone: new FormControl(undefined, [Validators.required])
-  });
   
-
+  
   constructor(private apiService:ApiService,private sweetAlert:SweetAlertService,
     private renderer: Renderer2) {
 
@@ -55,7 +51,6 @@ export class InvestementSignupComponent {
   idNumber:string|undefined;
   email:string|undefined;
   emailOtp:string|undefined;
-  phoneNumber:string|undefined;
   phoneNumberOtp:string|undefined;
   password:string|undefined;
   nationality:string="";
@@ -72,12 +67,15 @@ export class InvestementSignupComponent {
 
 
   register(){
+
+    console.log(this.myForm);
+
     if(this.myForm?.valid){
 
       var body={
         "userName": String(this.userName),
         "password": this.password,
-        "phoneNumber": this.phoneNumber,
+        "phoneNumber": this.phoneNumber.e164Number,
         "phoneNumberOTP": this.phoneNumberOtp,
         "email": this.email,
         "emailOTP": this.emailOtp,
@@ -88,6 +86,7 @@ export class InvestementSignupComponent {
         }
       };
 
+      
 
       var request=this.apiService.post('auth/Register',body);
 
@@ -152,7 +151,7 @@ export class InvestementSignupComponent {
 
 
       var body={
-        "phoneNumber": this.phoneNumber
+        "phoneNumber": this.phoneNumber.e164Number
       }
 
       var request=this.apiService.post("auth/SendOtpToPhoneNumber",body);

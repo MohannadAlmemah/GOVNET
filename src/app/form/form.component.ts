@@ -51,6 +51,9 @@ export class FormComponent implements OnInit {
   textViewItemArr:any[]=[];
   message:string|undefined;
   showStep="1";
+
+  phoneDto:any;
+
   //9861049531
   constructor(private apiService:ApiService,private route: ActivatedRoute,
     private sweetAlertService:SweetAlertService,private authService:AuthService
@@ -534,6 +537,19 @@ export class FormComponent implements OnInit {
         controlValue = String(control!.value);
         break;
 
+      case 'TEXT_FIELD_PHONE':
+
+        var phone=control!.value as any;
+
+        if(phone!=null){
+          this.phoneDto=phone;
+          controlValue = String(phone.e164Number);
+        }else{
+          controlValue="";
+        }
+
+        break;
+
       case 'MULTI_COMBO_BOX':
 
         controlValue = control!.value as any[];
@@ -572,9 +588,13 @@ export class FormComponent implements OnInit {
   getFileValue(fieldId: string): string[] {
     const filesBase64: string[] = this.files
       .filter(file => file.controlName === fieldId)
-      .map(file => file.fileBase64);
+      .map(file => file.objectId);
   
     return filesBase64;
+  }
+
+  setPhoneObject(phoneObj:any){
+    console.log(phoneObj);
   }
 
   goToUrl(url:string){

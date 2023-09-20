@@ -87,48 +87,7 @@
                             </div>
                         </div>
 
-                        <!-- <div class="row">
-                            <div class="col-sm-12">
-                                <div class="wrapper">
-                                    <ngx-intl-tel-input
-                                      [cssClass]="'custom'"
-                                      [preferredCountries]="preferredCountries"
-                                      [enableAutoCountrySelect]="true"
-                                      [enablePlaceholder]="true"
-                                      [searchCountryFlag]="true"
-                                      [searchCountryField]="[
-                                        SearchCountryField.Iso2,
-                                        SearchCountryField.Name
-                                      ]"
-                                      [selectFirstCountry]="false"
-                                      [selectedCountryISO]="CountryISO.India"
-                                      [phoneValidation]="true"
-                                      [separateDialCode]="separateDialCode"
-                                      [numberFormat]="PhoneNumberFormat.National"
-                                      name="phone"
-                                      formControlName="phone"
-                                    >
-                                    </ngx-intl-tel-input>
-                                    <div style="margin-top: 20px; margin-bottom: 10px">
-                                      <small
-                                        class="alert alert-danger"
-                                        *ngIf="
-                                          !phoneForm.controls['phone'].valid &&
-                                          phoneForm.controls['phone'].touched
-                                        "
-                                      >
-                                        <span *ngIf="phoneForm.controls['phone'].errors?.['required']">
-                                          Phone number is required.
-                                        </span>
-                                        <span *ngIf="phoneForm.controls['phone'].errors">
-                                          Phone number need to have 10 character
-                                        </span>
-                                      </small>
-                                    </div>
-                                  </div>
-                                  
-                            </div>
-                        </div> -->
+                       
 
                         
 
@@ -196,7 +155,41 @@
                                 <span class="text-danger" *ngIf="(myForm.submitted && !email_field.valid )|| showEmailRequeired">حقل اجباري!</span>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="col-sm-12 mb-4">
+                            <div class="wrapper" style="direction: ltr;">
+                                <ngx-intl-tel-input
+                                  [cssClass]="'form-control form-control-lg input-country-code'"
+                                  [preferredCountries]="preferredCountries"
+                                  [enableAutoCountrySelect]="true"
+                                  [enablePlaceholder]="true"
+                                  [searchCountryFlag]="true"
+                                  [searchCountryField]="[
+                                    SearchCountryField.Iso2,
+                                    SearchCountryField.Name
+                                  ]"
+                                  [selectFirstCountry]="true"
+                                  [selectedCountryISO]="CountryISO.Jordan"
+                                  [phoneValidation]="true"
+                                  [separateDialCode]="separateDialCode"
+                                  [numberFormat]="PhoneNumberFormat.National"
+                                  name="phoneNumber"
+                                  [(ngModel)]="phoneNumber"
+                                  [required]="true"
+                                >
+
+                                </ngx-intl-tel-input>
+
+                              </div>
+
+                              <span *ngIf="(phoneNumber==null && myForm.submitted)|| showPhoneRequeired" class="text-danger"  >
+
+                                حقل اجباري !
+
+                            </span>
+                              
+                        </div>
+
+                        <!-- <div class="mb-4">
                             <label class="form-label" for="signupSrEmail">رقم الهاتف</label>
 
                             <input type="text" name="phoneNumber" required="true" [(ngModel)]="phoneNumber" #phoneNumber_field="ngModel"
@@ -204,7 +197,7 @@
                                 placeholder="رقم الهاتف">
                                 <span class="text-danger" *ngIf="(myForm.submitted && !phoneNumber_field.valid) || showPhoneRequeired">حقل اجباري!</span>
 
-                        </div>
+                        </div> -->
 
                         <div class="mb-4">
                             <label class="form-label" for="signupSremailOtp"> رمز التحقق للبريد الالكتروني </label>

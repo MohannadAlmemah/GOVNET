@@ -44,7 +44,11 @@
           <tbody>
             <tr data-key="3225" *ngFor="let item of requests;let i=index">
               <td>{{item.id}}</td>
-              <td>{{item.establishmentNatId}}</td>
+              <td>
+                <a href="/Investment/CompanyInfo?id={{item.establishmentNatId}}" title="View" aria-label="View" data-pjax="0">
+                  {{item.establishmentNatId}}
+                </a>
+              </td>
               <td>{{item.companyName}}</td>
               <td>{{item.establishmentType}}</td>
               <td><span class="badge bg-soft-warning text-dark">

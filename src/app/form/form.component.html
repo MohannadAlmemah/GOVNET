@@ -215,20 +215,7 @@
                                                         (refreshFormEvent)="refreshForm2($event)"
                                                         [value]="myForm.get(ef_field.id)?.value"></app-text-view>
 
-                                                        <!-- <div class="row mb-4 align-items-center" [hidden]="ef_field.hidden">
-
-                                                            <label class="col-sm-2 col-form-label form-label">
-                                                                {{ef_field.label}}
-                                                            </label>
-
-                                                            <div class="col-sm-10">
-
-                                                                <label>
-                                                                    {{myForm.get(ef_field.id)?.value}}
-                                                                </label>
-
-                                                            </div>
-                                                        </div> -->
+                                                        
 
                                                     </ng-container>
 
@@ -245,36 +232,6 @@
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
                                                     (refreshFormEvent)="refreshForm2($event)"></app-text-field>
 
-                                                <!-- <div class="row mb-4" [hidden]="field.hidden">
-
-                                                    <label class="col-sm-2 col-form-label form-label">
-                                                        {{field.label}}
-                                                        <span class="text-danger" *ngIf="field.required"> * </span>
-                                                    </label>
-
-                                                    <div class="col-sm-10">
-
-                                                        
-                                                        <input class="form-control" [readOnly]="!field.editable" [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"  formControlName="{{field.id}}" [type]="getTextFieldType(field.textFieldType!)" [required]="field.required && !field.hidden!" (blur)="refreshForm(field.id,field.shouldRefresh)">
-                                                        
-                                                        <p class="pt-1" style="font-size: 13px !important;" *ngIf="field?.description">
-                                                            {{field?.description??""}}
-                                                        </p>
-
-                                                        <p class="pt-1 text-danger" style="font-size: 13px !important;" *ngIf="yourTurn && field?.approved == false">
-                                                            {{field?.comment??""}}
-                                                        </p>
-
-                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
-                                                            <span class="text-danger"
-                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
-                                                                حقل اجباري !
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-
-                                                </div> -->
 
                                             </ng-container>
 
@@ -285,43 +242,13 @@
                                                     [errors]="getFormControlErrors(field.id)"
                                                     [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
-                                                    (refreshFormEvent)="refreshForm2($event)"></app-text-field-phone>
+                                                    (refreshFormEvent)="refreshForm2($event)"
+                                                    (sendPhoneObjectEvent)="setPhoneObject($event)"
+                                                    [phoneNumber]="phoneDto"
+                                                >
+                                                
+                                                </app-text-field-phone>
 
-                                                <!-- <div class="row mb-4" [hidden]="field.hidden">
-
-                                                    <label class="col-sm-2 col-form-label form-label">
-                                                        {{field.label}}
-                                                        <span class="text-danger" *ngIf="field.required"> * </span>
-                                                    </label>
-
-                                                    <div class="col-sm-10">
-
-
-                                                        <input class="form-control"
-                                                            [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
-                                                            formControlName="{{field.id}}" [readOnly]="!field.editable"
-                                                            type="text" [required]="field.required && !field.hidden!">
-
-                                                        <p class="pt-1" style="font-size: 13px !important;"
-                                                            *ngIf="field?.description">
-                                                            {{field?.description??""}}
-                                                        </p>
-
-                                                        <p class="pt-1 text-danger" style="font-size: 13px !important;"
-                                                            *ngIf="yourTurn && field?.approved == false">
-                                                            {{field?.comment??""}}
-                                                        </p>
-
-                                                        <div *ngIf="myForm.get(field.id)?.invalid && submitted">
-                                                            <span class="text-danger"
-                                                                *ngIf="myForm.get(field.id)?.errors?.['required']">
-                                                                حقل اجباري !
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-
-                                                </div> -->
 
                                             </ng-container>
 
@@ -413,54 +340,9 @@
                                                                                         [fieldId]="containerFiled.id+'#'+container.index"
                                                                                         [submitted]="submitted"
                                                                                         [yourTurn]="yourTurn"
+                                                                                        [phoneNumber]="phoneDto"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-text-field-phone>
 
-
-                                                                                    <!-- <div class="row mb-4"
-                                                                                        [hidden]="containerFiled.hidden">
-
-                                                                                        <label
-                                                                                            class="col-sm-2 col-form-label form-label">
-                                                                                            {{containerFiled.label}}
-                                                                                            <span class="text-danger"
-                                                                                                *ngIf="containerFiled.required">
-                                                                                                * </span>
-                                                                                        </label>
-
-                                                                                        <div class="col-sm-10">
-
-
-                                                                                            <input class="form-control"
-                                                                                                [ngClass]="myForm.get(containerFiled.id)?.invalid && submitted ? 'is-invalid':null"
-                                                                                                formControlName="{{containerFiled.id}}#{{container.index}}"
-                                                                                                [readOnly]="!containerFiled.editable"
-                                                                                                type="text"
-                                                                                                [required]="containerFiled.required && !containerFiled.hidden!">
-
-                                                                                            <p class="pt-1"
-                                                                                                style="font-size: 13px !important;"
-                                                                                                *ngIf="containerFiled?.description">
-                                                                                                {{containerFiled?.description??""}}
-                                                                                            </p>
-
-                                                                                            <p class="pt-1 text-danger"
-                                                                                                style="font-size: 13px !important;"
-                                                                                                *ngIf="yourTurn && containerFiled?.approved == false">
-                                                                                                {{containerFiled?.comment??""}}
-                                                                                            </p>
-
-                                                                                            <div
-                                                                                                *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
-                                                                                                <span
-                                                                                                    class="text-danger"
-                                                                                                    *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
-                                                                                                    حقل اجباري !
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-
-
-                                                                                    </div> -->
 
                                                                                 </ng-container>
 
@@ -476,17 +358,7 @@
                                                                                         [yourTurn]="yourTurn"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-text-field>
 
-                                                                                    <!-- <div class="form-group col-md-12 col-12 py-2">
-                                                                                        <p  class="col-form-label">{{containerFiled.label}}</p>
-                                                                                        <span class="text-danger" *ngIf="containerFiled.required && !field.hidden!"> * </span>
-                                                           
-                                                                                        <input class="form-control" [ngClass]="myForm.get(containerFiled.id)?.invalid && submitted ? 'is-invalid':null" formControlName="{{containerFiled.id}}#{{container.index}}"   type="{{getTextFieldType(containerFiled.textFieldType!)}}" [required]="containerFiled.required && !field.hidden!" [readOnly]="!containerFiled.editable">
-                                                                                        <div *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
-                                                                                            <span class="text-danger" *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
-                                                                                                حقل اجباري !
-                                                                                            </span>
-                                                                                        </div>
-                                                                                    </div> -->
+                                                                                    
 
 
                                                                                 </ng-container>
@@ -502,20 +374,6 @@
                                                                                         [submitted]="submitted"
                                                                                         [yourTurn]="yourTurn"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-checkbox>
-
-
-                                                                                    <!-- <div
-                                                                                        class="form-group col-md-12 col-12 py-2">
-
-                                                                                        <p-checkbox
-                                                                                            formControlName="{{containerFiled.id}}#{{container.index}}"
-                                                                                            [binary]="true"></p-checkbox>
-                                                                                        <label
-                                                                                            class="mx-2">{{containerFiled.label}}</label>
-                                                                                        <span class="text-danger"
-                                                                                            *ngIf="containerFiled.required && !field.hidden!">
-                                                                                            * </span>
-                                                                                    </div> -->
 
                                                                                 </ng-container>
 
@@ -680,54 +538,6 @@
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-predefined-combo-box>
 
 
-
-                                                                                    <!-- <div class="row mb-4">
-                                                                                        <label
-                                                                                            class="col-sm-2 col-form-label form-label">
-                                                                                            {{containerFiled.label}}
-                                                                                            <span class="text-danger"
-                                                                                                *ngIf="containerFiled.required && !field.hidden!">
-                                                                                                * </span>
-                                                                                        </label>
-
-                                                                                        <div class="col-sm-10">
-                                                                                            <select
-                                                                                                [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
-                                                                                                formControlName="{{containerFiled.id}}#{{container.index}}"
-                                                                                                class="form-control"
-                                                                                                [required]="containerFiled.required && !field.hidden!">
-                                                                                                <option value="">يرجى
-                                                                                                    الاختيار</option>
-                                                                                                <option
-                                                                                                    *ngFor="let item of containerFiled.options"
-                                                                                                    value="{{item.key}}">
-                                                                                                    {{item.label}}
-                                                                                                </option>
-                                                                                            </select>
-
-                                                                                            <p class="pt-1"
-                                                                                                style="font-size: 13px !important;"
-                                                                                                *ngIf="containerFiled?.description">
-                                                                                                {{containerFiled?.description??""}}
-                                                                                            </p>
-
-                                                                                            <p class="pt-1 text-danger"
-                                                                                                style="font-size: 13px !important;"
-                                                                                                *ngIf="yourTurn && containerFiled?.approved == false">
-                                                                                                {{containerFiled?.comment??""}}
-                                                                                            </p>
-
-                                                                                            <div
-                                                                                                *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.invalid && submitted'>
-                                                                                                <span
-                                                                                                    class="text-danger"
-                                                                                                    *ngIf='myForm.get(containerFiled.id +"#" + container.index)?.errors?.["required"]'>
-                                                                                                    حقل اجباري !
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div> -->
-
                                                                                 </ng-container>
 
                                                                             </ng-container>
@@ -822,24 +632,3 @@
     </div>
 
 </main>
-<!-- 
-<div class="modal fade flashModal" id="exampleModal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered">
-    
-        <div class="modal-content">
-        <div class="modal-header mx-auto">
-                <img width="40" src="../../../assets/images/success.png" alt="success">
-            </div>
-            <div class="modal-body text-center text-black lead">
-                {{message}}
-            </div>
-            <div class="modal-footer">
-                <a href="/Investment/Dashboard" class="btn btn-secondary btn-sm m-auto">إغلاق</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<button id="exampleModalBtn" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Launch demo modal
-</button> -->
