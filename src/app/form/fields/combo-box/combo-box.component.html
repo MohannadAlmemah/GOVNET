@@ -5,7 +5,7 @@
     </label>
 
     <div class="col-sm-10">
-        <select formControlName="{{field.id}}" [ngClass]="isInvalid && submitted ? 'is-invalid':null" class="form-control" (change)="refreshForm(field.id,field.shouldRefresh)" 
+        <select formControlName="{{fieldId}}" [ngClass]="isInvalid && submitted ? 'is-invalid':null" class="form-control" (change)="refreshForm(field.id,field.shouldRefresh,containerFieldId,fieldIndex,isContainer)" 
             [required]="field.required && !field.hidden!">
             <option value="">يرجى الاختيار</option>
             <option *ngFor="let item of field.comboBoxOptions"

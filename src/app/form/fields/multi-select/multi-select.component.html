@@ -10,9 +10,9 @@
             defaultLabel="يرجى الاختيار"
             [ngClass]="isInvalid && submitted ? 'is-invalid':null"
             [options]="field.comboBoxOptions!"
-            formControlName="{{field.id}}" optionLabel="value"
+            formControlName="{{fieldId}}" optionLabel="value"
             optionValue="key"
-            (onChange)="refreshForm(field.id, field.shouldRefresh)">
+            (onChange)="refreshForm(field.id,field.shouldRefresh,containerFieldId,fieldIndex,isContainer)">
             <ng-template let-item pTemplate="item">
                 {{ item.value }}
             </ng-template>

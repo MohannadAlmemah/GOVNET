@@ -34,11 +34,21 @@ export class TextFieldPhoneComponent implements AfterViewInit {
   @Input()
   isInvalid:boolean=false;
 
-  @Output() 
-  refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean}>();
+  @Input()
+  isContainer:boolean=false;
+
+  @Input()
+  viewApp:boolean=false;
+
+  @Input()
+  containerFieldId:string|undefined=undefined;
+
+  @Input()
+  fieldIndex:number|undefined=undefined;
 
   @Input()
   phoneNumber:any|undefined;
+
 
   separateDialCode = true;
   SearchCountryField = SearchCountryField;
@@ -59,8 +69,14 @@ export class TextFieldPhoneComponent implements AfterViewInit {
     
   }
 
-  refreshForm(fieldId: string, shouldRefresh: boolean){
-    this.refreshFormEvent.emit({fieldId,shouldRefresh});
+  @Output() 
+  refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>();
+
+
+  refreshForm(fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean){
+
+    this.refreshFormEvent.emit({ fieldId ,shouldRefresh,containerFieldId,fieldIndex,isContainer});
+
   }
 
 

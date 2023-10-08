@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/services/apiService';
 import { SweetAlertService } from 'src/services/sweetAlertService';
@@ -9,6 +9,7 @@ import { formBody } from '../models/formBody';
 import { FileModel } from '../models/file';
 import {ConditionType} from '../models/enum/conditionType';
 import { AuthService } from 'src/services/auth.service';
+import { saveAs } from 'file-saver';
 
 export class FieldInfo{
   filedValue:any|undefined;
@@ -25,7 +26,8 @@ export class FieldInfo{
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.css']
+  styleUrls: ['./form.component.css'],
+  encapsulation:ViewEncapsulation.None,
 })
 
 
@@ -40,7 +42,6 @@ export class FormComponent implements OnInit {
   isLoading=true;
   service:any;
   submitted = false;
-  currentIndex=0;
   containers:Container[]=[];
   serviceName:string|undefined;
   serviceCard:any;
@@ -53,9 +54,24 @@ export class FormComponent implements OnInit {
   showStep="1";
 
   phoneDto:any;
+  disableConditionBtn=false;
+
+  viewApplication=false;
+  steps:any[]=[];
+  stepsName:any[]=[];
+  currentIndex=0;
+
+  serviceType:string|undefined;
+
+
+  private scrollToFirstInvalidControl() {
+    let firstInvalidControl = $("input.is-invalid,select.is-invalid")[0];
+    firstInvalidControl.scrollIntoView();
+    (firstInvalidControl as HTMLElement).focus();
+  }
 
   //9861049531
-  constructor(private apiService:ApiService,private route: ActivatedRoute,
+  constructor(private apiService:ApiService,private route: ActivatedRoute, private el: ElementRef,
     private sweetAlertService:SweetAlertService,private authService:AuthService
     ) {
     this.myForm=new UntypedFormGroup({});
@@ -64,14 +80,143 @@ export class FormComponent implements OnInit {
     
   }
 
+  goStep1(){
+    this.showStep="1";
+  }
+
   goStep2(){
     this.showStep="2";
   }
 
+  disableFormControls(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control!.disable(); // Disable the control
+      control!.markAsUntouched();
+      control!.markAsPristine();
+      if (control instanceof FormGroup) {
+        this.disableFormControls(control); // Recursively disable controls in nested form groups
+      }
+    });
+  }
+
+  allowedExtension(mediaType: string, allowedExtension: string[]|undefined): string[] {
+
+    if (mediaType === 'ANY') {
+      return ['*']; // Allow all file types (wildcard)
+    } else if (mediaType === 'MEDIA') {
+      return ['.mp3', '.mp4', '.avi']; // Add the media extensions you want to allow
+    } else if (mediaType === 'IMAGE') {
+      return ['.jpg', '.jpeg', '.png', '.gif']; // Add the image extensions you want to allow
+    } else if (mediaType === 'VIDEO') {
+      return ['.mp4', '.avi', '.mov']; // Add the video extensions you want to allow
+    } else if (mediaType === 'AUDIO') {
+      return ['.mp3', '.wav']; // Add the audio extensions you want to allow
+    } else if (mediaType === 'CUSTOM') {
+      return allowedExtension!; // Use the provided custom extensions
+    } else {
+      return []; // Return an empty array for unknown media types
+    }
+  }
+  
+
+  fillApplication(){
+
+    var request=this.apiService.get(`carboncopies/GetServiceByIdForConsumer?serviceId=${this.serviceId}&type=${this.serviceType}`);
+
+    request.subscribe(response=>{
+
+      var data=response.data;
+
+      this.serviceName=data.name;
+
+      this.steps = (data.steps as any[]).reverse();
+
+      this.generateField(this.steps[0]?.fields,false);
+
+      this.steps.map(step=>{
+        this.stepsName.push(step.name);
+      });
+
+      this.onParentChange();
+
+      this.disableFormControls(this.myForm);
+      this.goStep2();
+
+      this.viewApplication=true;
+
+      this.isLoading=false;
+
+    });
+  }
+
+  goNext(){
+    
+    this.currentIndex<this.steps.length-1? this.currentIndex++:this.currentIndex;
+    
+    if(this.currentIndex<=this.steps.length-1){
+
+      this.removeFormControls();
+    
+      this.generateField(this.steps[this.currentIndex]?.fields,false);
+  
+      this.onParentChange();
+  
+      this.disableFormControls(this.myForm);
+  
+      this.isLoading=false;
+    }
+  }
+
+  goBack(){
+
+    this.currentIndex>0? this.currentIndex--:this.currentIndex;
+
+    if(this.currentIndex>=0){
+
+      this.removeFormControls();
+      
+      this.generateField(this.steps[this.currentIndex]?.fields,false);
+  
+      this.onParentChange();
+  
+      this.disableFormControls(this.myForm);
+  
+      this.isLoading=false;
+      }
+  }
+
+  downloadFile(fileName:string,data: any,fileFormat:string): void {
+    const linkSource = 'data:'+fileFormat+';base64,'+data;
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+  }
+
+  downloadMinioFile(objectId:string){
+    var request=this.apiService.get(`Minio/GetFile?ObjectName=${objectId}`);
+    request.subscribe(response=>{
+
+      this.downloadFile(response.data?.objectstat?.objectName,response.data.data,response.data?.objectstat?.contentType);
+
+    })
+  }
+
+
 
   ngOnInit(): void {
 
-    if (this.route.snapshot.queryParams['BluePrintId']) {
+
+    if (this.route.snapshot.queryParams['serviceId'] && this.route.snapshot.queryParams['showForm']) {
+
+      this.serviceId= this.route.snapshot.queryParams['serviceId'];
+      this.serviceType= this.route.snapshot.queryParams['serviceType'];
+
+      this.fillApplication();
+    }
+
+    else if (this.route.snapshot.queryParams['BluePrintId']) {
 
       const bluePrintId = this.route.snapshot.queryParamMap.get('BluePrintId');
 
@@ -91,12 +236,11 @@ export class FormComponent implements OnInit {
   
         var service=data.filter(x=>x.id==this.BluePrintId)[0];
 
-        console.log(service);
-
         this.serviceName=service.name;
         this.serviceCard=service.serviceCard;
 
         if(!service.serviceCard.shouldShow){
+          this.disableConditionBtn=true;
           this.goStep2();
         }
   
@@ -130,7 +274,7 @@ export class FormComponent implements OnInit {
       this.serviceId = this.route.snapshot.queryParamMap.get('serviceId')!;
 
       this.yourTurn=true;
-
+      this.disableConditionBtn=true;
       this.goStep2();
 
       const serviceName = this.route.snapshot.queryParamMap.get('serviceName');
@@ -173,14 +317,28 @@ export class FormComponent implements OnInit {
       );
   
       if (indexToDelete !== -1) {
+
+        var selectedContainerItems=this.containers.filter(x=>x.containerId==containerId && x.index==indexId)[0];
+
+        this.updateValidation();
+
+        selectedContainerItems.containerFields.map(field=>{
+          console.log(field.id+`#${indexId}`);
+          this.myForm.removeControl(field.id+`#${indexId}`);
+        });
+
         this.containers.splice(indexToDelete, 1);
       }
 
-      Object.keys(this.myForm.controls).forEach(controlName => {
-        if (controlName.startsWith(containerId) && controlName.endsWith(`#${indexId}`)) {
-          this.myForm.removeControl(controlName);
-        }
-      });
+
+      // Object.keys(this.myForm.controls).forEach(controlName => {
+        
+      //   if (controlName.startsWith(containerId) && controlName.endsWith(`#${indexId}`)) {
+      //     this.myForm.removeControl(controlName);
+      //   }else{
+      //   }
+      // });
+
 
     }
   }
@@ -197,7 +355,7 @@ export class FormComponent implements OnInit {
       this.containers.push(new Container(containerId,container.containerFields,maxIndex+1));
   
       container.containerFields.map(containerField=>{
-        this.myForm.addControl(containerField.id+`#${maxIndex+1}`,new FormControl(containerField.value??""));
+        this.myForm.addControl(containerField.id+`#${maxIndex+1}`,new FormControl(null));
       });
     }
 
@@ -265,21 +423,21 @@ export class FormComponent implements OnInit {
 
       if(res.statusCode==200){
 
-        this.generateField(res,false);
+        this.generateField(res.data.fields,false);
         this.onParentChange();
 
         this.isLoading=false;
       }else{
         this.isLoading=false;
-        alert(res.message);
+        //alert(res.message);
       }
 
     });
 
   }
 
-  private generateField(res: any,refresh:boolean) {
-    var apiFields = res.data.fields as any[];
+  private generateField(fields: any[],refresh:boolean) {
+    var apiFields = fields as any[];
 
     apiFields.map(x => {
       const field = <Field>x;
@@ -298,9 +456,8 @@ export class FormComponent implements OnInit {
 
   }
 
-
-
   private addField(field: Field,fieldId:string,value:any) {
+
     if (field.type == 'CHECBOX') {
       this.generateCheckbox(field,fieldId,value);
     }
@@ -328,7 +485,7 @@ export class FormComponent implements OnInit {
     }
     else if (field.type == 'WEBVIEW') {
 
-      this.showSubmit=false;
+      //this.showSubmit=false;
       this.generateOther(field,fieldId,field.value);
 
     }
@@ -344,6 +501,7 @@ export class FormComponent implements OnInit {
     var fields = field.fields!;
 
     this.payment = true;
+    this.disableConditionBtn=true;
     this.goStep2();
 
     this.myForm.addControl(field.id, new FormControl(field.value ?? ""));
@@ -434,6 +592,8 @@ export class FormComponent implements OnInit {
   
           if (response.statusCode === 200) {
             this.isLoading = false;
+            this.showSubmit=true;
+
   
             if (data.continue === false) {
 
@@ -449,12 +609,24 @@ export class FormComponent implements OnInit {
           else{
 
             this.isLoading = false;
+            this.showSubmit=true;
 
-            this.sweetAlertService.ShowAlertThenRedirect('error','حدث خطأ ما يرجى المحاولة مره اخرى','Investment/Dashboard');
+            this.sweetAlertService.ShowAlert('error',response.message);
 
           }
         });
     } else {      
+
+      this.myForm.markAllAsTouched();
+      
+      setTimeout(() => {
+        try{
+          this.scrollToFirstInvalidControl();
+
+        }catch(ex){
+
+        }
+      }, 200);
 
       console.log(this.myForm);
     }
@@ -469,14 +641,17 @@ export class FormComponent implements OnInit {
     });
   }
 
-  // validateCheckbox(control: AbstractControl): ValidationErrors | null {
-  //   if (control.value === true) {
+  validateCheckbox(control: AbstractControl): ValidationErrors | null {
+
+    console.log('checkbox');
+
+    if (control.value === true) {
     
-  //     return null; // Checkbox is checked, no error
-  //   } else {
-  //     return { checkboxRequired: true }; // Checkbox is not checked, return an error
-  //   }
-  // }
+      return null; // Checkbox is checked, no error
+    } else {
+      return { checkboxRequired: true }; // Checkbox is not checked, return an error
+    }
+  }
 
   hasRequiredValidator(controlName: string): boolean {
     const control = this.myForm.get(controlName);
@@ -621,6 +796,20 @@ export class FormComponent implements OnInit {
             fieldValue = formField?.value;
             
             break;
+
+           case 'TEXT_FIELD_PHONE':
+
+            var phone=formField?.value as any;
+    
+            if(phone!=null){
+              this.phoneDto=phone;
+              fieldValue = String(phone.e164Number);
+            }else{
+              fieldValue="";
+            }
+    
+            break;
+              
           case 'CHECKBOX':
             fieldType = "BOOLEAN";
             fieldValue = this.checkCbValue(field.id);
@@ -700,48 +889,47 @@ export class FormComponent implements OnInit {
   }
 
 
-  refreshForm(fieldId: string, shouldRefresh: boolean): void {
+  // refreshForm(fieldId: string, shouldRefresh: boolean): void {
 
-    if (shouldRefresh) {
-      this.isLoading = true;
+  //   if (shouldRefresh) {
+  //     this.isLoading = true;
   
-      const formValues = this.getFormValues();
+  //     const formValues = this.getFormValues();
   
-      const filteredFormValues = formValues.filter(x => x.value !== null && x.value !== undefined && x.value !== "" && x.value !== "null");
+  //     const filteredFormValues = formValues.filter(x => x.value !== null && x.value !== undefined && x.value !== "" && x.value !== "null");
   
-      const body = {
-        userId: this.authService.getNationalNumber(),
-        serviceId: this.serviceId,
-        fieldId,
-        values: filteredFormValues,
-      };
+  //     const body = {
+  //       serviceId: this.serviceId,
+  //       fieldId,
+  //       values: filteredFormValues,
+  //     };
   
-      this.apiService.post('carboncopies/RefreshStep', body).subscribe(
-        (res: any) => {
+  //     this.apiService.post('carboncopies/RefreshStep', body).subscribe(
+  //       (res: any) => {
   
-          if (res.statusCode === 200) {
-            this.removeFormControls();
+  //         if (res.statusCode === 200) {
+  //           this.removeFormControls();
 
-            this.generateField(res, true);
+  //           this.generateField(res.data.fields, true);
             
-          } else {
+  //         } else {
 
-            alert(res.message);
-          }
+  //           //alert(res.message);
+  //         }
   
-          this.isLoading = false;
-          this.onParentChange();
+  //         this.isLoading = false;
+  //         this.onParentChange();
 
-        },
-        (error: any) => {
-          this.isLoading = false;
-          console.error('Error refreshing form:', error);
-        }
-      );
-    } else {
-      this.onParentChange();
-    }
-  }
+  //       },
+  //       (error: any) => {
+  //         this.isLoading = false;
+  //         console.error('Error refreshing form:', error);
+  //       }
+  //     );
+  //   } else {
+  //     this.onParentChange();
+  //   }
+  // }
 
   refreshForm2(event:any): void {
 
@@ -755,7 +943,9 @@ export class FormComponent implements OnInit {
       const body = {
         userId: this.authService.getNationalNumber(),
         serviceId: this.serviceId,
-        fieldId:event.fieldId,
+        fieldId: event.isContainer==true? event.containerFieldId :event.fieldId,
+        containerFieldId : event.isContainer==true ? event.fieldId :undefined ,
+        fieldIndex:event.fieldIndex!=undefined?event.fieldIndex:null,
         values: filteredFormValues,
       };
   
@@ -763,13 +953,18 @@ export class FormComponent implements OnInit {
         (res: any) => {
   
           if (res.statusCode === 200) {
+
+            this.showSubmit=true;
+
             this.removeFormControls();
 
-            this.generateField(res, true);
+            this.generateField(res.data.fields, true);
             
           } else {
 
-            alert(res.message);
+            this.showSubmit=false;
+
+            //alert(res.message);
           }
   
           this.isLoading = false;
@@ -899,36 +1094,48 @@ export class FormComponent implements OnInit {
   }
 
   async onUploadFile(controlName: string, event: any, multi: boolean) {
-    const objectName: string = await this.uploadFileAndGetObjectName(event);
-    
+
     if (multi === false && this.getFiles(controlName).length > 0) {
       this.sweetAlertService.ShowAlert('error', 'you can upload 1 file only');
       return;
     }
-  
-    const reader = new FileReader();
-    const file = event.target.files[0];
-    reader.readAsDataURL(file);
-  
-    reader.onload = () => {
-      const base64String = reader.result as string;
-      const base64WithoutPrefix = base64String?.substring(base64String.indexOf(',') + 1);
-      this.pubshFile(controlName, base64WithoutPrefix, file, objectName);
-    };
-  
+
+
+    var files=event.target.files as any[];
+
+    for(var i=0;i<files.length;i++){
+      var objectName: string = await this.uploadFileAndGetObjectName(files[i]);
+
+      if(objectName==null || objectName=="" ){
+        this.sweetAlertService.ShowAlert('error','يرجى تحميل الملف مرة اخرى');
+        return;
+      }
+
+      const reader = new FileReader();
+      const file = event.target.files[0];
+      reader.readAsDataURL(file);
+    
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        const base64WithoutPrefix = base64String?.substring(base64String.indexOf(',') + 1);
+        this.pubshFile(controlName, base64WithoutPrefix, file, objectName);
+      };
+
+    }
+
     event.target.value = '';
-    console.log(this.files);
+
   }
   
-  async uploadFileAndGetObjectName(event: any): Promise<string> {
+  async uploadFileAndGetObjectName(file: any): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      this.apiService.uploadFile(event.target.files[0], this.serviceId!).subscribe(
+      this.apiService.uploadFile(file, this.serviceId!).subscribe(
         (response: any) => {
           const objectName = response.data.objectName;
           resolve(objectName);
         },
         (error: any) => {
-          reject(error);
+          return "";
         }
       );
     });
@@ -943,7 +1150,9 @@ export class FormComponent implements OnInit {
   }
 
   deleteFile(fileId:number){
-    this.files=this.files.filter(x=>x.id!=fileId);
+    if (window.confirm("هل انت متأكد ؟")) {
+      this.files=this.files.filter(x=>x.id!=fileId);
+    }
   }
 
 }

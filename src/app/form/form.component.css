@@ -27,3 +27,13 @@ input[type=file] {
     background: unset !important;
     color: unset !important;
   }
+
+  .dropdown-menu{
+    position: absolute !important;
+    left: -206px !important;
+    width: 320px !important;
+   }
+  
+   .input-country-code{
+    padding-left: 10px !important;
+   }

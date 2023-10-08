@@ -9,6 +9,8 @@ export class Field{
     public editable:boolean|undefined;
     public required:boolean;
     public label:string;
+    public mediaType:string|undefined;
+    public allowedExtensions:string[]|undefined;
     public textFieldType:string|undefined;
     public hidden:boolean|undefined;
     public value:any|undefined;
@@ -39,13 +41,15 @@ export class Field{
         fields:Field[]|undefined,multiSelect:boolean|undefined,options:any[]|undefined,
         comboBoxOptions:any[]|undefined,keyboardType:string,designType:string,description:string,
         approved:boolean|undefined,shouldRefresh:boolean,parent:parentModel|undefined,
-        url:string|undefined
+        url:string|undefined,mediaType:string|undefined,allowedExtensions:string[]|undefined
         ) {
             this.id=id;
             this.type=type;
             this.regex=regex;
             this.label=label;
             this.editable=editable;
+            this.mediaType=mediaType;
+            this.allowedExtensions=allowedExtensions;
             this.textFieldType=textFieldType;
             this.required=required;
             this.hidden=hidden;

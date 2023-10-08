@@ -8,7 +8,7 @@
             <nav aria-label="breadcrumb">
                 <ol id="w6" class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/Investment/Dashboard">الرئيسية</a></li>
-                    <!-- <li class="breadcrumb-item"><a href="/ar/services/sub?id=12">التسجيل والترخيص</a></li> -->
+                    <li class="breadcrumb-item"><a href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a">الخدمات الالكترونيه</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{serviceName}}</li>
                 </ol>
             </nav>
@@ -16,18 +16,12 @@
         <div class="row justify-content-center py-7" style="background:url(/img/bg-green-full.png);">
             <div class="col-md-8 col-12">
 
-                <div class="js-step-form" data-hs-step-form-options="{
-            &quot;progressSelector&quot;: &quot;#basicStepFormProgress&quot;,
-            &quot;stepsSelector&quot;: &quot;#basicStepFormContent&quot;,
-            &quot;endSelector&quot;: &quot;#createProjectFinishBtn&quot;
-          }">
+                <div class="js-step-form" >
 
-                    <ul id="basicStepFormProgress" dir="rtl"
+                    <ul id="basicStepFormProgress" dir="rtl" *ngIf="!viewApplication"
                         class="js-step-progress step step-sm step-icon-sm step-inline step-item-between mb-7">
                         <li class="step-item" [ngClass]="showStep=='1'?'active focus':null">
-                            <a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options="{
-              &quot;targetSelector&quot;: &quot;#basicStepDetails&quot;
-            }">
+                            <a class="step-content-wrapper">
                                 <span class="step-icon step-icon-soft-dark">1</span>
                                 <div class="step-content">
                                     <span class="step-title">معلومات عامة</span>
@@ -35,15 +29,27 @@
                             </a>
                         </li>
                         <li class="step-item" [ngClass]="showStep=='2'?'active focus':null">
-                            <a class="step-content-wrapper" href="javascript:;" data-hs-step-form-next-options="{
-               &quot;targetSelector&quot;: &quot;#basicStepTerms&quot;
-             }">
+                            <a class="step-content-wrapper">
                                 <span class="step-icon step-icon-soft-dark">2</span>
                                 <div class="step-content">
                                     <span class="step-title">تقديم الطلب</span>
                                 </div>
                             </a>
                         </li>
+                    </ul>
+
+                    <ul id="basicStepFormProgress" dir="rtl" *ngIf="viewApplication"
+                        class="js-step-progress step step-sm step-icon-sm step-inline step-item-between mb-7">
+                        
+                        <li class="step-item" *ngFor="let item of stepsName;let index=index" [ngClass]="index==currentIndex?'active focus':null">
+                            <a class="step-content-wrapper">
+                                <span class="step-icon step-icon-soft-dark">{{index+1}}</span>
+                                <div class="step-content">
+                                    <span class="step-title">{{item}}</span>
+                                </div>
+                            </a>
+                        </li>
+                        
                     </ul>
 
 
@@ -106,6 +112,7 @@
                                                                                 [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
                                                                                 [multiple]="field.multiSelect"
                                                                                 class="form-control" type="file"
+                                                                                [accept]="allowedExtension(field.mediaType!,field.allowedExtensions!)"
                                                                                 (change)="onUploadFile(field.id,$event,field.multiSelect!)"
                                                                                 [required]="field.required && getFiles(field.id).length==0">
 
@@ -139,6 +146,7 @@
                                                                             <thead class="thead-light">
                                                                                 <tr>
                                                                                     <th>اسم الملف</th>
+                                                                                    <th  *ngIf="!viewApplication">id</th>
                                                                                     <th>حذف</th>
                                                                                 </tr>
                                                                             </thead>
@@ -148,8 +156,12 @@
                                                                                 <tr
                                                                                     *ngFor="let item of getFiles(field.id)">
                                                                                     <td>{{field.label}}</td>
+                                                                                    <td *ngIf="!viewApplication">{{item.objectId}}</td>
                                                                                     <td>
-                                                                                        <i role="button"
+
+                                                                                        <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary"></i>
+
+                                                                                        <i role="button"  *ngIf="!viewApplication"
                                                                                             (click)="deleteFile(item.id)"
                                                                                             class="fa-solid fa-trash text-danger"></i>
                                                                                     </td>
@@ -173,6 +185,24 @@
 
                                             </ng-container>
 
+                                            <ng-container *ngIf="field.type=='URL_LAUNCHER'">
+
+                                                <div class="row mb-4 align-items-center" [hidden]="field.hidden"> 
+
+                                                    <label class="col-sm-2 col-form-label form-label">
+                                                        {{field.label}}
+                                                        <span class="text-danger" *ngIf="field.required"> * </span>
+                                                    </label>
+
+                                                    <div class="col-sm-10" *ngIf="field.value!=null && field.value!=''"> 
+                                                        <a href="{{field.value}}" target="_blank">عرض 
+                                                            <i class="fa fa-eye text-primary"></i>
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </ng-container>
+
                                             <ng-container *ngIf="field.type=='WEBVIEW'">
                                                 <div class="row mb-4" [hidden]="field.hidden">
 
@@ -193,6 +223,7 @@
                                                 [errors]="getFormControlErrors(field.id)"
                                                 [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                 [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                [containerFieldId]="undefined" [fieldIndex]="undefined"
                                                 (refreshFormEvent)="refreshForm2($event)" [value]="myForm.get(field.id)?.value"></app-text-view>
 
                                             
@@ -230,6 +261,9 @@
                                                     [errors]="getFormControlErrors(field.id)"
                                                     [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    [containerFieldId]="undefined" [fieldIndex]="undefined"
+                                                    
+                                                    [isContainer]="false"
                                                     (refreshFormEvent)="refreshForm2($event)"></app-text-field>
 
 
@@ -245,6 +279,9 @@
                                                     (refreshFormEvent)="refreshForm2($event)"
                                                     (sendPhoneObjectEvent)="setPhoneObject($event)"
                                                     [phoneNumber]="phoneDto"
+                                                    [viewApp]="viewApplication"
+                                                    [isContainer]="false"
+                                                    [containerFieldId]="undefined" [fieldIndex]="undefined"
                                                 >
                                                 
                                                 </app-text-field-phone>
@@ -259,7 +296,12 @@
                                                     [errors]="getFormControlErrors(field.id)"
                                                     [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
-                                                    (refreshFormEvent)="refreshForm2($event)"></app-combo-box>
+                                                    [isContainer]="false"
+                                                    
+                                                    [containerFieldId]="undefined" [fieldIndex]="undefined"
+                                                    (refreshFormEvent)="refreshForm2($event)"
+                                                    
+                                                    ></app-combo-box>
 
 
                                             </ng-container>
@@ -270,6 +312,8 @@
                                                     [errors]="getFormControlErrors(field.id)"
                                                     [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    [isContainer]="false"
+                                                    [containerFieldId]="undefined" [fieldIndex]="undefined"
                                                     (refreshFormEvent)="refreshForm2($event)"></app-multi-select>
 
                                             </ng-container>
@@ -277,10 +321,13 @@
 
                                             <ng-container *ngIf="field.type=='PREDEFINED_COMBO_BOX'">
 
-                                                <app-predefined-combo-box [formGroup]="myForm"
+                                                <app-predefined-combo-box [formGroup]="myForm" id="compo_{{field.id}}"
                                                     [errors]="getFormControlErrors(field.id)"
                                                     [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    [isContainer]="false"
+                                                    
+                                                    [containerFieldId]="undefined" [fieldIndex]="undefined"
                                                     (refreshFormEvent)="refreshForm2($event)"></app-predefined-combo-box>
 
                                             </ng-container>
@@ -291,6 +338,8 @@
                                                     [errors]="getFormControlErrors(field.id)"
                                                     [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
+                                                    [isContainer]="false"
+                                                    [containerFieldId]="undefined" [fieldIndex]="undefined"
                                                     (refreshFormEvent)="refreshForm2($event)"></app-checkbox>
 
 
@@ -299,7 +348,7 @@
 
                                             <ng-container *ngIf="field.type=='CONTAINER'">
 
-                                                <div [hidden]="field.hidden">
+                                                <div *ngIf="!field.hidden">
 
                                                     <div class=" card px-2" *ngIf="field.designType!='TABLE'">
 
@@ -328,6 +377,8 @@
                                                                             <ng-container
                                                                                 *ngFor="let containerFiled of container.containerFields">
 
+                                                                                
+
 
                                                                                 <ng-container
                                                                                     *ngIf="containerFiled.type=='TEXT_FIELD_PHONE'">
@@ -340,7 +391,10 @@
                                                                                         [fieldId]="containerFiled.id+'#'+container.index"
                                                                                         [submitted]="submitted"
                                                                                         [yourTurn]="yourTurn"
+                                                                                        [isContainer]="true"
                                                                                         [phoneNumber]="phoneDto"
+                                                                                        [viewApp]="viewApplication"
+                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-text-field-phone>
 
 
@@ -355,7 +409,10 @@
                                                                                         [field]="containerFiled"
                                                                                         [fieldId]="containerFiled.id+'#'+container.index"
                                                                                         [submitted]="submitted"
+                                                                                        
                                                                                         [yourTurn]="yourTurn"
+                                                                                        [isContainer]="true"
+                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-text-field>
 
                                                                                     
@@ -373,6 +430,8 @@
                                                                                         [fieldId]="containerFiled.id+'#'+container.index"
                                                                                         [submitted]="submitted"
                                                                                         [yourTurn]="yourTurn"
+                                                                                        [isContainer]="true"
+                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-checkbox>
 
                                                                                 </ng-container>
@@ -389,6 +448,8 @@
                                                                                         [fieldId]="containerFiled.id+'#'+container.index"
                                                                                         [submitted]="submitted"
                                                                                         [yourTurn]="yourTurn"
+                                                                                        [isContainer]="true"
+                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-combo-box>
 
                                                                                 </ng-container>
@@ -428,6 +489,7 @@
                                                                                                                     [multiple]="containerFiled.multiSelect"
                                                                                                                     class="form-control"
                                                                                                                     type="file"
+                                                                                                                    [accept]="allowedExtension(containerFiled.mediaType!,containerFiled.allowedExtensions!)"
                                                                                                                     (change)="onUploadFile(containerFiled.id+'#'+container.index,$event,containerFiled.multiSelect!)"
                                                                                                                     [required]="containerFiled.required && getFiles(containerFiled.id+'#'+container.index).length==0">
 
@@ -468,6 +530,7 @@
                                                                                                                         <th>اسم
                                                                                                                             الملف
                                                                                                                         </th>
+                                                                                                                        <th  *ngIf="!viewApplication">id</th>
                                                                                                                         <th>حذف
                                                                                                                         </th>
                                                                                                                     </tr>
@@ -479,8 +542,14 @@
                                                                                                                         *ngFor="let item of getFiles(containerFiled.id+'#'+container.index)">
                                                                                                                         <td>{{containerFiled.label}}
                                                                                                                         </td>
+
+                                                                                                                        <td *ngIf="!viewApplication">{{item.objectId}}</td>
+
                                                                                                                         <td>
-                                                                                                                            <i role="button"
+
+                                                                                                                            <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary"></i>
+
+                                                                                                                            <i role="button"  *ngIf="!viewApplication" 
                                                                                                                                 (click)="deleteFile(item.id)"
                                                                                                                                 class="fa-solid fa-trash text-danger"></i>
                                                                                                                         </td>
@@ -518,6 +587,7 @@
                                                                                     [fieldId]="containerFiled.id+'#'+container.index"
                                                                                     [submitted]="submitted"
                                                                                     [yourTurn]="yourTurn"
+                                                                                    [containerFieldId]="field.id" [fieldIndex]="container.index-1"
                                                                                     (refreshFormEvent)="refreshForm2($event)"></app-text-view>
 
 
@@ -534,7 +604,11 @@
                                                                                         [field]="containerFiled"
                                                                                         [fieldId]="containerFiled.id+'#'+container.index"
                                                                                         [submitted]="submitted"
+                                                                                        
                                                                                         [yourTurn]="yourTurn"
+                                                                                        
+                                                                                        [isContainer]="true"
+                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
                                                                                         (refreshFormEvent)="refreshForm2($event)"></app-predefined-combo-box>
 
 
@@ -549,7 +623,7 @@
 
 
                                                                         <div class="col-12 text-center py-3"
-                                                                            *ngIf="field.modifiable==true">
+                                                                            *ngIf="field.modifiable==true && !viewApplication"  >
                                                                             <button id="submit-button"
                                                                                 class="btn btn-primary"
                                                                                 (click)="addContainerItems(field)">اضافة</button>
@@ -603,18 +677,25 @@
 
                                         <p class="text-danger">
                                             (*) متطلبات إلزامية </p>
-                                        <div class="d-flex justify-content-center">
-                                            <!-- <button type="button" class="btn btn-ghost-secondary ms-4"
-                                                data-hs-step-form-prev-options="{
-                 &quot;targetSelector&quot;: &quot;#basicStepDetails&quot;
-               }">
+                                        <div class="d-flex justify-content-center" *ngIf="!viewApplication">
+                                            <button type="button" [disabled]="disableConditionBtn" (click)="goStep1()" class="btn btn-ghost-secondary ms-4">
                                                 <i class="bi-chevron-right small"></i>
-                                                الشروط </button> -->
+                                                الشروط </button>
 
-                                            <ng-container>
-                                                <button (click)="Save()" id="submit-button"
+                                                <button (click)="Save()" [disabled]="!showSubmit" id="submit-button"
                                                     class="btn btn-primary btn-lg">تقديم الطلب</button>
-                                            </ng-container>
+
+
+                                        </div>
+
+                                        <div class="d-flex justify-content-center" *ngIf="viewApplication">
+                                            <button type="button" (click)="goBack()" class="btn btn-ghost-secondary ms-4">
+                                                <i class="bi-chevron-right small"></i>
+                                                السابق </button>
+
+                                                <button (click)="goNext()" id="submit-button"
+                                                    class="btn btn-primary btn-lg">التالي</button>
+
 
                                         </div>
                                     </form>

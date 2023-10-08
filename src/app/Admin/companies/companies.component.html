@@ -32,9 +32,9 @@
             </tr>
             <tr id="w0-filters" class="filters">
               <td>&nbsp;</td>
-              <td><input type="text" class="form-control" name="CompanySearch[national_id]"></td>
-              <td><input type="text" class="form-control" name="CompanySearch[name]"></td>
-              <td><input type="text" class="form-control" name="CompanySearch[company_type]"></td>
+              <td><input type="text" class="form-control" name="natinoalId" [(ngModel)]="natinoalId" (blur)="search()"></td>
+              <td><input type="text" class="form-control" name="establishName" [(ngModel)]="establishName" (blur)="search()"></td>
+              <td><input type="text" class="form-control" name="establishType" [(ngModel)]="establishType" (blur)="search()"></td>
               <td><input type="text" class="form-control" name="CompanySearch[status]"></td>
               <td><input type="text" class="form-control" name="CompanySearch[created_at]"></td>
               <td><input type="text" class="form-control" name="CompanySearch[updated_at]"></td>

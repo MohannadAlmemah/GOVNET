@@ -57,6 +57,9 @@ import { TextFieldPhoneComponent } from './form/fields/text-field-phone/text-fie
 import { MultiSelectComponent } from './form/fields/multi-select/multi-select.component';
 import { FileComponent } from './form/fields/file/file.component';
 import { TextViewComponent } from './form/fields/text-view/text-view.component';
+import { ServiceOutputComponent } from './investement/service-output/service-output.component';
+import { ViewApplicationComponent } from './form/view-application/view-application.component';
+import { PredefinedComboBoxViewComponent } from './form/view-fields/predefined-combo-box-view/predefined-combo-box-view.component';
 // import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 // import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -104,6 +107,9 @@ registerPlugin(FilePondPluginFileValidateType);
     MultiSelectComponent,
     FileComponent,
     TextViewComponent,
+    ServiceOutputComponent,
+    ViewApplicationComponent,
+    PredefinedComboBoxViewComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

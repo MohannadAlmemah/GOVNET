@@ -1,6 +1,6 @@
 <header class="position-absolute top-0 start-0 end-0 mt-3 mx-3">
     <div class="d-flex d-lg-none justify-content-center">
-        <a href="/">
+        <a routerLink="/">
             <img class="w-100" src="../../../assets/images/logo2.png" alt="Image Description" data-hs-theme-appearance="default"
                 style="min-width: 7rem; max-width: 8.5rem;">
         </a>
@@ -41,7 +41,7 @@
                         <div class="text-center">
                             <div class="mb-5">
                                 <h1 class="display-4">إنشاء حساب</h1>
-                                <p>هل لديك حساب؟ <a class="link" href="/Investment/login">تسجيل الدخول هنا</a> </p>
+                                <p>هل لديك حساب؟ <a class="link" routerLink="/Investment/login">تسجيل الدخول هنا</a> </p>
                             </div>
                         </div>
 
@@ -161,7 +161,7 @@
                                   [cssClass]="'form-control form-control-lg input-country-code'"
                                   [preferredCountries]="preferredCountries"
                                   [enableAutoCountrySelect]="true"
-                                  [enablePlaceholder]="true"
+                                  [enablePlaceholder]="false"
                                   [searchCountryFlag]="true"
                                   [searchCountryField]="[
                                     SearchCountryField.Iso2,
@@ -169,7 +169,7 @@
                                   ]"
                                   [selectFirstCountry]="true"
                                   [selectedCountryISO]="CountryISO.Jordan"
-                                  [phoneValidation]="true"
+                                  [phoneValidation]="false"
                                   [separateDialCode]="separateDialCode"
                                   [numberFormat]="PhoneNumberFormat.National"
                                   name="phoneNumber"
@@ -242,7 +242,7 @@
                             <div class="mb-3 field-signupform-password">
                                 <input type="password"  class="form-control form-control-lg"
                                 name="password" required="true" [(ngModel)]="password" #password_field="ngModel"
-                                    pattern="^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$"
+                                    pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$"
                                     placeholder="مجموعة من الحروف والأرقام وان لا تقل عن 8 خانات" aria-required="true">
                                     <span class="text-danger" *ngIf="myForm.submitted && !password_field.valid">حقل اجباري!</span>
 

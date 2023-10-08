@@ -13,12 +13,13 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service'; // Import your AuthService
 import { CookieService } from 'ngx-cookie-service'; // Import CookieService
 import { ApiService } from 'src/services/apiService';
+import { SweetAlertService } from 'src/services/sweetAlertService';
 
 @Injectable()
 
 export class TokenInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService,private apiService:ApiService) { }
+  constructor(private authService: AuthService,private apiService:ApiService,private sweetAlertService:SweetAlertService) { }
 
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -28,6 +29,8 @@ export class TokenInterceptor implements HttpInterceptor {
 
         
           try{
+
+            
 
             if(response.body?.statusCode!=undefined){
  
@@ -57,10 +60,17 @@ export class TokenInterceptor implements HttpInterceptor {
 
                 //   }
                 // });
+              }else if(response.body?.statusCode>=400){
+                this.sweetAlertService.ShowAlert('error','حدث خطأ يرجى المحاولة مره اخرى');
               }
+          }else{
+            // console.log(request);
+            // console.log(response);
           }
 
           }catch(ex){
+
+            this.sweetAlertService.ShowAlert('error','حدث خطأ يرجى المحاولة مره اخرى');
 
             console.log(ex);
 

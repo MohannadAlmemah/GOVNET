@@ -7,12 +7,15 @@ import { AuthService } from "src/services/auth.service";
     providedIn: 'root'
 })
 
-export class AuthGuard implements CanActivate {
+export class ConsumerGuard implements CanActivate {
     constructor(private router: Router,private cookieService: CookieService,private authService:AuthService) { }
    
     canActivate() {
       const token = this.authService.getToken();
-      if (token) {
+
+      var role=this.authService.getRole();
+
+      if (token && role?.toLocaleLowerCase()=='consumer') {
         // Token exists, user is authorized to access the requested route
         return true;
       } else {

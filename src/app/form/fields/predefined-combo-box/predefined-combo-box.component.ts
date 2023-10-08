@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { Field } from 'src/app/models/field';
 
@@ -7,7 +7,11 @@ import { Field } from 'src/app/models/field';
   templateUrl: './predefined-combo-box.component.html',
   styleUrls: ['./predefined-combo-box.component.css']
 })
-export class PredefinedComboBoxComponent {
+export class PredefinedComboBoxComponent implements AfterViewInit {
+
+  ngAfterViewInit(): void {
+    // console.log(this.field);
+  }
 
   @Input() formGroup: UntypedFormGroup|undefined;
 
@@ -32,11 +36,29 @@ export class PredefinedComboBoxComponent {
   @Input()
   isInvalid:boolean=false;
 
-  @Output() 
-  refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean}>();
+  @Input()
+  isContainer:boolean=false;
 
-  
-  refreshForm(fieldId: string, shouldRefresh: boolean){
-    this.refreshFormEvent.emit({fieldId,shouldRefresh});
+  @Input()
+  containerFieldId:string|undefined=undefined;
+
+  @Input()
+  fieldIndex:number|undefined=undefined;
+
+  @Output() 
+  refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>();
+
+
+  refreshForm(fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean){
+
+    this.refreshFormEvent.emit({ fieldId ,shouldRefresh,containerFieldId,fieldIndex,isContainer});
+
   }
+
+  /**
+   *
+   */
+
+
+
 }

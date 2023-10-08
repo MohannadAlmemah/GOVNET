@@ -15,12 +15,13 @@ export class ServicesComponent implements OnInit {
   selectedServiceId:string="";
   sectionName:string="";
   index=0;
+  sectionId:string|undefined;
 
   constructor(private apiService:ApiService,private route: ActivatedRoute) {
     if (this.route.snapshot.queryParams['SectionId']) {
-      const value = this.route.snapshot.queryParamMap.get('SectionId');
-      if(value!=null){
-        var request= this.apiService.get('categorization/GetServicesWithSectionId?id='+value);
+      this.sectionId = this.route.snapshot.queryParamMap.get('SectionId')!;
+      if(this.sectionId!=null){
+        var request= this.apiService.get('categorization/GetServicesWithSectionId?id='+this.sectionId);
         request.subscribe(response=>{
           var data=response.data;
           this.services=data;
@@ -99,22 +100,22 @@ export class ServicesComponent implements OnInit {
     '../../assets/images/one-approval.png',
   ];
 
-  openDialog(serviceId:string,shouldShow:boolean){
+  // openDialog(serviceId:string,shouldShow:boolean){
 
-    if(shouldShow==false){
-      this.goToForm(serviceId);
-      return;
-    }
+  //   if(shouldShow==false){
+  //     this.goToForm(serviceId);
+  //     return;
+  //   }
 
-    var service=this.services.filter(x=>x.id==serviceId)[0];
-    this.serviceCard=service.serviceCard;
-    this.selectedServiceId=serviceId;
-  }
+  //   var service=this.services.filter(x=>x.id==serviceId)[0];
+  //   this.serviceCard=service.serviceCard;
+  //   this.selectedServiceId=serviceId;
+  // }
 
-  goToForm(serviceId:string){
-    const SectionId = this.route.snapshot.queryParamMap.get('SectionId');
-    location.href=`/Form?BluePrintId=${serviceId}&SectionId=${SectionId}`;
-  }
+  // goToForm(serviceId:string){
+  //   const SectionId = this.route.snapshot.queryParamMap.get('SectionId');
+  //   location.href=`/Form?BluePrintId=${serviceId}&SectionId=${SectionId}`;
+  // }
 
   
 }

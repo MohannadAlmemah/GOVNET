@@ -35,11 +35,19 @@ export class TextViewComponent {
   @Input()
   isInvalid:boolean=false;
 
-  @Output() 
-  refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean}>();
+  @Input()
+  containerFieldId:string|undefined=undefined;
 
-  
-  refreshForm(fieldId: string, shouldRefresh: boolean){
-    this.refreshFormEvent.emit({fieldId,shouldRefresh});
+  @Input()
+  fieldIndex:number|undefined=undefined;
+
+  @Output() 
+  refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>();
+
+
+  refreshForm(fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean){
+
+    this.refreshFormEvent.emit({ fieldId ,shouldRefresh,containerFieldId,fieldIndex,isContainer});
+
   }
 }

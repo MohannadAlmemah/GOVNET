@@ -13,13 +13,15 @@
             formControlName="{{field.id}}" [readOnly]="!field.editable"
             type="text" [required]="field.required && !field.hidden!"> -->
 
-            <div class="wrapper" style="direction: ltr;">
+
+
+            <div class="wrapper" style="direction: ltr;" *ngIf="!viewApp">
                 <ngx-intl-tel-input
                   [cssClass]="'form-control form-control-lg input-country-code'"
                   [preferredCountries]="preferredCountries"
                   [ngClass]="isInvalid && submitted ? 'is-invalid':null"
                   [enableAutoCountrySelect]="true"
-                  [enablePlaceholder]="true"
+                  [enablePlaceholder]="false"
                   [searchCountryFlag]="true"
                   [searchCountryField]="[
                     SearchCountryField.Iso2,
@@ -27,16 +29,21 @@
                   ]"
                   [selectFirstCountry]="true"
                   [selectedCountryISO]="CountryISO.Jordan"
-                  [phoneValidation]="true"
+                  [phoneValidation]="false"
                   [separateDialCode]="separateDialCode"
                   [numberFormat]="PhoneNumberFormat.National"
-                  formControlName="{{field.id}}"
+                  formControlName="{{fieldId}}"
                   [(ngModel)]="phoneNumber"
                   [required]="field.required && !field.hidden!"
                 >
 
                 </ngx-intl-tel-input>
 
+              </div>
+              
+              <div *ngIf="viewApp==true">
+                
+                <input  formControlName="{{fieldId}}" [value]="field.value" class="form-control">
               </div>
 <!-- 
               <span *ngIf="(phoneNumber==null && submitted)" class="text-danger"  >

@@ -1,8 +1,15 @@
 <div class="row mb-4" [formGroup]="formGroup!">
 
     <div class="col-sm-12">
-        <p-checkbox formControlName="{{fieldId}}" (onChange)="refreshForm(field.id,field.shouldRefresh)"
-            [binary]="true"></p-checkbox>
+        <p-checkbox formControlName="{{fieldId}}" (onChange)="refreshForm(field.id,field.shouldRefresh,containerFieldId,fieldIndex,isContainer)"
+            [binary]="true" [pattern]="field.required?'true':''" ></p-checkbox>
         <label class="mx-2">{{field.label}}</label>
+    </div>
+
+    <div *ngIf="isInvalid && submitted">
+        <span class="text-danger"
+            *ngIf="errors?.['pattern']">
+            حقل اجباري !
+        </span>
     </div>
 </div>

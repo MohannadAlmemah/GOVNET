@@ -78,9 +78,20 @@
                                          </span>
                                     </td>
                                     <td class="col-md-2 order-md-4">
+
+                                        <a class="btn btn-white btn-sm py-1 px-4  my-2" href="/Form?serviceId={{item?.id}}&showForm=true&serviceType=CURRENT">عرض الطلب</a>
+
+                                        <br>
+
+                                        <a class="btn btn-white btn-sm py-1 px-4  my-2" href="/Investment/ServiceOutput?serviceId={{item?.id}}&serviceType=CURRENT">مخرجات الخدمه</a>
+
+                                        <br>
+
                                         <ng-container *ngIf="item.yourTurn==true" >
                                             <a class="btn btn-white btn-sm py-1 px-4"
                                                 href="/Form?serviceId={{item?.id}}">استكمال</a>
+
+                                                
         
                                         </ng-container>
                                   </td>
@@ -124,6 +135,14 @@
                                              </span>
                                         </td>
                                         <td class="col-md-2 order-md-4">
+
+                                            <a class="btn btn-white btn-sm py-1 px-4 my-2" href="/Form?serviceId={{item?.id}}&showForm=true&serviceType=ARCHIVED">عرض الطلب</a>
+        
+                                            <br>
+
+                                            <a class="btn btn-white btn-sm py-1 px-4 my-2" href="/Investment/ServiceOutput?serviceId={{item?.id}}&serviceType=ARCHIVED">مخرجات الخدمه</a>
+
+                                            <br>
     
                                             <ng-container *ngIf="item.yourTurn==true" >
                                                 <a class="btn btn-white btn-sm py-1 px-4"

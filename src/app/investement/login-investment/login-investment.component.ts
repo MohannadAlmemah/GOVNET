@@ -3,6 +3,8 @@ import { NgForm } from '@angular/forms';
 import { ApiService } from 'src/services/apiService';
 import { AuthService } from 'src/services/auth.service';
 import { SweetAlertService } from 'src/services/sweetAlertService';
+import jwt_decode from "jwt-decode";
+
 
 @Component({
   selector: 'app-login-investment',
@@ -40,11 +42,21 @@ export class LoginInvestmentComponent {
 
           if(res.statusCode==200){
 
-            location.href='/Investment/Dashboard';
-           
+            var token = res.data.access_token;
+            var decoded = jwt_decode(token) as any;
+            
+            var roel= decoded.role as string;
+          
             this.authService.setToken(res.data.access_token);
+            this.authService.setRole(roel);
             this.authService.setRefreshToken(res.data.refresh_token);
             this.authService.setNationalNumber(this.username!);
+
+            if(roel.toLowerCase()=="admin"){
+              location.href='/Investment/Admin/Users';
+            }else{
+              location.href='/Investment/Dashboard';
+            }
 
           }else{
             this.sweetAlertService.ShowAlert('error',res.message);

@@ -12,8 +12,11 @@ export class InvestmentUsersComponent {
   requests:any[]=[];
   pages: number[] = [];
   currentIndex=1;
-  investmentName:string|undefined;
-
+  userName:string|undefined="";
+  nameEn:string|undefined="";
+  nameAr:string|undefined="";
+  nationality	:string|undefined="";
+  mobil:string|undefined="";
   constructor(private apiService:ApiService) {
    
     this.fillRequest();
@@ -34,8 +37,47 @@ export class InvestmentUsersComponent {
 
   }
 
+
   search(){
-    var request=this.apiService.get('Company/GetAllInvestorsRequests?','http://investment.dev.test.jo/api');
+
+    this.pages=[];
+
+    var url="Company/GetAllInvestorsRequests?";
+
+    if(this.userName!=""){
+      url+=`NationalId=${this.userName}&`;
+    }
+
+    if(this.nameEn!=""){
+      url+=`NameEn=${this.nameEn}&`;
+    }
+
+    if(this.nameAr!=""){
+      url+=`NameAr=${this.nameAr}&`;
+    }
+
+    if(this.nameAr!=""){
+      url+=`NameAr=${this.nameAr}&`;
+    }
+
+    if(this.nationality!=""){
+      url+=`Nationality=${this.nationality}&`;
+    }
+
+    if(this.mobil!=""){
+      url+=`Mobile=${this.mobil}&`;
+    }
+
+    var request=this.apiService.get(url,'http://investment.dev.test.jo/api');
+
+    request.subscribe(response=>{
+      this.requests=response.records;
+
+      
+      for (let i = 1; i <= response.totalPages; i++) {
+        this.pages.push(i);
+      }
+    });
 
   }
 

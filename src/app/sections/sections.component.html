@@ -42,7 +42,11 @@
 
                             <div class="row col-divider">
                                 <div class="col">
-                                    <a class="btn btn-outline-gold-2"  href="/Services?SectionId={{item.id}}&MainSectionId={{sectionId}}&index={{index}}">عرض الخدمات <i
+                                    <a class="btn btn-outline-gold-2" routerLink="/Services"  [queryParams]="{
+                                        SectionId:item.id,
+                                        MainSectionId:sectionId,
+                                        index:index
+                                    }">عرض الخدمات <i
                                             class="bi-arrow-left fs-2"></i></a>
                                 </div>
 

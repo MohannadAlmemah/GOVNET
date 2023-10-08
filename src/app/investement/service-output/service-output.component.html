@@ -1,0 +1,54 @@
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div dir="rtl">
+            <nav aria-label="breadcrumb">
+                <ol id="w1" class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        مخرج الخدمة
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div id="create-form" class="row justify-content-center py-7" style="background:url(/img/bg-green-full.png);">
+            <div class="col-md-8 col-12">
+                <div dir="rtl" class="card">
+                    <div class="card-header">
+                        <h2 class="card-title h2"> 
+                            مخرج الخدمة
+                        </h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row" *ngFor="let item of outputs">
+                            <div class="col-md-6 mb-4">
+                                <label>
+                                    {{item.note}}
+                                </label>
+                            </div>
+
+                            <div  class="col-sm-6  mb-4">
+
+                                <div role="button" (click)="downloadMinioFile(item.file)" class="text-primary">تنزيل
+                                    <i class="fa fa-download"></i>
+                                </div>
+
+                            </div>
+
+                            
+                        </div>
+
+
+                        
+
+                       
+
+                        
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+</main>

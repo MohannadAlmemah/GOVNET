@@ -18,7 +18,7 @@
                         <h3 class="card-header-title fw-normal">الشركات</h3>
 
                         <div class="dropdown">
-                            <a class="btn btn-white btn-sm" href="/Form?BluePrintId=64f456164b6d4c716b97d8f3&SectionId=64f0e1dc666ecc198cf6cbed"><i class="bi-plus-lg"></i> إضافة
+                            <a class="btn btn-white btn-sm" href="/Form?BluePrintId=651942c1f427a90fcd395a14&SectionId=64f0e1dc666ecc198cf6cbed"><i class="bi-plus-lg"></i> إضافة
                                 شركة</a>
                         </div>
 
@@ -45,7 +45,7 @@
 
                                             <div class="col-auto">
                                                 <a class="btn fw-bold btn-primary btn-sm"
-                                                    href="/Investment/CompanyInfo?id={{item?.key}}">عرض <i
+                                                    routerLink="/Investment/CompanyInfo" [queryParams]="{'id':item?.key}">عرض <i
                                                         class="bi-box-arrow-up-left ms-1"></i></a>
                                             </div>
 
@@ -69,7 +69,7 @@
                         <h3 class="card-header-title fw-normal">آخر الطلبات المقدمة </h3>
 
                         <div class="dropdown">
-                            <a class="btn btn-white btn-sm" href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a"><i
+                            <a class="btn btn-white btn-sm" routerLink="/Sections" [queryParams]="{SectionId:'64ae566b4e3b1454dea0ed6a'}"><i
                                     class="bi-plus-lg"></i> طلب جديد</a>
                         </div>
 
@@ -123,10 +123,19 @@
                                                      </span>
                                                 </td>
                                                 <td class="order-md-4">
+
+                                                    <a class="btn btn-white btn-sm py-1 px-4  my-2" href="/Form?serviceId={{item?.id}}&showForm=true&serviceType=CURRENT">عرض الطلب</a>
+
+                                                    <br>
+
+                                                    <a class="btn btn-white btn-sm py-1 px-4  my-2" href="/Investment/ServiceOutput?serviceId={{item?.id}}&serviceType=CURRENT">مخرجات الخدمه</a>
+
+                                                    <br>
+        
         
                                                     <ng-container *ngIf="item.yourTurn==true" >
                                                         <a class="btn btn-white btn-sm py-1 px-4"
-                                                            href="/Form?serviceId={{item?.id}}&serviceName={{item?.name}}">استكمال</a>
+                                                            routerLink="/Form" [queryParams]="{serviceId:item?.id,serviceName:item?.name}">استكمال</a>
         
                                                     </ng-container>
         
@@ -173,7 +182,15 @@
                                                      </span>
                                                 </td>
                                                 <td class="order-md-4">
+
+                                                    <a class="btn btn-white btn-sm py-1 px-4 my-2" href="/Form?serviceId={{item?.id}}&showForm=true&serviceType=ARCHIVED">عرض الطلب</a>
         
+                                                    <br>
+
+                                                    <a class="btn btn-white btn-sm py-1 px-4 my-2" href="/Investment/ServiceOutput?serviceId={{item?.id}}&serviceType=ARCHIVED">مخرجات الخدمه</a>
+        
+                                                    <br>
+
                                                     <span *ngIf="item.typeStatus==2">
                                                         <i class="fa fa-eye text-primary" role="button" (click)="showRejectedType(item.id)"></i>
                                                     </span>

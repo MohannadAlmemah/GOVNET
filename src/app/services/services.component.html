@@ -7,8 +7,8 @@
         <div dir="rtl">
             <nav aria-label="breadcrumb">
                 <ol id="w0" class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
-                    <li class="breadcrumb-item"><a href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a">الخدمات الإلكترونية</a></li>
+                    <li class="breadcrumb-item"><a routerLink="/">الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a routerLink="/Sections" [queryParams]="{SectionId:'64ae566b4e3b1454dea0ed6a'}">الخدمات الإلكترونية</a></li>
                     <li class="breadcrumb-item active" aria-current="page">
                         {{sectionName}}
                     </li>
@@ -46,7 +46,7 @@
 
                         <div class="card-footer">
 
-                            <button type="button" class="btn btn-outline-dark" (click)="goToForm(item.id)"  >تقديم طلب </button>
+                            <a type="button" class="btn btn-outline-dark" routerLink="/Form" [queryParams]="{'BluePrintId':item.id, 'SectionId':sectionId}"  >تقديم طلب </a>
                         </div>
                     </div>
                 </div>

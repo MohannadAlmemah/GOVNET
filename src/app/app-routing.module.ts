@@ -13,7 +13,7 @@ import { InvestmentProfileComponent } from './investement/investment-profile/inv
 import { LoginInvestmentComponent } from './investement/login-investment/login-investment.component';
 import { InvestementSignupComponent } from './investement/investement-signup/investement-signup.component';
 import { InvestmentForgetPasswordComponent } from './investement/investment-forget-password/investment-forget-password.component';
-import { AuthGuard } from 'src/security/AuthGuard';
+import { ConsumerGuard } from 'src/security/consumer.guard';
 import { CompanyInfoComponent } from './investement/company-info/company-info.component';
 import { FilterRequestsComponent } from './Admin/filter-requests/filter-requests.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
@@ -21,6 +21,10 @@ import { ReciptComponent } from './Admin/recipt/recipt.component';
 import { InvestmentUsersComponent } from './Admin/investment-users/investment-users.component';
 import { CompaniesComponent } from './Admin/companies/companies.component';
 import { InvestmentUserViewComponent } from './Admin/investment-user-view/investment-user-view.component';
+import { ServiceOutputComponent } from './investement/service-output/service-output.component';
+import { AdminGuard } from 'src/security/admin.guard';
+import { AuthGuard } from 'src/security/auth.guard';
+import { ViewApplicationComponent } from './form/view-application/view-application.component';
 
 const routes: Routes = [
   { 
@@ -38,9 +42,10 @@ const routes: Routes = [
       {path:'Sections',component:SectionsComponent},
       {path:'Services',component:ServicesComponent},
       {path:'Form',component:FormComponent},
+      {path:'ViewApplcation',component:ViewApplicationComponent},
       {path:'MyRequests',component:MyRequestsComponent},
     ]
-    ,canActivate:[AuthGuard],
+    ,canActivate:[ConsumerGuard],
   },
   {
     path:'Investment',
@@ -48,9 +53,17 @@ const routes: Routes = [
     children:[
       {path:'Dashboard',component:InvestmentDashboardComponent},
       {path:'Profile',component:InvestmentProfileComponent},
-      {path:'CompanyInfo',component:CompanyInfoComponent},
+      {path:'ServiceOutput',component:ServiceOutputComponent},
     ]
-    ,canActivate:[AuthGuard],
+    ,canActivate:[ConsumerGuard],
+  },
+  {
+    path:'Investment',
+    component:ServciesLayoutComponent,
+    children:[
+      {path:'CompanyInfo',component:CompanyInfoComponent},
+    ],
+    canActivate:[AuthGuard]
   },
   {
     path:'Investment/Admin',
@@ -62,7 +75,7 @@ const routes: Routes = [
       {path:'UserView',component:InvestmentUserViewComponent},
       {path:'Companies',component:CompaniesComponent},
     ]
-    ,canActivate:[AuthGuard],
+    ,canActivate:[AdminGuard],
   },
   {path:'Investment/login',component:LoginInvestmentComponent},
   {path:'Investment/SignUp',component:InvestementSignupComponent},

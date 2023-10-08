@@ -26,7 +26,8 @@
                         </h2>
                         <span class="text-start">{{userInfo?.en_FullName}}
                         </span>
-                        <a class="btn btn-sm btn-warning" href="/user/update?id=45">تعديل</a> <a href="#"
+                        <!-- <a class="btn btn-sm btn-warning" href="/user/update?id=45">تعديل</a>  -->
+                        <a href="#"
                             class="float-start" onclick="window.print();">طباعة</a>
                     </div>
                     <!-- Body -->
@@ -57,7 +58,7 @@
                                         <label>رقم دفتر العائلة</label>
                                     </div>
                                     <div class="col-auto">
-                                        <input type="text" class="form-control" name="family_no" value="E912799"
+                                        <input type="text" class="form-control" name="family_no" 
                                             disabled="disabled">
                                     </div>
                                 </div>
@@ -84,7 +85,7 @@
                                         <label>رقم الهاتف</label>
                                     </div>
                                     <div class="col-auto">
-                                        <input type="text" class="form-control" name="mobile" value="+962795404862"
+                                        <input type="text" class="form-control" name="mobile" value="{{phone}}"
                                             disabled="disabled">
                                     </div>
                                 </div>
@@ -93,7 +94,7 @@
                                         <label>البريد الإلكتروني</label>
                                     </div>
                                     <div class="col-auto">
-                                        <input type="text" class="form-control" name="email" disabled="disabled">
+                                        <input type="text" class="form-control" name="email" value="{{email}}" disabled="disabled">
                                     </div>
                                 </div>
                             </div>

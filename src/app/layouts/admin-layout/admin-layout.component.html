@@ -53,11 +53,11 @@
 
                              
                             <li class="nav-item text-end">
-                                <a class="hs-mega-menu-invoker nav-link" href="/Investment/Admin/Users"><i class="bi-person dropdown-item-icon text-white-50"></i> المستثمرين</a>
+                                <a class="hs-mega-menu-invoker nav-link" routerLink="/Investment/Admin/Users"><i class="bi-person dropdown-item-icon text-white-50"></i> المستثمرين</a>
                             </li>
 
                             <li class="nav-item text-end">
-                                <a class="hs-mega-menu-invoker nav-link" href="/Investment/Admin/Companies"><i class="bi-files-alt dropdown-item-icon text-white-50"></i> الشركات</a> </li> 
+                                <a class="hs-mega-menu-invoker nav-link" routerLink="/Investment/Admin/Companies"><i class="bi-files-alt dropdown-item-icon text-white-50"></i> الشركات</a> </li> 
                                                 
     
                         <!-- <li class="nav-item me-2 text-end">
@@ -74,14 +74,14 @@
                             <a class="hs-mega-menu-invoker nav-link" href="/emp"><i class="bi-person dropdown-item-icon text-white-50"></i> الموظفون</a>                    </li> -->
                                           
                                             <li class="nav-item me-2 text-end">
-                            <a class="hs-mega-menu-invoker nav-link" href="/Investment/Admin/Recipt"><i class="bi-cash dropdown-item-icon text-white-50"></i> المالية</a>                    </li>
+                            <a class="hs-mega-menu-invoker nav-link" routerLink="/Investment/Admin/Recipt"><i class="bi-cash dropdown-item-icon text-white-50"></i> المالية</a>                    </li>
                                       
                                             <!-- <li class="nav-item me-2 text-end">
                             <a class="hs-mega-menu-invoker nav-link" href="/services"><i class="bi-list dropdown-item-icon text-white-50"></i> الخدمات</a>                    </li>
                                           -->
                         <li class="nav-item me-2 text-end">
                            
-    <input type="hidden" name="_csrf-backend" value="bg5LOwvrU9Zx8ebAxSCCpMF749b6jT3dITkriwg_Kd0vQnJpfpkVr0nEl7GwYsnWikmuuMv3DOtNbE26MQpzrQ=="><button type="submit" class="hs-mega-menu-invoker nav-link bg-maroon border-0"><i class="bi-box-arrow-left dropdown-item-icon text-white-50"></i>
+                        <button type="button" (click)="logout()" class="hs-mega-menu-invoker nav-link bg-maroon border-0"><i class="bi-box-arrow-left dropdown-item-icon text-white-50"></i>
                                 تسجيل خروج</button>                    </li>
                         <!-- End Pages -->
                     </ul>

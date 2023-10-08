@@ -28,12 +28,20 @@ export class AuthService {
     return this.cookieService.get('refreshToken');
   }
 
+  getRole(): string | null {
+    return this.cookieService.get('role');
+  }
+
   getNationalNumber(): string | null {
     return this.cookieService.get('nationalNumber');
   }
 
   setToken(token: string): void {
     this.cookieService.set('token', token,1,'/');
+  }
+
+  setRole(role: string): void {
+    this.cookieService.set('role', role ,1,'/');
   }
 
   setRefreshToken(token: string): void {
@@ -48,6 +56,7 @@ export class AuthService {
     this.cookieService.delete('token');
     this.cookieService.delete('refreshToken');
     this.cookieService.delete('nationalNumber');
+    this.cookieService.delete('role');
   }
 
   removeToken2(): void {

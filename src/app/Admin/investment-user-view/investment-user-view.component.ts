@@ -14,6 +14,8 @@ export class InvestmentUserViewComponent {
   userInfo:any;
   isLoading=true;
   userNatId:string|undefined;
+  email:string|undefined;
+  phone:string|undefined;
 
   constructor(private apiService:ApiService,private route: ActivatedRoute) {
 
@@ -23,10 +25,25 @@ export class InvestmentUserViewComponent {
       forkJoin([this.getPersonalInfo()])
       .pipe(finalize(() => this.isLoading = false))
       .subscribe();
+
+      this.getConactInfo();
       
     }
     
 
+  }
+
+  getConactInfo(){
+    var request=this.apiService.get(`Admin/GetConsumerInfo?UserName=${this.userNatId}`);
+
+    request.subscribe(response=>{
+
+      if(response.statusCode==200){
+        var data=response.data;
+        this.email=data.email;
+        this.phone=data.phoneNumber;
+      }
+    })
   }
 
   getPersonalInfo(){

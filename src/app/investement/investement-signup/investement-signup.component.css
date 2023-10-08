@@ -1,10 +1,9 @@
-
 .dropdown-menu{
     position: absolute !important;
     left: -206px !important;
     width: 320px !important;
-   }
-  
-   .input-country-code{
+}
+
+.input-country-code{
     padding-left: 10px !important;
-   }
+}
