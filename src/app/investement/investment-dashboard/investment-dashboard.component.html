@@ -26,36 +26,55 @@
 
 
                     <div class="card-body">
-                        <p>أضف شركة لملفك الشخصي للإستفادة من الخدمات الإلكترونية</p>
-                        <ul class="list-group list-group-flush list-group-no-gutters">
 
-                            <li class="list-group-item" *ngFor="let item of compaines">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <span class="avatar avatar-success avatar-circle">
-                                            <span class="avatar-initials fw-normal">فعالة</span>
-                                        </span>
-                                    </div>
-                                    <div class="flex-grow-1 me-3 ms-3" >
-                                        <div class="row align-items-center">
-                                            <div class="col" >
-                                                <h5 class="mb-0"> {{item?.value}}</h5>
-                                                <!-- <span class="d-block fs-6 text-body">ذات مسؤولية محدودة</span> -->
-                                            </div>
 
-                                            <div class="col-auto">
-                                                <a class="btn fw-bold btn-primary btn-sm"
-                                                    routerLink="/Investment/CompanyInfo" [queryParams]="{'id':item?.key}">عرض <i
-                                                        class="bi-box-arrow-up-left ms-1"></i></a>
-                                            </div>
+                        <ng-container *ngIf="companyLoading">
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+    
+                        </ng-container>
 
+                        <ng-container  *ngIf="!companyLoading">
+                            <p>أضف شركة لملفك الشخصي للإستفادة من الخدمات الإلكترونية</p>
+                            <ul class="list-group list-group-flush list-group-no-gutters">
+    
+                                <li class="list-group-item" *ngFor="let item of compaines">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <span class="avatar avatar-success avatar-circle">
+                                                <span class="avatar-initials fw-normal">فعالة</span>
+                                            </span>
                                         </div>
-
+                                        <div class="flex-grow-1 me-3 ms-3" >
+                                            <div class="row align-items-center">
+                                                <div class="col" >
+                                                    <h5 class="mb-0"> {{item?.value}}</h5>
+                                                    <!-- <span class="d-block fs-6 text-body">ذات مسؤولية محدودة</span> -->
+                                                </div>
+    
+                                                <div class="col-auto">
+                                                    <a class="btn fw-bold btn-primary btn-sm"
+                                                        routerLink="/Investment/CompanyInfo" [queryParams]="{'id':item?.key}">عرض <i
+                                                            class="bi-box-arrow-up-left ms-1"></i></a>
+                                                </div>
+    
+                                            </div>
+    
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-
-                        </ul>
+                                </li>
+    
+                            </ul>
+                        </ng-container>
+                        
                     </div>
 
                 </div>
@@ -81,7 +100,7 @@
                             الطلبات غير المنتهية
                           </li>
                       
-                          <li class="nav-item tab" data-role="tab" data-target="#tabs-profile3">
+                          <li class="nav-item tab" data-role="tab" data-target="#tabs-profile3" (click)="fillArchiveServicesForConsumer()">
                             الطلبات المنتهية
                           </li>
         

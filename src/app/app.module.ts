@@ -62,6 +62,7 @@ import { ViewApplicationComponent } from './form/view-application/view-applicati
 import { PredefinedComboBoxViewComponent } from './form/view-fields/predefined-combo-box-view/predefined-combo-box-view.component';
 // import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 // import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SkeletonModule } from 'primeng/skeleton';
 
 
 // export function HttpLoaderFactory(http: HttpClient) {
@@ -120,6 +121,7 @@ registerPlugin(FilePondPluginFileValidateType);
     //     deps: [HttpClient]
     //   }
     // }),
+    SkeletonModule,
     ReactiveFormsModule,
     NgxIntlTelInputModule,
     ToastModule,

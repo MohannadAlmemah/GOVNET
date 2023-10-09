@@ -37,8 +37,10 @@
                             </a>
                         </li>
                     </ul>
+                    <ul id="basicStepFormProgress" dir="rtl" *ngIf="viewApplication" 
 
-                    <ul id="basicStepFormProgress" dir="rtl" *ngIf="viewApplication"
+                         [ngStyle]="{'justify-content':stepsName.length>=1 ? 'center':null}"
+
                         class="js-step-progress step step-sm step-icon-sm step-inline step-item-between mb-7">
                         
                         <li class="step-item" *ngFor="let item of stepsName;let index=index" [ngClass]="index==currentIndex?'active focus':null">
@@ -147,7 +149,7 @@
                                                                                 <tr>
                                                                                     <th>اسم الملف</th>
                                                                                     <th  *ngIf="!viewApplication">id</th>
-                                                                                    <th>حذف</th>
+                                                                                    <th>الاجراء</th>
                                                                                 </tr>
                                                                             </thead>
 
@@ -156,10 +158,11 @@
                                                                                 <tr
                                                                                     *ngFor="let item of getFiles(field.id)">
                                                                                     <td>{{field.label}}</td>
-                                                                                    <td *ngIf="!viewApplication">{{item.objectId}}</td>
+                                                                                    <td style="max-width: 120px;" *ngIf="!viewApplication">{{item.objectId}}</td>
                                                                                     <td>
 
-                                                                                        <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary"></i>
+                                                                                        <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary px-2"></i>
+                                                                                        <i role="button" *ngIf="!viewApplication" (click)="downloadMinioFile(item.objectId)" class="fa fa-eye text-primary px-2"></i>
 
                                                                                         <i role="button"  *ngIf="!viewApplication"
                                                                                             (click)="deleteFile(item.id)"
@@ -531,7 +534,7 @@
                                                                                                                             الملف
                                                                                                                         </th>
                                                                                                                         <th  *ngIf="!viewApplication">id</th>
-                                                                                                                        <th>حذف
+                                                                                                                        <th>الاجراء
                                                                                                                         </th>
                                                                                                                     </tr>
                                                                                                                 </thead>
@@ -543,11 +546,13 @@
                                                                                                                         <td>{{containerFiled.label}}
                                                                                                                         </td>
 
-                                                                                                                        <td *ngIf="!viewApplication">{{item.objectId}}</td>
+                                                                                                                        <td *ngIf="!viewApplication" style="max-width: 120px;">{{item.objectId}}</td>
 
                                                                                                                         <td>
 
-                                                                                                                            <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary"></i>
+                                                                                                                            <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary px-2"></i>
+
+                                                                                                                            <i role="button" *ngIf="!viewApplication" (click)="downloadMinioFile(item.objectId)" class="fa fa-eye text-primary px-2"></i>
 
                                                                                                                             <i role="button"  *ngIf="!viewApplication" 
                                                                                                                                 (click)="deleteFile(item.id)"

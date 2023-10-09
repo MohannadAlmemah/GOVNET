@@ -18,6 +18,8 @@ export class InvestmentDashboardComponent {
   compaines: any[] = [];
   isLoading: boolean = true;
 
+  companyLoading: boolean = true;
+
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
@@ -25,10 +27,12 @@ export class InvestmentDashboardComponent {
     private authService: AuthService
   ) {
     // Use forkJoin to combine both observables and finalize to update isLoading
-    forkJoin([this.fillCurrentServicesForConsumer(),this.fillArchiveServicesForConsumer(), this.getCompanies()])
+    forkJoin([this.fillCurrentServicesForConsumer()])
       .pipe(finalize(() => this.isLoading = false))
       .subscribe();
 
+
+      
     setTimeout(() => {
       
       const tabs = document.querySelectorAll('[data-role="tab"]'),
@@ -52,7 +56,11 @@ export class InvestmentDashboardComponent {
 
     }, 2000);
 
+    this.getCompanies();
+
   }
+
+
 
   getCompanies() {
     var headers = new HttpHeaders({
@@ -63,13 +71,15 @@ export class InvestmentDashboardComponent {
       'Authorization': this.authService.getToken() != undefined ? `Bearer ${this.authService.getToken()}` : '',
     });
 
-    return this.apiService.get('Investment/GetAllCompanyAuthorizationData?NationalId=' + this.authService.getNationalNumber(), 'https://appv4.sanad.gov.jo/api', headers)
-      .pipe(
-        tap(response => {
-          var data = response.list;
-          this.compaines = data;
-        })
-      );
+    var request= this.apiService.get('Investment/GetAllCompanyAuthorizationData?NationalId=' + this.authService.getNationalNumber(), 'https://appv4.sanad.gov.jo/api', headers);
+
+    request.subscribe(response=>{
+      var data = response.list;
+      this.compaines = data;
+      this.companyLoading=false;
+      
+    });
+
   }
 
   fillCurrentServicesForConsumer() {
@@ -86,16 +96,21 @@ export class InvestmentDashboardComponent {
   }
 
   fillArchiveServicesForConsumer() {
-    return this.apiService.get(`carboncopies/GetArchivedServicesForConsumer?SortOrder=desc`)
-      .pipe(
-        tap(response => {
-          if(response.statusCode == 200) {
-          var requests = response.data as any[];
-          var data = requests as any;
-          this.archiveService = data.items;
-        }
-        }),
-      );
+
+    this.isLoading=true;
+
+     var request = this.apiService.get(`carboncopies/GetArchivedServicesForConsumer?SortOrder=desc`);
+
+     request.subscribe(response=>{
+
+      var requests = response.data as any[];
+      var data = requests as any;
+      this.archiveService = data.items;
+
+      this.isLoading=false;
+     })
+
+      
   }
 
   showRejectedType(id:string){

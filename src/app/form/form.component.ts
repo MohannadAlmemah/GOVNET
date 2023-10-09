@@ -525,7 +525,7 @@ export class FormComponent implements OnInit {
   
       if(files.length>0){
         files.map(file=>{
-          this.pubshFile(fieldId,file,"","");
+          this.pubshFile(fieldId,file,"",file);
         });
       }
     }

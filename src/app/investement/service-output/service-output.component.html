@@ -23,13 +23,13 @@
                     <div class="card-body">
 
                         <div class="row" *ngFor="let item of outputs">
-                            <div class="col-md-6 mb-4">
+                            <div class="col-md-6 mb-4" *ngIf="item.note!='' && item.note!=null">
                                 <label>
                                     {{item.note}}
                                 </label>
                             </div>
 
-                            <div  class="col-sm-6  mb-4">
+                            <div  class="col-sm-6  mb-4"  *ngIf="item.file!='' && item.file!=null">
 
                                 <div role="button" (click)="downloadMinioFile(item.file)" class="text-primary">تنزيل
                                     <i class="fa fa-download"></i>
