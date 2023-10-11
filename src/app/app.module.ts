@@ -58,8 +58,7 @@ import { MultiSelectComponent } from './form/fields/multi-select/multi-select.co
 import { FileComponent } from './form/fields/file/file.component';
 import { TextViewComponent } from './form/fields/text-view/text-view.component';
 import { ServiceOutputComponent } from './investement/service-output/service-output.component';
-import { ViewApplicationComponent } from './form/view-application/view-application.component';
-import { PredefinedComboBoxViewComponent } from './form/view-fields/predefined-combo-box-view/predefined-combo-box-view.component';
+
 // import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 // import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -109,8 +108,6 @@ registerPlugin(FilePondPluginFileValidateType);
     FileComponent,
     TextViewComponent,
     ServiceOutputComponent,
-    ViewApplicationComponent,
-    PredefinedComboBoxViewComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

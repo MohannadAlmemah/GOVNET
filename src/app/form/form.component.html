@@ -7,8 +7,8 @@
         <div dir="rtl">
             <nav aria-label="breadcrumb">
                 <ol id="w6" class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/Investment/Dashboard">الرئيسية</a></li>
-                    <li class="breadcrumb-item"><a href="/Sections?SectionId=64ae566b4e3b1454dea0ed6a">الخدمات الالكترونيه</a></li>
+                    <li class="breadcrumb-item"><a routerLink="/Investment/Dashboard">الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a routerLink="/Sections" [queryParams]="{'SectionId':'64ae566b4e3b1454dea0ed6a'}">الخدمات الالكترونيه</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{serviceName}}</li>
                 </ol>
             </nav>

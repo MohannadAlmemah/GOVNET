@@ -16,6 +16,9 @@ export class TextFieldComponent {
   field!: Field;
 
   @Input()
+  isUserType:boolean=false;
+
+  @Input()
   fieldId:string|undefined;
 
   @Input()
@@ -42,7 +45,14 @@ export class TextFieldComponent {
   @Input()
   isContainer:boolean=false;
 
-  
+
+  updateIsUserType(){
+    if(this.formGroup?.get(this.fieldId!)?.value!="" && this.formGroup?.get(this.fieldId!)?.value!=null){
+      this.isUserType=true;
+    }else{
+      this.isUserType=false;
+    }
+  }
 
   getTextFieldType(tpye:string):string{
 
@@ -72,9 +82,9 @@ export class TextFieldComponent {
 
   refreshForm(fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean){
 
-    this.refreshFormEvent.emit({ fieldId ,shouldRefresh,containerFieldId,fieldIndex,isContainer});
-    // if(this.formGroup?.get(fieldId)?.value!="" && this.formGroup?.get(fieldId)?.value!=null){
-    // }
+    if(this.isUserType){
+      this.refreshFormEvent.emit({ fieldId ,shouldRefresh,containerFieldId,fieldIndex,isContainer});
+    }
 
   }
 

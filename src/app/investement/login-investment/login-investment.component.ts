@@ -17,7 +17,7 @@ export class LoginInvestmentComponent {
 
   username:string|undefined;
   password:string|undefined;
-
+  isLoading=false;
 
   constructor(private apiService:ApiService,
     private sweetAlertService:SweetAlertService,
@@ -30,6 +30,8 @@ export class LoginInvestmentComponent {
 
     if(this.myForm?.valid){
 
+      this.isLoading=true;
+
         var body={
           "userName": this.username,
           "password": this.password,
@@ -39,6 +41,8 @@ export class LoginInvestmentComponent {
         var request=this.apiService.post('Auth/Login',body);
     
         request.subscribe(res=>{
+
+          this.isLoading=false;
 
           if(res.statusCode==200){
 

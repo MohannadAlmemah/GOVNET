@@ -24,7 +24,6 @@ import { InvestmentUserViewComponent } from './Admin/investment-user-view/invest
 import { ServiceOutputComponent } from './investement/service-output/service-output.component';
 import { AdminGuard } from 'src/security/admin.guard';
 import { AuthGuard } from 'src/security/auth.guard';
-import { ViewApplicationComponent } from './form/view-application/view-application.component';
 
 const routes: Routes = [
   { 
@@ -42,7 +41,6 @@ const routes: Routes = [
       {path:'Sections',component:SectionsComponent},
       {path:'Services',component:ServicesComponent},
       {path:'Form',component:FormComponent},
-      {path:'ViewApplcation',component:ViewApplicationComponent},
       {path:'MyRequests',component:MyRequestsComponent},
     ]
     ,canActivate:[ConsumerGuard],

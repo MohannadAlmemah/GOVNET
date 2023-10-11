@@ -467,6 +467,9 @@ export class FormComponent implements OnInit {
     else if (field.type == 'COMBO_BOX') {
       this.generateComboBox(field,fieldId,value);
     }
+    else if (field.type == 'TEXT_FIELD' && field.textFieldType=="date") {
+      this.generateDate(field,fieldId,value);
+    }
     else if (field.type == 'TEXT_FIELD') {
       this.generateTextField(field,fieldId,value);
     }
@@ -542,6 +545,19 @@ export class FormComponent implements OnInit {
 
   private generateOther(field: Field,fieldId:string,value:any) {
     this.myForm.addControl(fieldId, new FormControl(value ?? null));
+  }
+
+  generateDate(field: Field,fieldId:string,value:string) {
+    const dateObject = new Date(value);
+    const year = dateObject.getFullYear();
+    const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+    const day = dateObject.getDate().toString().padStart(2, '0');
+
+    var Newvalue= `${year}-${month}-${day}`;
+
+    console.log(Newvalue);
+
+    this.myForm.addControl(fieldId, new FormControl(Newvalue ?? null));
   }
 
   private generatePredefinedComboBox(field: Field,fieldId:string,value:any) {
