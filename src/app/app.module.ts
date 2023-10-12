@@ -62,6 +62,7 @@ import { ServiceOutputComponent } from './investement/service-output/service-out
 // import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 // import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SkeletonModule } from 'primeng/skeleton';
+import { ContainerComponent } from './form/fields/container/container.component';
 
 
 // export function HttpLoaderFactory(http: HttpClient) {
@@ -108,6 +109,7 @@ registerPlugin(FilePondPluginFileValidateType);
     FileComponent,
     TextViewComponent,
     ServiceOutputComponent,
+    ContainerComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

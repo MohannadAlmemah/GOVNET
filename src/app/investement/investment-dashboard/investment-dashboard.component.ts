@@ -95,6 +95,14 @@ export class InvestmentDashboardComponent {
       );
   }
 
+  runFillCurrentServicesForConsumer(){
+    this.isLoading=true;
+
+    this.fillCurrentServicesForConsumer().subscribe(response=>{
+      this.isLoading=false;
+    });
+  }
+
   fillArchiveServicesForConsumer() {
 
     this.isLoading=true;

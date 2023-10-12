@@ -90,7 +90,28 @@
 
                                             <ng-container *ngIf="field.type=='FILE'">
 
-                                                <div class="row mb-4" [hidden]="field.hidden">
+                                                <app-file 
+                                                [formGroup]="myForm"
+                                                [errors]="getFormControlErrors(field.id)"
+                                                [viewApplication]="viewApplication"
+                                                [files]="getFiles(field.id)"
+                                                [isInvalid]="getFiles(field.id).length==0 && field.required"
+                                                [field]="field"
+                                                [fieldId]="field.id"
+                                                [submitted]="submitted"
+                                                [yourTurn]="yourTurn"
+                                                [containerFieldId]="undefined"
+                                                [fieldIndex]="undefined"
+                                                [isContainer]="false"
+                                                
+                                                (refreshFormEvent)="refreshForm($event)"
+                                                (deleteFileEvent)="deleteFile($event)"
+                                                (onUploadFileEvent)="onUploadFile($event)"
+                                                
+                                                >
+                                            </app-file>
+
+                                                <!-- <div class="row mb-4" [hidden]="field.hidden">
 
                                                     <label class="col-sm-2 col-form-label form-label">
                                                         {{field.label}}
@@ -184,7 +205,7 @@
 
 
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                             </ng-container>
 
@@ -227,7 +248,7 @@
                                                 [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                 [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
                                                 [containerFieldId]="undefined" [fieldIndex]="undefined"
-                                                (refreshFormEvent)="refreshForm2($event)" [value]="myForm.get(field.id)?.value"></app-text-view>
+                                                (refreshFormEvent)="refreshForm($event)" [value]="myForm.get(field.id)?.value"></app-text-view>
 
                                             
                                             </ng-container>
@@ -246,7 +267,7 @@
                                                         [errors]="getFormControlErrors(ef_field.id)"
                                                         [isInvalid]="getFormControlValidation(ef_field.id)" [field]="ef_field"
                                                         [fieldId]="ef_field.id" [submitted]="submitted" [yourTurn]="yourTurn"
-                                                        (refreshFormEvent)="refreshForm2($event)"
+                                                        (refreshFormEvent)="refreshForm($event)"
                                                         [value]="myForm.get(ef_field.id)?.value"></app-text-view>
 
                                                         
@@ -267,7 +288,7 @@
                                                     [containerFieldId]="undefined" [fieldIndex]="undefined"
                                                     
                                                     [isContainer]="false"
-                                                    (refreshFormEvent)="refreshForm2($event)"></app-text-field>
+                                                    (refreshFormEvent)="refreshForm($event)"></app-text-field>
 
 
                                             </ng-container>
@@ -279,7 +300,7 @@
                                                     [errors]="getFormControlErrors(field.id)"
                                                     [isInvalid]="getFormControlValidation(field.id)" [field]="field"
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
-                                                    (refreshFormEvent)="refreshForm2($event)"
+                                                    (refreshFormEvent)="refreshForm($event)"
                                                     (sendPhoneObjectEvent)="setPhoneObject($event)"
                                                     [phoneNumber]="phoneDto"
                                                     [viewApp]="viewApplication"
@@ -302,7 +323,7 @@
                                                     [isContainer]="false"
                                                     
                                                     [containerFieldId]="undefined" [fieldIndex]="undefined"
-                                                    (refreshFormEvent)="refreshForm2($event)"
+                                                    (refreshFormEvent)="refreshForm($event)"
                                                     
                                                     ></app-combo-box>
 
@@ -317,7 +338,7 @@
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
                                                     [isContainer]="false"
                                                     [containerFieldId]="undefined" [fieldIndex]="undefined"
-                                                    (refreshFormEvent)="refreshForm2($event)"></app-multi-select>
+                                                    (refreshFormEvent)="refreshForm($event)"></app-multi-select>
 
                                             </ng-container>
 
@@ -331,7 +352,7 @@
                                                     [isContainer]="false"
                                                     
                                                     [containerFieldId]="undefined" [fieldIndex]="undefined"
-                                                    (refreshFormEvent)="refreshForm2($event)"></app-predefined-combo-box>
+                                                    (refreshFormEvent)="refreshForm($event)"></app-predefined-combo-box>
 
                                             </ng-container>
 
@@ -343,7 +364,7 @@
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
                                                     [isContainer]="false"
                                                     [containerFieldId]="undefined" [fieldIndex]="undefined"
-                                                    (refreshFormEvent)="refreshForm2($event)"></app-checkbox>
+                                                    (refreshFormEvent)="refreshForm($event)"></app-checkbox>
 
 
 
@@ -351,324 +372,27 @@
 
                                             <ng-container *ngIf="field.type=='CONTAINER'">
 
-                                                <div *ngIf="!field.hidden">
-
-                                                    <div class=" card px-2" *ngIf="field.designType!='TABLE'">
-
-
-                                                        <div class=" row">
-
-
-                                                            <div class="col-md-12 col-12">
-                                                                <div class="solution_card">
-
-                                                                    <h4 class="text-center mt-2">{{field.label}}</h4>
-
-                                                                    <div>
-                                                                        <ng-container
-                                                                            *ngFor="let container of GetContainerItems(field.id)">
-
-                                                                            <div class="col-12"
-                                                                                style="text-align: left;"
-                                                                                *ngIf="container.index!=1 && field.modifiable">
-                                                                                <i role="button"
-                                                                                    (click)="deleteContainer(container.index,container.containerId)"
-                                                                                    class="fa-solid fa-trash text-danger p-2"
-                                                                                    style="padding: 7px;border: 2px solid #eee;border-radius: 5px;"></i>
-                                                                            </div>
-
-                                                                            <ng-container
-                                                                                *ngFor="let containerFiled of container.containerFields">
-
-                                                                                
-
-
-                                                                                <ng-container
-                                                                                    *ngIf="containerFiled.type=='TEXT_FIELD_PHONE'">
-
-                                                                                    <app-text-field-phone
-                                                                                        [formGroup]="myForm"
-                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
-                                                                                        [field]="containerFiled"
-                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
-                                                                                        [submitted]="submitted"
-                                                                                        [yourTurn]="yourTurn"
-                                                                                        [isContainer]="true"
-                                                                                        [phoneNumber]="phoneDto"
-                                                                                        [viewApp]="viewApplication"
-                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
-                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-text-field-phone>
-
-
-                                                                                </ng-container>
-
-                                                                                <ng-container
-                                                                                    *ngIf="containerFiled.type=='TEXT_FIELD'">
-
-                                                                                    <app-text-field [formGroup]="myForm"
-                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
-                                                                                        [field]="containerFiled"
-                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
-                                                                                        [submitted]="submitted"
-                                                                                        
-                                                                                        [yourTurn]="yourTurn"
-                                                                                        [isContainer]="true"
-                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
-                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-text-field>
-
-                                                                                    
-
-
-                                                                                </ng-container>
-
-                                                                                <ng-container
-                                                                                    *ngIf="containerFiled.type=='CHECKBOX'">
-
-                                                                                    <app-checkbox [formGroup]="myForm"
-                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
-                                                                                        [field]="containerFiled"
-                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
-                                                                                        [submitted]="submitted"
-                                                                                        [yourTurn]="yourTurn"
-                                                                                        [isContainer]="true"
-                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
-                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-checkbox>
-
-                                                                                </ng-container>
-
-
-                                                                                <ng-container
-                                                                                    *ngIf="containerFiled.type=='COMBO_BOX'">
-
-
-                                                                                    <app-combo-box [formGroup]="myForm"
-                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
-                                                                                        [field]="containerFiled"
-                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
-                                                                                        [submitted]="submitted"
-                                                                                        [yourTurn]="yourTurn"
-                                                                                        [isContainer]="true"
-                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
-                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-combo-box>
-
-                                                                                </ng-container>
-
-                                                                                <ng-container
-                                                                                    *ngIf="containerFiled.type=='FILE'">
-
-                                                                                    <div class="row mb-4"
-                                                                                        [hidden]="containerFiled.hidden">
-
-                                                                                        <label
-                                                                                            class="col-sm-2 col-form-label form-label">
-                                                                                            {{containerFiled.label}}
-
-                                                                                            <span class="text-danger"
-                                                                                                *ngIf="containerFiled.required">
-                                                                                                * </span>
-                                                                                        </label>
-
-                                                                                        <div class="col-sm-10">
-
-                                                                                            <table
-                                                                                                class="multiple-input-list table table-condensed table-renderer">
-                                                                                                <tbody>
-                                                                                                    <tr class="multiple-input-list__item"
-                                                                                                        data-index="0">
-
-                                                                                                        <td
-                                                                                                            class="list-cell__environmental_exsits_approval_file">
-
-                                                                                                            <div
-                                                                                                                class="field-dynamicmodel-environmental_exsits_approval_file-0 form-group">
-
-                                                                                                                <input
-                                                                                                                    [ngClass]="myForm.get(field.id)?.invalid && submitted ? 'is-invalid':null"
-                                                                                                                    formControlName="{{containerFiled.id}}#{{container.index}}"
-                                                                                                                    [multiple]="containerFiled.multiSelect"
-                                                                                                                    class="form-control"
-                                                                                                                    type="file"
-                                                                                                                    [accept]="allowedExtension(containerFiled.mediaType!,containerFiled.allowedExtensions!)"
-                                                                                                                    (change)="onUploadFile(containerFiled.id+'#'+container.index,$event,containerFiled.multiSelect!)"
-                                                                                                                    [required]="containerFiled.required && getFiles(containerFiled.id+'#'+container.index).length==0">
-
-                                                                                                                <p class="pt-1"
-                                                                                                                    style="font-size: 13px !important;"
-                                                                                                                    *ngIf="containerFiled?.description">
-                                                                                                                    {{containerFiled?.description??""}}
-                                                                                                                </p>
-
-                                                                                                                <p class="pt-1 text-danger"
-                                                                                                                    style="font-size: 13px !important;"
-                                                                                                                    *ngIf="yourTurn && containerFiled?.approved == false">
-                                                                                                                    {{containerFiled?.comment??""}}
-                                                                                                                </p>
-
-
-
-                                                                                                                <div
-                                                                                                                    *ngIf="myForm.get(containerFiled.id+'#'+container.index)?.invalid && submitted">
-                                                                                                                    <span
-                                                                                                                        class="text-danger"
-                                                                                                                        *ngIf="myForm.get(containerFiled.id+'#'+container.index)?.errors?.['required']">
-                                                                                                                        حقل
-                                                                                                                        اجباري
-                                                                                                                        !
-                                                                                                                    </span>
-                                                                                                                </div>
-                                                                                                            </div>
-
-
-
-                                                                                                            <table
-                                                                                                                class="table text-center my-3"
-                                                                                                                *ngIf="getFiles(containerFiled.id+'#'+container.index).length>0">
-                                                                                                                <thead
-                                                                                                                    class="thead-light">
-                                                                                                                    <tr>
-                                                                                                                        <th>اسم
-                                                                                                                            الملف
-                                                                                                                        </th>
-                                                                                                                        <th  *ngIf="!viewApplication">id</th>
-                                                                                                                        <th>الاجراء
-                                                                                                                        </th>
-                                                                                                                    </tr>
-                                                                                                                </thead>
-
-                                                                                                                <tbody>
-
-                                                                                                                    <tr
-                                                                                                                        *ngFor="let item of getFiles(containerFiled.id+'#'+container.index)">
-                                                                                                                        <td>{{containerFiled.label}}
-                                                                                                                        </td>
-
-                                                                                                                        <td *ngIf="!viewApplication" style="max-width: 120px;">{{item.objectId}}</td>
-
-                                                                                                                        <td>
-
-                                                                                                                            <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary px-2"></i>
-
-                                                                                                                            <i role="button" *ngIf="!viewApplication" (click)="downloadMinioFile(item.objectId)" class="fa fa-eye text-primary px-2"></i>
-
-                                                                                                                            <i role="button"  *ngIf="!viewApplication" 
-                                                                                                                                (click)="deleteFile(item.id)"
-                                                                                                                                class="fa-solid fa-trash text-danger"></i>
-                                                                                                                        </td>
-                                                                                                                    </tr>
-                                                                                                                </tbody>
-                                                                                                            </table>
-
-                                                                                                            <br>
-
-                                                                                                        </td>
-                                                                                                        <td
-                                                                                                            class="list-cell__button">
-                                                                                                        </td>
-                                                                                                    </tr>
-                                                                                                </tbody>
-                                                                                            </table>
-
-
-
-
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                </ng-container>
-
-                                                                                <ng-container
-                                                                                    *ngIf="containerFiled.type=='TEXT_VIEW'">
-
-                                                                                    <app-text-view
-                                                                                    [formGroup]="myForm"
-                                                                                    [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                                                                    [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
-                                                                                    [field]="containerFiled"
-                                                                                    [value]="myForm.get(containerFiled.id+'#'+container.index)?.value"
-                                                                                    [fieldId]="containerFiled.id+'#'+container.index"
-                                                                                    [submitted]="submitted"
-                                                                                    [yourTurn]="yourTurn"
-                                                                                    [containerFieldId]="field.id" [fieldIndex]="container.index-1"
-                                                                                    (refreshFormEvent)="refreshForm2($event)"></app-text-view>
-
-
-                                                                                </ng-container>
-
-                                                                                <ng-container
-                                                                                    *ngIf="containerFiled.type=='PREDEFINED_COMBO_BOX'">
-
-
-                                                                                    <app-predefined-combo-box
-                                                                                        [formGroup]="myForm"
-                                                                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                                                                        [isInvalid]="getFormControlValidation(containerFiled.id+'#'+container.index)"
-                                                                                        [field]="containerFiled"
-                                                                                        [fieldId]="containerFiled.id+'#'+container.index"
-                                                                                        [submitted]="submitted"
-                                                                                        
-                                                                                        [yourTurn]="yourTurn"
-                                                                                        
-                                                                                        [isContainer]="true"
-                                                                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
-                                                                                        (refreshFormEvent)="refreshForm2($event)"></app-predefined-combo-box>
-
-
-                                                                                </ng-container>
-
-                                                                            </ng-container>
-
-                                                                            <hr
-                                                                                *ngIf="GetContainerItems(field.id).length>1">
-
-                                                                        </ng-container>
-
-
-                                                                        <div class="col-12 text-center py-3"
-                                                                            *ngIf="field.modifiable==true && !viewApplication"  >
-                                                                            <button id="submit-button"
-                                                                                class="btn btn-primary"
-                                                                                (click)="addContainerItems(field)">اضافة</button>
-                                                                        </div>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div *ngIf="field.designType=='TABLE'">
-
-
-                                                        <table class="table text-center my-3">
-                                                            <thead class="thead-light">
-
-                                                                <tr>
-                                                                    <th
-                                                                        *ngFor="let containerTableHeader of field.fields">
-                                                                        {{containerTableHeader.label}} </th>
-                                                                </tr>
-
-                                                            </thead>
-
-                                                            <tbody>
-
-                                                                <tr *ngFor="let containerTableBody of field.value">
-
-                                                                    <td
-                                                                        *ngFor="let containerTableBodyValue of containerTableBody">
-                                                                        {{containerTableBodyValue.value}}</td>
-
-                                                                </tr>
-
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-
-                                                </div>
+                                                <app-container
+                                                [containerItems]="GetContainerItems(field.id)"
+                                                [submitted]="submitted"
+                                                [fieldId]="field.id"
+                                                [allcontainers]="containers"
+                                                [field]="field"
+                                                [yourTurn]="yourTurn"
+                                                [viewApplication]="viewApplication"
+                                                [myForm]="myForm"
+                                                [phoneDto]="phoneDto"
+                                                [files]="getAllFiles()"
+
+                                                (deleteContainerEvent)="deleteContainer($event)"
+                                                (addContainerItemsEvent)="addContainerItems($event)"
+                                                (refreshFormEvent)="refreshForm($event)"
+                                                (getFormControlErrorsEvent)="getFormControlErrors($event)"
+
+
+                                                >
+
+                                                </app-container>
 
                                                 <br>
 
