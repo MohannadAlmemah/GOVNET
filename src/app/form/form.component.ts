@@ -725,6 +725,8 @@ export class FormComponent implements OnInit {
     this.myForm.addControl(fieldId, new FormControl(Boolean(value)));
   }
 
+  
+
   Save() {
 
     this.submitted = true;
@@ -880,6 +882,10 @@ export class FormComponent implements OnInit {
     switch (field.type) {
 
       case 'TEXT_FIELD':
+        controlValue = String(control!.value);
+        break;
+
+      case 'CALCULATION':
         controlValue = String(control!.value);
         break;
 
