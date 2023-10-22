@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { Container } from 'src/app/models/ContainerField';
 import { Field } from 'src/app/models/field';
 import { FileModel } from 'src/app/models/file';
@@ -13,14 +13,14 @@ export class ContainerComponent implements OnInit {
 
 
   ngOnInit(): void {
-    setTimeout(() => {
-        console.log(this.containerItems);
-        console.log(this.field);
-    }, 2000);
+
   }
 
   @Input()
   field!: Field;
+
+  @Input()
+  calculationField!: Field[];
 
   @Input()
   fieldId:string|undefined;
@@ -99,6 +99,4 @@ export class ContainerComponent implements OnInit {
     return containerItems;
   }
 
-
-  
 }

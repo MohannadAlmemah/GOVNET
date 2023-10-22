@@ -63,6 +63,9 @@ import { ServiceOutputComponent } from './investement/service-output/service-out
 // import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ContainerComponent } from './form/fields/container/container.component';
+import { PredfiendMultiSelectComponent } from './form/fields/predfiend-multi-select/predfiend-multi-select.component';
+import { DateComponent } from './form/fields/date/date.component';
+import { CalculationComponent } from './form/fields/calculation/calculation.component';
 
 
 // export function HttpLoaderFactory(http: HttpClient) {
@@ -110,6 +113,9 @@ registerPlugin(FilePondPluginFileValidateType);
     TextViewComponent,
     ServiceOutputComponent,
     ContainerComponent,
+    PredfiendMultiSelectComponent,
+    DateComponent,
+    CalculationComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

@@ -53,15 +53,15 @@ export class AuthService {
   }
 
   removeToken(): void {
-    this.cookieService.delete('token');
-    this.cookieService.delete('refreshToken');
-    this.cookieService.delete('nationalNumber');
-    this.cookieService.delete('role');
+    this.cookieService.delete('token','/');
+    this.cookieService.delete('refreshToken','/');
+    this.cookieService.delete('nationalNumber','/');
+    this.cookieService.delete('role','/');
   }
 
   removeToken2(): void {
-    this.cookieService.delete('token');
-    this.cookieService.delete('refreshToken');
+    this.cookieService.delete('token','/');
+    this.cookieService.delete('refreshToken','/');
   }
 
 

@@ -19,11 +19,13 @@ export class ContainerField{
   
 
 export class Container{
+  public id:number;
   public containerId:string; 
   public containerFields:Field[]=[];
   public index:number;
 
-  constructor(containerId:string,containerFields:any[],index:number) {
+  constructor(id:number,containerId:string,containerFields:any[],index:number) {
+    this.id=id;
     this.containerId=containerId;
     this.containerFields=containerFields;
     this.index=index;

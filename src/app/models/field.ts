@@ -1,14 +1,30 @@
 import { parentModel } from "./parent";
 
+export class DateModel{
+    public date:string|undefined;
+    public minusDays:string|undefined;
+    public plusDays:string|undefined;
+}
+
+export class Equation {
+    public type: string|undefined
+    public operation: string|undefined
+    fieldId: string|undefined
+    containerId: string|undefined
+}
+  
 export class Field{
     public id:string;
     public type:string;
+    public withTime:boolean;
     public designType:string;
     public modifiable:boolean|undefined;
     public regex:string|undefined;
     public editable:boolean|undefined;
     public required:boolean;
     public label:string;
+    public equation:Equation|undefined;
+    public textDirection:string|undefined;
     public mediaType:string|undefined;
     public allowedExtensions:string[]|undefined;
     public textFieldType:string|undefined;
@@ -32,6 +48,10 @@ export class Field{
 
     public url:string|undefined;
 
+    public defaultDate:DateModel|undefined;
+    public minDate:DateModel|undefined;
+    public maxDate:DateModel|undefined;
+
     /**
      *
      */
@@ -41,7 +61,10 @@ export class Field{
         fields:Field[]|undefined,multiSelect:boolean|undefined,options:any[]|undefined,
         comboBoxOptions:any[]|undefined,keyboardType:string,designType:string,description:string,
         approved:boolean|undefined,shouldRefresh:boolean,parent:parentModel|undefined,
-        url:string|undefined,mediaType:string|undefined,allowedExtensions:string[]|undefined
+        url:string|undefined,mediaType:string|undefined,allowedExtensions:string[]|undefined,
+        withTime:boolean, defaultDate:DateModel|undefined,minDate:DateModel|undefined,
+        maxDate:DateModel|undefined,textDirection:string|undefined,
+        equation:Equation|undefined
         ) {
             this.id=id;
             this.type=type;
@@ -67,5 +90,12 @@ export class Field{
             this.parent=parent;
             this.modifiable=modifiable;
             this.url=url;
+            this.withTime=withTime;
+            this.textDirection=textDirection;
+
+            this.defaultDate=defaultDate;
+            this.minDate=minDate;
+            this.maxDate=maxDate;
+            this.equation=equation;
         }
 }

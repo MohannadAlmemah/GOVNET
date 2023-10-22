@@ -7,7 +7,8 @@
 
     <div class="col-sm-10">
 
-        <input [style]="{'direction':field.textDirection??'rtl'}" (change)="updateIsUserType()" class="form-control" [readOnly]="!field.editable"  [ngClass]="isInvalid && submitted ? 'is-invalid':null"  formControlName="{{fieldId}}" [type]="getTextFieldType(field.textFieldType!)" [required]="field.required && !field.hidden!" (blur)="refreshForm(field.id,field.shouldRefresh,containerFieldId,fieldIndex,isContainer)">
+        
+        <input class="form-control" [value]="defaultDate" [readOnly]="!field.editable && field.editable!=null"  [min]="minDate" [max]="maxDate"  [ngClass]="isInvalid && submitted ? 'is-invalid':null"  formControlName="{{fieldId}}" type="date" [required]="field.required && !field.hidden!" (blur)="refreshForm(field.id,field.shouldRefresh,containerFieldId,fieldIndex,isContainer)">
         
         <p class="pt-1" style="font-size: 13px !important;" *ngIf="field?.description">
             {{field.description}}

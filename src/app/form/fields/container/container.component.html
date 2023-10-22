@@ -1,26 +1,20 @@
 <div *ngIf="!field.hidden" [formGroup]="myForm!">
 
     <div class=" card px-2" *ngIf="field.designType!='TABLE'">
-
-
         <div class=" row">
-
-
             <div class="col-md-12 col-12">
                 <div class="solution_card">
 
                     <h4 class="text-center mt-2">{{field.label}}</h4>
 
                     <div>
-                        <ng-container *ngFor="let container of containerItems">
-
-                            
+                        <ng-container *ngFor="let container of containerItems;let i=index">
 
                             <div class="col-12"
                                 style="text-align: left;"
-                                *ngIf="container.index!=1 && field.modifiable">
+                                *ngIf="i>0 && field.modifiable && viewApplication==false">
                                 <i role="button"
-                                    (click)="deleteContainer(container.index,container.containerId)"
+                                    (click)="deleteContainer(container.id,container.containerId)"
                                     class="fa-solid fa-trash text-danger p-2"
                                     style="padding: 7px;border: 2px solid #eee;border-radius: 5px;"></i>
                             </div>
@@ -28,26 +22,23 @@
                             <ng-container *ngFor="let containerFiled of container.containerFields">
 
 
+                                
                                 <ng-container *ngIf="containerFiled.type=='CONTAINER'">
 
                                     <app-container
                                     [containerItems]="GetContainerItems(containerFiled.id)"
                                     [submitted]="submitted"
-                                    [fieldId]="containerFiled.id+'#'+container.index"
+                                    [fieldId]="containerFiled.id"
                                     [field]="containerFiled"
                                     [yourTurn]="yourTurn"
                                     [viewApplication]="viewApplication"
                                     [myForm]="myForm"
                                     [phoneDto]="phoneDto"
-                                    [files]="getFiles(containerFiled.id+'#'+container.index)"
+                                    [files]="getFiles(containerFiled.id)"
                                     (deleteContainerEvent)="deleteContainer(container.index,containerFiled.id)"
                                     (addContainerItemsEvent)="addContainerItems(containerFiled)"
                                     (refreshFormEvent)="refreshForm($event)"
-                                    (getFormControlErrorsEvent)="getFormControlErrors($event)"
-
-
-                                    >
-
+                                    (getFormControlErrorsEvent)="getFormControlErrors($event)">
                                     </app-container>
 
                                     <br>
@@ -60,95 +51,69 @@
 
                                     <app-text-field-phone
                                         [formGroup]="myForm!"
-                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                        [isInvalid]="!myForm?.get(containerFiled.id+'#'+container.index)?.valid!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
                                         [field]="containerFiled"
-                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                        [fieldId]="containerFiled.id"
                                         [submitted]="submitted"
                                         [yourTurn]="yourTurn"
                                         [isContainer]="true"
                                         [phoneNumber]="phoneDto"
                                         [viewApp]="viewApplication!"
-                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
                                         (refreshFormEvent)="refreshForm($event)"></app-text-field-phone>
 
 
                                 </ng-container>
 
-                                <!-- <ng-container *ngIf="containerFiled.type=='CONTAINER'">
-
-                                    <div class="card my-2">
-                                        <div class=" row">
-
-                                            <h4 class="text-center mt-2">{{containerFiled.label}}</h4>
-
-                                            <div class="col-md-12 col-12">
-                                                <ng-container  *ngFor="let containerFiled2 of containerFiled.fields">
-
-                                                    <ng-container
-                                                *ngIf="containerFiled2.type=='TEXT_VIEW'">
-
-                                                <app-text-view
-                                                [formGroup]="myForm!"
-                                                [errors]="getFormControlErrors(containerFiled2.id+'#'+container.index)"
-                                                [isInvalid]="getFormControlValidation(containerFiled2.id+'#'+container.index)"
-                                                [field]="containerFiled2"
-                                                [value]="myForm.get(containerFiled2.id+'#'+container.index)?.value"
-                                                [fieldId]="containerFiled2.id+'#'+container.index"
-                                                [submitted]="submitted"
-                                                [yourTurn]="yourTurn"
-                                                [containerFieldId]="field.id" [fieldIndex]="container.index-1"
-                                                (refreshFormEvent)="refreshForm($event)"></app-text-view>
-
-
-                                            </ng-container>
-
-                                                </ng-container> 
-
-                                            </div>
-                                    </div>  
-
-
-                                    </div>
                                 
-                                    
-                                    
-                                </ng-container> -->
-
-
-
                                 <ng-container
                                     *ngIf="containerFiled.type=='TEXT_FIELD'">
 
                                     <app-text-field [formGroup]="myForm!"
-                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                        [isInvalid]="!myForm?.get(containerFiled.id+'#'+container.index)?.valid!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
                                         [field]="containerFiled"
-                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                        [fieldId]="containerFiled.id"
                                         [submitted]="submitted"
-                                        
+                                        [calculationFields]="calculationField"
                                         [yourTurn]="yourTurn"
                                         [isContainer]="true"
-                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
                                         (refreshFormEvent)="refreshForm($event)"></app-text-field>
+                                </ng-container>
+                                
 
-                                    
+                              
 
+                                
+                                <ng-container
+                                    *ngIf="containerFiled.type=='DATE'">
 
+                                    <app-date [formGroup]="myForm!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
+                                        [field]="containerFiled"
+                                        [fieldId]="containerFiled.id"
+                                        [submitted]="submitted"
+                                        [yourTurn]="yourTurn"
+                                        [isContainer]="true"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
+                                        (refreshFormEvent)="refreshForm($event)"></app-date>
                                 </ng-container>
 
                                 <ng-container
                                     *ngIf="containerFiled.type=='CHECKBOX'">
 
                                     <app-checkbox [formGroup]="myForm!"
-                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                        [isInvalid]="!myForm?.get(containerFiled.id+'#'+container.index)?.valid!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
                                         [field]="containerFiled"
-                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                        [fieldId]="containerFiled.id"
                                         [submitted]="submitted"
                                         [yourTurn]="yourTurn"
                                         [isContainer]="true"
-                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
                                         (refreshFormEvent)="refreshForm($event)"></app-checkbox>
 
                                 </ng-container>
@@ -159,15 +124,47 @@
 
 
                                     <app-combo-box [formGroup]="myForm!"
-                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                        [isInvalid]="!myForm?.get(containerFiled.id+'#'+container.index)?.valid!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
                                         [field]="containerFiled"
-                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                        [fieldId]="containerFiled.id"
                                         [submitted]="submitted"
                                         [yourTurn]="yourTurn"
                                         [isContainer]="true"
-                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
                                         (refreshFormEvent)="refreshForm($event)"></app-combo-box>
+
+                                </ng-container>
+
+                                <ng-container *ngIf="containerFiled.type=='MULTI_COMBO_BOX'">
+
+
+                                    <app-multi-select [formGroup]="myForm!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
+                                        [field]="containerFiled"
+                                        [fieldId]="containerFiled.id"
+                                        [submitted]="submitted"
+                                        [yourTurn]="yourTurn"
+                                        [isContainer]="true"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
+                                        (refreshFormEvent)="refreshForm($event)"></app-multi-select>
+
+                                </ng-container>
+
+                                <ng-container *ngIf="containerFiled.type=='MULTI_PREDEFINED_COMBO_BOX'">
+
+
+                                    <app-predfiend-multi-select [formGroup]="myForm!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
+                                        [field]="containerFiled"
+                                        [fieldId]="containerFiled.id"
+                                        [submitted]="submitted"
+                                        [yourTurn]="yourTurn"
+                                        [isContainer]="true"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
+                                        (refreshFormEvent)="refreshForm($event)"></app-predfiend-multi-select>
 
                                 </ng-container>
 
@@ -176,16 +173,16 @@
 
                                     <app-file 
                                         [formGroup]="myForm!"
-                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
                                         [viewApplication]="viewApplication!"
-                                        [files]="getFiles(containerFiled.id+'#'+container.index)"
+                                        [files]="getFiles(containerFiled.id)"
                                         [isInvalid]="getFiles(containerFiled.id).length==0 && containerFiled.required"
                                         [field]="containerFiled"
-                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                        [fieldId]="containerFiled.id"
                                         [submitted]="submitted"
                                         [yourTurn]="yourTurn"
                                         [containerFieldId]="field.id" 
-                                        [fieldIndex]="container.index-1"
+                                        [fieldIndex]="i"
                                         [isContainer]="true"
                                         (refreshFormEvent)="refreshForm($event)"
                                         
@@ -199,14 +196,14 @@
 
                                     <app-text-view
                                     [formGroup]="myForm!"
-                                    [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                    [isInvalid]="!myForm?.get(containerFiled.id+'#'+container.index)?.valid!"
+                                    [errors]="getFormControlErrors(containerFiled.id)"
+                                    [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
                                     [field]="containerFiled"
-                                    [value]="myForm?.get(containerFiled.id+'#'+container.index)?.value"
-                                    [fieldId]="containerFiled.id+'#'+container.index"
+                                    [value]="myForm?.get(containerFiled.id)?.value"
+                                    [fieldId]="containerFiled.id"
                                     [submitted]="submitted"
                                     [yourTurn]="yourTurn"
-                                    [containerFieldId]="field.id" [fieldIndex]="container.index-1"
+                                    [containerFieldId]="field.id" [fieldIndex]="i"
                                     (refreshFormEvent)="refreshForm($event)"></app-text-view>
 
 
@@ -218,16 +215,16 @@
 
                                     <app-predefined-combo-box
                                         [formGroup]="myForm!"
-                                        [errors]="getFormControlErrors(containerFiled.id+'#'+container.index)"
-                                        [isInvalid]="!myForm?.get(containerFiled.id+'#'+container.index)?.valid!"
+                                        [errors]="getFormControlErrors(containerFiled.id)"
+                                        [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
                                         [field]="containerFiled"
-                                        [fieldId]="containerFiled.id+'#'+container.index"
+                                        [fieldId]="containerFiled.id"
                                         [submitted]="submitted"
                                         
                                         [yourTurn]="yourTurn"
                                         
                                         [isContainer]="true"
-                                        [containerFieldId]="field.id" [fieldIndex]="container.index-1"
+                                        [containerFieldId]="field.id" [fieldIndex]="i"
                                         (refreshFormEvent)="refreshForm($event)"></app-predefined-combo-box>
 
 

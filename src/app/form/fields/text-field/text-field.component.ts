@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, UntypedFormGroup } from '@angular/forms';
 import { Field } from 'src/app/models/field';
 
@@ -7,7 +7,7 @@ import { Field } from 'src/app/models/field';
   templateUrl: './text-field.component.html',
   styleUrls: ['./text-field.component.css']
 })
-export class TextFieldComponent {
+export class TextFieldComponent  {
 
 
   @Input() formGroup: UntypedFormGroup|undefined;
@@ -20,6 +20,9 @@ export class TextFieldComponent {
 
   @Input()
   fieldId:string|undefined;
+
+  @Input()
+  calculationFields:Field[]=[];
 
   @Input()
   yourTurn:boolean|undefined;
@@ -52,7 +55,39 @@ export class TextFieldComponent {
     }else{
       this.isUserType=false;
     }
+
+    this.calculate();
+    
+  } 
+
+  calculate() {
+
+    const baseId = this.field.id.replace(/#.*$/, '');
+
+    const targetCalculation = this.calculationFields.find(x => x.equation?.fieldId === baseId);
+
+    if (!targetCalculation) return;
+
+    const targetValueControl = this.formGroup?.get(targetCalculation.id);
+
+    let accumulatedValue: number = 0;
+
+    Object.keys(this.formGroup!.controls).forEach(controlKey => {
+        if (controlKey.startsWith(baseId)) {
+            const controlValue = Number(this.formGroup?.get(controlKey)?.value);
+            if (targetCalculation.equation?.operation === "PLUS") {
+                accumulatedValue += controlValue;
+            } else {
+                accumulatedValue -= controlValue;
+            }
+        }
+    });
+
+    targetValueControl?.setValue(accumulatedValue);
   }
+
+
+
 
   getTextFieldType(tpye:string):string{
 
@@ -81,7 +116,6 @@ export class TextFieldComponent {
 
 
   refreshForm(fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean){
-
     if(this.isUserType){
       this.refreshFormEvent.emit({ fieldId ,shouldRefresh,containerFieldId,fieldIndex,isContainer});
     }

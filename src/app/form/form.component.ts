@@ -9,7 +9,7 @@ import { formBody } from '../models/formBody';
 import { FileModel } from '../models/file';
 import {ConditionType} from '../models/enum/conditionType';
 import { AuthService } from 'src/services/auth.service';
-import { saveAs } from 'file-saver';
+import * as _ from 'lodash';
 import { Observable, map } from 'rxjs';
 
 export class FieldInfo{
@@ -64,6 +64,11 @@ export class FormComponent implements OnInit {
 
   serviceType:string|undefined;
 
+  applyForServiceBody:any;
+
+  doesFormGenerated=false;
+
+  currentSubmitButtonText:string|undefined;
 
   private scrollToFirstInvalidControl() {
     let firstInvalidControl = $("input.is-invalid,select.is-invalid")[0];
@@ -86,6 +91,9 @@ export class FormComponent implements OnInit {
   }
 
   goStep2(){
+    if(this.doesFormGenerated==false){
+      this.applyForService(this.applyForServiceBody);
+    }
     this.showStep="2";
   }
 
@@ -117,6 +125,8 @@ export class FormComponent implements OnInit {
       this.steps = (data.steps as any[]).reverse();
 
       this.generateField(this.steps[0]?.fields,false);
+
+      
 
       this.steps.map(step=>{
         this.stepsName.push(step.name);
@@ -179,6 +189,8 @@ export class FormComponent implements OnInit {
       this.serviceId= this.route.snapshot.queryParams['serviceId'];
       this.serviceType= this.route.snapshot.queryParams['serviceType'];
 
+      this.doesFormGenerated=true;
+
       this.fillApplication();
     }
 
@@ -204,15 +216,10 @@ export class FormComponent implements OnInit {
 
         this.serviceName=service.name;
         this.serviceCard=service.serviceCard;
-
-        if(!service.serviceCard.shouldShow){
-          this.disableConditionBtn=true;
-          this.goStep2();
-        }
   
         var rootValues=service.rootValues as any[];
   
-          var body={
+          this.applyForServiceBody ={
             "serviceId": this.BluePrintId,
               "rootValues": rootValues.map(x=>{
                 return{
@@ -222,16 +229,14 @@ export class FormComponent implements OnInit {
                 }
               })
           };
-  
-        var request=this.apiService.post("carboncopies/applyforservice",body);
-        request.subscribe(res=>{
-          
-          if(res.statusCode==200 && res.error==false){
-            this.serviceId=res.data;
-            this.GetStepForConsumer();
+
+          if(!service.serviceCard.shouldShow){
+            this.disableConditionBtn=true;
+            this.goStep2();
           }
-        });
-  
+
+          this.isLoading=false;
+    
       });
 
     }
@@ -241,6 +246,9 @@ export class FormComponent implements OnInit {
 
       this.yourTurn=true;
       this.disableConditionBtn=true;
+
+      this.doesFormGenerated=true;
+
       this.goStep2();
 
       const serviceName = this.route.snapshot.queryParamMap.get('serviceName');
@@ -253,62 +261,123 @@ export class FormComponent implements OnInit {
 
   }
 
-  deleteContainer(event:any) {
+  private applyForService(body: { serviceId: string | undefined; rootValues: { fieldId: any; keyValue: any; value: string | null; }[]; }) {
 
-    var indexId=event.indexId;
+    this.isLoading=true;
     
-    var containerId= event.containerId;
+    var request = this.apiService.post("carboncopies/applyforservice", body);
+    request.subscribe(res => {
 
-    if (window.confirm("هل انت متأكد ؟")) {
-      const indexToDelete = this.containers.findIndex(
-        x => x.containerId === containerId && x.index === indexId
-      );
+      if (res.statusCode == 200 && res.error == false) {
+        this.serviceId = res.data;
+        this.GetStepForConsumer();
+        this.doesFormGenerated=true;
+      }
+    });
+  }
+
+  deleteContainer(event: any, showConfirmation = true) {
   
-      if (indexToDelete !== -1) {
+    var indexId = event.indexId;
+    var containerId = event.containerId;
 
-        var selectedContainerItems=this.containers.filter(x=>x.containerId==containerId && x.index==indexId)[0];
-
-        this.updateValidation();
-
-        selectedContainerItems.containerFields.map(field=>{
-          console.log(field.id+`#${indexId}`);
-          this.myForm.removeControl(field.id+`#${indexId}`);
-        });
-
-        this.containers.splice(indexToDelete, 1);
+    if(showConfirmation){
+      if (window.confirm("هل انت متأكد ؟")==false) {
+        return;
       }
     }
+  
+    if (true) {
+      const filterCondition = indexId
+        ? (x: any) => x.containerId === containerId && x.id === indexId
+        : (x: any) => x.containerId === containerId;
+  
+      const indexToDelete = this.containers.findIndex(filterCondition);
+  
+      const selectedContainer = this.containers.filter(filterCondition)[0];
+  
+      this.updateValidation();
+  
+      selectedContainer.containerFields.map((field: any) => {
+        if (field.type === "CONTAINER") {
+          this.deleteContainer({ containerId: field.id },false);
+        }
+        this.myForm.removeControl(field.id);
+      });
+  
+      this.containers.splice(indexToDelete, 1);
+    }
   }
+  
 
+  // deleteContainer(event:any) {
+
+  //   console.log(this.containers);
+
+  //   var indexId=event.indexId;
+    
+  //   var containerId= event.containerId;
+
+  //   if (window.confirm("هل انت متأكد ؟")) {
+
+  //     const indexToDelete = this.containers.findIndex(
+  //       x => x.containerId === containerId && x.id === indexId
+  //     );
+
+  //     const selectedContainer = this.containers.filter(x => x.containerId === containerId && x.id== indexId)[0];
+
+  //     this.updateValidation();
+
+  //     selectedContainer.containerFields.map(field=>{
+
+  //         if(field.type=="CONTAINER"){
+  //           this.deleteContainer({containerId:field.id});
+  //         }
+
+  //         this.myForm.removeControl(field.id);
+  //     });
+
+  //     this.containers.splice(indexToDelete, 1);
+
+  //   }
+
+  //   // if (window.confirm("هل انت متأكد ؟")) {
+  //   //   const indexToDelete = this.containers.filter(x => x.containerId === containerId)[indexId];
+  
+  //   //   if (indexToDelete !== null) {
+
+  //   //     var selectedContainerItems=this.containers.filter(x=>x.containerId==containerId)[indexId];
+
+  //   //     this.updateValidation();
+
+  //   //     selectedContainerItems.containerFields.map(field=>{
+  //   //       this.myForm.removeControl(field.id+`#${indexId}`);
+
+  //   //     });
+
+  //   //     this.containers.splice(indexToDelete, 1);
+  //   //   }
+  //   // }
+  // }
+  
   addContainerItems(event:any){
 
-    var containerUi=event.field;
+    var container=event.field as Field;
 
-    var containerId=containerUi.id;
+    var updatedFields=this.updateContainerIds(_.cloneDeep(container));
 
-    if(this.containers.length>0){
-      var maxIndex=Math.max(...this.containers.filter(y=>y.containerId==containerId).map(item => item.index));
-  
-      var container=this.containers.filter(x=>x.containerId==containerId)[0];
-  
-      this.containers.push(new Container(containerId,container.containerFields,maxIndex+1));
-  
-      container.containerFields.map(containerField=>{
+    this.containers.push(new Container(this.containers.length+1,updatedFields.id,updatedFields.fields!,1));
 
-        // if(containerField.type=="CONTAINER"){
+    updatedFields.fields?.map(field=>{
+      
+      this.addField(field,field.id,'');
 
-        //   this.addContainerItems({field:containerField});
+    });
 
-        // }
+    this.myForm.addControl(container.id, new FormControl(null));
 
-        this.myForm.addControl(containerField.id+`#${maxIndex+1}`,new FormControl(null));
-      });
-    }
-
-    console.log(this.containers);
 
   }
-
 
 
   GetStepForConsumer(){
@@ -318,7 +387,10 @@ export class FormComponent implements OnInit {
 
       if(res.statusCode==200){
 
+        this.currentSubmitButtonText=res.data.submitButtonText;
+
         this.generateField(res.data.fields,false);
+
         this.onParentChange(this.fields);
       }
 
@@ -342,6 +414,7 @@ export class FormComponent implements OnInit {
       
       this.fields.push(field);
       this.addField(field,field.id,field.value);
+      
     });
 
   }
@@ -357,7 +430,7 @@ export class FormComponent implements OnInit {
     else if (field.type == 'COMBO_BOX') {
       this.generateComboBox(field,fieldId,value);
     }
-    else if (field.type == 'TEXT_FIELD' && field.textFieldType=="date") {
+    else if ((field.type == 'TEXT_FIELD' && field.textFieldType=="date" )|| field.type=="DATE") {
       this.generateDate(field,fieldId,value);
     }
     else if (field.type == 'TEXT_FIELD') {
@@ -373,7 +446,7 @@ export class FormComponent implements OnInit {
     }
     else if (field.type == 'CONTAINER') {
 
-      this.generateContainer(field);
+      this.generateContainerV2(field,field.value);
 
     }
     else if (field.type == 'WEBVIEW') {
@@ -387,59 +460,198 @@ export class FormComponent implements OnInit {
     }
   }
 
-  
-  generateContainer(containerUI:Field){
 
-    this.myForm.addControl(containerUI.id, new FormControl(""));
-    
-    var fieldValuesArr=containerUI.value as any[];
 
-    if(fieldValuesArr.length>0){
+  generateContainerV2(container: Field,containerValue:any) {
 
-      fieldValuesArr.map((fieldValue)=>{
+    const containerValues = containerValue as any[] || [];
 
-        var index=this.containers.filter(x=>x.containerId==containerUI.id).length+1;
+    const loops = containerValues.length > 0 ? containerValues.length : 1;
 
-        this.containers.push(new Container(containerUI.id,containerUI.fields!,index));
+    for (let i = 0; i < loops; i++) {
+      var updatedContainer= this.updateContainerIds(container);
 
-        var fieldValueItems=fieldValue as any[];
+      this.containers.push(new Container(this.containers.length+1,updatedContainer.id,updatedContainer.fields!,1));
 
-        fieldValueItems.map(item=>{
+      const currentLoopValue = containerValues[i] as any[] || [];
 
-          containerUI.fields?.map((fieled)=>{
+      updatedContainer.fields?.map(field=>{
 
-            if(item.fieldId==fieled.id){
+        const newFieldId = this.getBaisFieldName(field);
 
-              this.addField(fieled,fieled.id+`#${index}`,item.value);
-            }
+        const value = currentLoopValue.find((value) => value.fieldId === newFieldId)?.value || null;
+      
+        if(field.type=="CONTAINER"){
+          this.generateContainerV2(field,value);
+        }else{
+          this.addField(field,field.id,value);
+        }
 
-          });
-        })
-      });
-
-    }else{
-
-      //this.itemNames('').push(this.fb.control(''));
-
-      var containerFields = containerUI.fields;
-
-      this.containers?.push(new Container(containerUI.id, containerFields!, 1));
-  
-      containerFields!.forEach((containerField) => {
-
-        this.addField(containerField,containerField.id+"#1",containerField.value);
-         
       });
   
-      this.myForm.addControl(containerUI.id, new FormControl(containerUI.value ?? ""));
+      this.myForm.addControl(updatedContainer.id, new FormControl(null));
 
     }
-
   }
 
-  itemNames(controlName:string): FormArray {
-    return this.myForm.get(controlName) as FormArray;
+  oldgenerate(){
+     // const containerValues = container.value as any[] || [];
+    // const containerId = container.id;
+    // var  existingContainerCount = this.containers.filter((x) => x.containerId === containerId).length;
+    // const loops = containerValues.length > 0 ? containerValues.length : 1;
+
+    
+    // for (let i = 0; i < loops; i++) {
+        
+    //   this.containers?.push(new Container(containerId, containerFields!, index));
+  
+    //   const currentLoopValue = containerValues[i] as any[] || [];
+  
+    //   containerFields!.forEach((containerField) => {
+  
+    //     this.addField(containerField, fieldKey, value);
+    //   });
+    // }
+  
+    // this.myForm.addControl(containerId, new FormControl(container.value || ''));
   }
+
+
+  getBaisFieldName(field:Field):string{
+    const index = field.id.indexOf("#");
+    const newFieldId = index !== -1 ? field.id.slice(0, index) : field.id; 
+
+    return newFieldId;
+  }
+
+  // generateContainerV3(container: Field) {
+  //   // Find the parent container for the given field
+  //   const parentContainer = this.parentContainer.find((pc) => pc.cotnainerId === container.id);
+  
+  //   // Extract container values and ID
+  //   const containerValues = container.value as any[] || [];
+  //   const containerId = container.id;
+  
+  //   // Initialize existing container count
+  //   const existingContainerCount = parentContainer?.containers.length ?? 0;
+  
+  //   // Determine the number of loops based on container values
+  //   const loops = containerValues.length > 0 ? containerValues.length : 1;
+  
+  //   for (let i = 0; i < loops; i++) {
+  //     // Calculate the index for the current container
+  //     const index = existingContainerCount + 1 || 1;
+  
+  //     // Extract container fields
+  //     const containerFields = container.fields;
+  
+  //     if (parentContainer) {
+  //       // Push the sub-index and a new container to the parent container
+  //       parentContainer.subIndex!.push(i + 1);
+  //       parentContainer.containers.push(new Container(container.id, containerFields!, index));
+  //     } else {
+  //       // Create a new container array and push it to the parent containers
+  //       const newContainer: Container[] = [new Container(container.id, containerFields!, index)];
+  //       this.parentContainer.push(new ParentContainer(container.id, newContainer, [i]));
+  //     }
+  
+  //     // Extract values for the current loop
+  //     const currentLoopValue = containerValues[i] as any[] || [];
+  
+  //     // Iterate through container fields and process them
+  //     containerFields!.forEach((containerField) => {
+  //       const fieldId = containerField.id;
+  //       const fieldKey = `${fieldId}#${index}`;
+  //       const value = currentLoopValue.find((value) => value.fieldId === fieldId)?.value || null;
+  
+  //       // Add the field with the computed key and value
+  //       this.addField(containerField, fieldKey, value);
+  //     });
+  //   }
+  
+  //   // Add a control to the form with the container ID and default value
+  //   this.myForm.addControl(containerId, new FormControl(container.value || ''));
+  // }
+  
+
+  updateContainerIds(container:Field): Field {
+
+    const clonedContainer = _.cloneDeep(container); 
+
+    // console.log(container);
+
+    clonedContainer.fields?.map(field=>{
+
+      var randomText = Math.floor(Math.random() * 10000000000000).toString();
+
+      field.id=field.id+"#"+randomText;
+
+      if(field.fields){
+        this.updateContainerIds(field);
+      }
+    });
+
+    return clonedContainer;
+
+  }
+  
+    // generateContainer(containerUI:Field){
+
+  //   this.myForm.addControl(containerUI.id, new FormControl(""));
+    
+  //   var fieldValuesArr=containerUI.value as any[];
+
+  //   if(fieldValuesArr.length>0){
+
+  //     fieldValuesArr.map((fieldValue)=>{
+
+  //       var index=this.containers.filter(x=>x.containerId==containerUI.id).length+1;
+
+  //       this.containers.push(new Container(containerUI.id,containerUI.fields!,index));
+
+  //       var fieldValueItems=fieldValue as any[];
+
+  //       fieldValueItems.map(item=>{
+
+  //         containerUI.fields?.map((fieled)=>{
+
+  //           if(item.fieldId==fieled.id){
+
+  //             this.addField(fieled,fieled.id+`#${index}`,item.value);
+
+  //           }
+
+  //         });
+  //       })
+  //     });
+
+  //   }else{
+
+
+  //     var containerFields = containerUI.fields;
+
+  //     this.containers?.push(new Container(containerUI.id, containerFields!, 1));
+  
+  //     containerFields!.forEach((containerField) => {
+
+  //       this.addField(containerField,containerField.id+"#1",containerField.value);
+
+         
+  //     });
+  
+  //     this.myForm.addControl(containerUI.id, new FormControl(containerUI.value ?? ""));
+
+  //   }
+
+  // }
+
+
+  getCalculationFields():Field[]{
+    var fields=this.fields.filter(x=>x.type=="CALCULATION");
+
+    return fields;
+  }
+
 
   private generateEfawateercom(field: Field) {
     var fields = field.fields!;
@@ -489,12 +701,20 @@ export class FormComponent implements OnInit {
   }
 
   generateDate(field: Field,fieldId:string,value:string) {
-    const dateObject = new Date(value);
-    const year = dateObject.getFullYear();
-    const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
-    const day = dateObject.getDate().toString().padStart(2, '0');
+    
+    var formatedValue="";
 
-    this.myForm.addControl(fieldId, new FormControl(`${year}-${month}-${day}` ?? null));
+    if(value!=null && value !=""){
+      const dateObject = new Date(value);
+      const year = dateObject.getFullYear();
+      const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+      const day = dateObject.getDate().toString().padStart(2, '0');
+      formatedValue=`${year}-${month}-${day}`;
+    }
+
+    console.log(formatedValue);
+
+    this.myForm.addControl(fieldId, new FormControl(formatedValue));
   }
 
   private generatePredefinedComboBox(field: Field,fieldId:string,value:any) {
@@ -596,8 +816,6 @@ export class FormComponent implements OnInit {
 
   validateCheckbox(control: AbstractControl): ValidationErrors | null {
 
-    console.log('checkbox');
-
     if (control.value === true) {
     
       return null; // Checkbox is checked, no error
@@ -686,6 +904,14 @@ export class FormComponent implements OnInit {
 
         break;
 
+      case 'MULTI_PREDEFINED_COMBO_BOX':
+
+        controlValue = control!.value as any[];
+
+        fieldType="LIST_OF_STRING";
+
+        break;
+
       case 'FILE':
 
         controlValue = this.getFileValue(field.id) as any[]|null;
@@ -728,6 +954,7 @@ export class FormComponent implements OnInit {
   goToUrl(url:string){
     window.open(url, '_blank');
   }
+
   
   getContainerValue(field: Field): formBody[][] {
     const containerItems = this.containers.filter(x => x.containerId === field.id);
@@ -737,7 +964,10 @@ export class FormComponent implements OnInit {
       const fields: formBody[] = [];
   
       containerItem.containerFields.forEach(field => {
-        const formField = this.myForm.get(`${field.id}#${containerItem.index}`);
+        var formField = this.myForm.get(`${field.id}`);
+
+        // console.log(formField);
+
         let fieldType = this.getFieldType(field.type);
   
         let fieldValue: any;
@@ -776,14 +1006,16 @@ export class FormComponent implements OnInit {
             break;
           case 'FILE':
             fieldType = "FILE";
-            fieldValue = this.getFileValue(`${field.id}#${containerItem.index}`);
+            fieldValue = this.getFileValue(`${field.id}`);
             break;
           // Add more cases for other field types if needed
           default:
             fieldValue = formField?.value;
         }
   
-        fields.push(new formBody(fieldType, field.id, fieldValue));
+        const newFieldId = this.getBaisFieldName(field);
+
+        fields.push(new formBody(fieldType, newFieldId, fieldValue));
       });
   
       containerValue.push([...fields]);
@@ -824,7 +1056,6 @@ export class FormComponent implements OnInit {
     }
   }
 
-
   private removeFormControls() {
     Object.keys(this.myForm.controls).forEach(controlName => {
       this.isLoading = true;
@@ -857,6 +1088,14 @@ export class FormComponent implements OnInit {
   
       const filteredFormValues = formValues.filter(x => x.value !== null && x.value !== undefined && x.value !== "" && x.value !== "null");
   
+      if(event?.fieldId){
+
+        const index = event?.fieldId.indexOf("#");
+        const newFieldId = index !== -1 ? event?.fieldId.slice(0, index) : event?.fieldId; 
+
+        event.fieldId = newFieldId;
+      }
+
       const body = {
         userId: this.authService.getNationalNumber(),
         serviceId: this.serviceId,
@@ -897,6 +1136,7 @@ export class FormComponent implements OnInit {
       this.onParentChange(this.fields);
     }
 
+
   }
 
   
@@ -907,10 +1147,9 @@ export class FormComponent implements OnInit {
     fields.filter((field) => field.parent != null).map((field) => {
       const data = this.getConditionType(field.parent!.condition);
 
-      if(field.editable==false){
-        console.log(field);
+      if( field.parent?.editable ==false){
         this.myForm.get(field.id)?.disable();
-      }else{
+      }else if(field.parent?.editable ==true){
         this.myForm.get(field.id)?.enable();
       }
 
@@ -984,10 +1223,26 @@ export class FormComponent implements OnInit {
         case "LESS":
           return left < right;
 
+        case "CONTAINS":
+
+          var lestString= left as string;
+
+          var rightString= right as string;
+        
+          return containsString(lestString,rightString);
+          
       default:
         return false;
     }
+
+    function containsString(str1: string, str2: string): boolean {
+      return str1.includes(str2);
+    }
+
   }
+
+
+
   inputLogicOperation(conditionLogicInput:any):any{
 
     switch (conditionLogicInput.inputType) {
@@ -1015,9 +1270,9 @@ export class FormComponent implements OnInit {
 
   GetContainerItems(containerId:string):Container[]{
 
-    var filterdContainer=this.containers.filter(x=>x.containerId==containerId);
+    var container=this.containers.filter(x=>x.containerId==containerId);
 
-    return filterdContainer;
+    return container;
   }
 
   onUploadFile(event:any) {

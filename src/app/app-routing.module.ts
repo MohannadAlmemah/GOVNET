@@ -24,6 +24,7 @@ import { InvestmentUserViewComponent } from './Admin/investment-user-view/invest
 import { ServiceOutputComponent } from './investement/service-output/service-output.component';
 import { AdminGuard } from 'src/security/admin.guard';
 import { AuthGuard } from 'src/security/auth.guard';
+import { TestComponent } from './test/test.component';
 
 const routes: Routes = [
   { 
@@ -38,6 +39,7 @@ const routes: Routes = [
     path:'',
     component:ServciesLayoutComponent,
     children:[
+      {path:'test',component:TestComponent},
       {path:'Sections',component:SectionsComponent},
       {path:'Services',component:ServicesComponent},
       {path:'Form',component:FormComponent},
