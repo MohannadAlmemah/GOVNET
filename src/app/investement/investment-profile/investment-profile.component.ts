@@ -41,7 +41,7 @@ export class InvestmentProfileComponent {
       'Password': 'LASU2zapNIrqJAVX',
     });
 
-    var request= this.apiService.get(`api/Individual/GetPersonalInfo?NationalID=${this.authService.getNationalNumber()}`,'http://appv4.sanad.gov.jo',headers);
+    var request= this.apiService.get(`api/Individual/GetPersonalInfo?NationalID=${this.authService.getNationalNumber()}`,'http://appv4.sanad.gov.jo/',headers);
 
     return request.pipe(
       tap(response => {

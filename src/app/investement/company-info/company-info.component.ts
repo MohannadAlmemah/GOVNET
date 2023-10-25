@@ -45,7 +45,7 @@ export class CompanyInfoComponent {
   
 
       if(companyId.startsWith("2")){
-        var request=this.apiService.get(`Investment/GetCCdCompanyData?CompanyNationalId=${companyId}`,'http://appv4.sanad.gov.jo/api',headers);
+        var request=this.apiService.get(`Investment/GetCCdCompanyData?CompanyNationalId=${companyId}`,'http://appv4.sanad.gov.jo//api',headers);
 
         request.subscribe(response=>{
 
@@ -99,7 +99,7 @@ export class CompanyInfoComponent {
 
       }
       else if(companyId.startsWith("1")){
-        var request=this.apiService.get(`Investment/GetMITCompanyData?CompanyNationalId=${companyId}`,'http://appv4.sanad.gov.jo/api',headers);
+        var request=this.apiService.get(`Investment/GetMITCompanyData?CompanyNationalId=${companyId}`,'http://appv4.sanad.gov.jo//api',headers);
 
         request.subscribe(response=>{
 

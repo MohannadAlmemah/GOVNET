@@ -122,7 +122,6 @@
                                 <ng-container
                                     *ngIf="containerFiled.type=='COMBO_BOX'">
 
-
                                     <app-combo-box [formGroup]="myForm!"
                                         [errors]="getFormControlErrors(containerFiled.id)"
                                         [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
@@ -185,7 +184,8 @@
                                         [fieldIndex]="i"
                                         [isContainer]="true"
                                         (refreshFormEvent)="refreshForm($event)"
-                                        
+                                        (onUploadFileEvent)="onUploadFile($event)"
+                                        (deleteFileEvent)="deleteFile($event)"
                                         >
                                     </app-file>
 
@@ -267,11 +267,12 @@
 
             <tbody>
 
-                <tr *ngFor="let containerTableBody of field.value">
+                <tr *ngFor="let containerTableBody of field.value!.value!">
 
                     <td
                         *ngFor="let containerTableBodyValue of containerTableBody">
-                        {{containerTableBodyValue.value}}</td>
+                        <!-- {{containerTableBodyValue.value!}} -->
+                    </td>
 
                 </tr>
 

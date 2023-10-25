@@ -122,7 +122,7 @@
                                                         <span class="text-danger" *ngIf="field.required"> * </span>
                                                     </label>
 
-                                                    <div class="col-sm-10" *ngIf="field.value!=null && field.value!=''"> 
+                                                    <div class="col-sm-10" *ngIf="field.value!=null && field.value.value!=''"> 
                                                         <a href="{{field.value}}" target="_blank">عرض 
                                                             <i class="fa fa-eye text-primary"></i>
                                                         </a>
@@ -328,7 +328,8 @@
                                                 (addContainerItemsEvent)="addContainerItems($event)"
                                                 (refreshFormEvent)="refreshForm($event)"
                                                 (getFormControlErrorsEvent)="getFormControlErrors($event)"
-
+                                                (deleteFileEvent)="deleteFile($event)"
+                                                (onUploadFileEvent)="onUploadFile($event)"
 
                                                 >
 

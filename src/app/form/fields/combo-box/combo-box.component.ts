@@ -24,6 +24,9 @@ export class ComboBoxComponent {
   submitted:boolean|undefined;
 
   @Input()
+  options:any[]=[];
+
+  @Input()
   control!: any;
 
   @Input()
@@ -46,10 +49,19 @@ export class ComboBoxComponent {
   refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>();
 
 
-  refreshForm(fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean){
+  refreshForm(fieldId: string, shouldRefresh: boolean,containerId:string|undefined,fieldIndex:number|undefined,isContainer:boolean){
 
-    this.refreshFormEvent.emit({ fieldId ,shouldRefresh,containerFieldId,fieldIndex,isContainer});
+    var containerFieldId= containerId != undefined ? this.getBasitFieldName(containerId) : undefined;
 
+    this.refreshFormEvent.emit({ fieldId ,shouldRefresh, containerFieldId ,fieldIndex,isContainer});
+
+  }
+
+  getBasitFieldName(fieldId:string):string{
+    const index = fieldId.indexOf("#");
+    const newFieldId = index !== -1 ? fieldId.slice(0, index) : fieldId; 
+
+    return newFieldId;
   }
   
 }

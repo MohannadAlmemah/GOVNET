@@ -12,6 +12,13 @@ export class Equation {
     fieldId: string|undefined
     containerId: string|undefined
 }
+
+export class Value{
+    public type:string|undefined;
+    public value:string|undefined;
+    public options:any[]|undefined;
+    public fieldId:string|undefined;
+}
   
 export class Field{
     public id:string;
@@ -29,7 +36,7 @@ export class Field{
     public allowedExtensions:string[]|undefined;
     public textFieldType:string|undefined;
     public hidden:boolean|undefined;
-    public value:any|undefined;
+    public value:Value;
     public comment:string|undefined;
     public fields:Field[]|undefined;
     public multiSelect:boolean|undefined;

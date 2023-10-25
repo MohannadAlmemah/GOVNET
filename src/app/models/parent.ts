@@ -3,7 +3,7 @@ export class parentModel{
     editable:boolean|undefined;
     hidden:boolean|undefined;
     required:boolean=false;
-    condition:CarbonCopyConditionLogic|undefined;
+    condition:CarbonCopyConditionLogicOperation|undefined;
 }
 
 // You would need to define or import these types as appropriate for your code.

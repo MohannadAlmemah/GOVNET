@@ -9,7 +9,7 @@
         <p-multiSelect class="select-items" [required]="field.required"
             defaultLabel="يرجى الاختيار"
             [ngClass]="isInvalid && submitted ? 'is-invalid':null"
-            [options]="field.comboBoxOptions!"
+            [options]="field.value.options!"
             formControlName="{{fieldId}}" optionLabel="value"
             optionValue="key"
             (onChange)="refreshForm(field.id,field.shouldRefresh,containerFieldId,fieldIndex,isContainer)">

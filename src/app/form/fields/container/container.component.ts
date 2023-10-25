@@ -65,15 +65,38 @@ export class ContainerComponent implements OnInit {
 
   @Output() 
   getFormControlValidationEvent:EventEmitter<string>=new EventEmitter<string>();
-  
+
+  @Output() 
+  onUploadFileEvent:EventEmitter<{fieldId: string,event:any,multi:boolean}>=new EventEmitter<{fieldId: string,event:any,multi:boolean}>();
+
+  @Output() 
+  deleteFileEvent:EventEmitter<{fieldId: number}>=new EventEmitter<{fieldId: number}>();
+
 
   getFormControlValidation(fieldId:string){
     this.getFormControlValidationEvent.emit(fieldId);
+  }
+
+  onUploadFile(currentData: any) {
+    var fieldId = currentData.fieldId as string;
+    var event = currentData.event as any; 
+    var multi = currentData.multi as boolean;
+
+    this.onUploadFileEvent.emit({fieldId, event, multi});
+  }
+
+  deleteFile(fieldId:any){
+
+    this.deleteFileEvent.emit(fieldId);
 
   }
 
+
+  
   getFiles(controlName:string):FileModel[]{
-    return this.files.filter(x=>x.controlName==controlName);
+    var files= this.files.filter(x=>x.controlName==controlName);
+
+    return files;
   }
   
   getFormControlErrors(fieldId:string){
@@ -99,4 +122,6 @@ export class ContainerComponent implements OnInit {
     return containerItems;
   }
 
+
+  
 }

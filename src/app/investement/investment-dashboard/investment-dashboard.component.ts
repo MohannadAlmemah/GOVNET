@@ -71,7 +71,7 @@ export class InvestmentDashboardComponent {
       'Authorization': this.authService.getToken() != undefined ? `Bearer ${this.authService.getToken()}` : '',
     });
 
-    var request= this.apiService.get('Investment/GetAllCompanyAuthorizationData?NationalId=' + this.authService.getNationalNumber(), 'https://appv4.sanad.gov.jo/api', headers);
+    var request= this.apiService.get('Investment/GetCompanyAuthorizationData?NationalId=' + this.authService.getNationalNumber(), 'https://appv4.sanad.gov.jo/api', headers);
 
     request.subscribe(response=>{
       var data = response.list;

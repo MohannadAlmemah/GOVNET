@@ -62,8 +62,7 @@
 
                             <tbody>
 
-                                <tr
-                                    *ngFor="let item of files">
+                                <tr *ngFor="let item of files">
                                     <td>{{field.label}}</td>
                                     <td style="max-width: 120px;" *ngIf="!viewApplication">{{item.objectId}}</td>
                                     <td>

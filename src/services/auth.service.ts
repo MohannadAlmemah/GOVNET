@@ -12,7 +12,7 @@ export class AuthService {
 
   }
 
-  private apiUrl = 'https://stagingapp.sanad.gov.jo/api';
+  private apiUrl = 'https://stagingapp.govnet.gov.jo/api';
 
   login(email: string, password: string): Observable<any> {
     const url = `${this.apiUrl}/api/user/login`;
@@ -92,7 +92,7 @@ export class AuthService {
     // Replace with your actual refresh token logic
     const refreshToken = this.getRefreshToken();
 
-    return this.http.post('https://stagingapp.sanad.gov.jo/api/auth/RefreshToken', { "refreshToken" : refreshToken }).pipe(
+    return this.http.post(`${this.apiUrl}/auth/RefreshToken`, { "refreshToken" : refreshToken }).pipe(
       catchError(error => {
        
         this.removeToken();
