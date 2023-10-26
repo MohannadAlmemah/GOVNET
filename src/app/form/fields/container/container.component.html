@@ -70,7 +70,7 @@
                                 <ng-container
                                     *ngIf="containerFiled.type=='TEXT_FIELD'">
 
-                                    <app-text-field [formGroup]="myForm!"
+                                <app-text-field [formGroup]="myForm!"
                                         [errors]="getFormControlErrors(containerFiled.id)"
                                         [isInvalid]="!myForm?.get(containerFiled.id)?.valid!"
                                         [field]="containerFiled"
@@ -80,7 +80,10 @@
                                         [yourTurn]="yourTurn"
                                         [isContainer]="true"
                                         [containerFieldId]="field.id" [fieldIndex]="i"
-                                        (refreshFormEvent)="refreshForm($event)"></app-text-field>
+                                        (refreshFormEvent)="refreshForm($event)"
+                                        (calulcateTextField)="calculate($event)"
+                                        >
+                                    </app-text-field>
                                 </ng-container>
                                 
 

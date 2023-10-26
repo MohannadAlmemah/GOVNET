@@ -11,6 +11,7 @@ import {ConditionType} from '../models/enum/conditionType';
 import { AuthService } from 'src/services/auth.service';
 import * as _ from 'lodash';
 import { Observable, map } from 'rxjs';
+import { CalculationComponent } from './fields/calculation/calculation.component';
 
 export class FieldInfo{
   filedValue:any|undefined;
@@ -33,6 +34,8 @@ export class FieldInfo{
 
 
 export class FormComponent implements OnInit {
+
+  @ViewChild(CalculationComponent) childComponent!: CalculationComponent;
 
   fields:Field[];
 
@@ -299,16 +302,56 @@ export class FormComponent implements OnInit {
       this.updateValidation();
   
       selectedContainer.containerFields.map((field: any) => {
+
         if (field.type === "CONTAINER") {
           this.deleteContainer({ containerId: field.id },false);
         }
         this.myForm.removeControl(field.id);
+
+        
+        try{
+          this.calculate(field.id);
+        }catch(ex){
+
+        }
+        
       });
   
       this.containers.splice(indexToDelete, 1);
+      
+      
     }
+
+    
   }
   
+  
+  calculate(fieldId:string) {
+
+    const baseId = fieldId.replace(/#.*$/, '');
+
+    const targetCalculation = this.getCalculationFields().find(x => x.equation?.fieldId === baseId);
+
+    if (!targetCalculation) return;
+
+    const targetValueControl = this.myForm?.get(targetCalculation.id);
+
+    let accumulatedValue: number = 0;
+
+    Object.keys(this.myForm!.controls).forEach(controlKey => {
+        if (controlKey.startsWith(baseId)) {
+            const controlValue = Number(this.myForm?.get(controlKey)?.value);
+            if (targetCalculation.equation?.operation === "PLUS") {
+                accumulatedValue += controlValue;
+            } else {
+                accumulatedValue -= controlValue;
+            }
+        }
+    });
+
+    targetValueControl?.setValue(accumulatedValue);
+  }
+
 
   // deleteContainer(event:any) {
 

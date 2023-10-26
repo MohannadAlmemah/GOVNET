@@ -43,8 +43,6 @@ export class CalculationComponent {
   @Input()
   fieldIndex:number|undefined=undefined;
 
-  calcValue:string|undefined;
-
   @Output() 
   refreshFormEvent:EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>=new EventEmitter<{fieldId: string, shouldRefresh: boolean,containerFieldId:string|undefined,fieldIndex:number|undefined,isContainer:boolean}>();
 

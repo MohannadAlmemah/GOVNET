@@ -66,6 +66,13 @@ export class ContainerComponent implements OnInit {
   @Output() 
   getFormControlValidationEvent:EventEmitter<string>=new EventEmitter<string>();
   
+  @Output()
+  calulcateTextFieldEvent:EventEmitter<string>=new EventEmitter<string>;
+
+  calculate(id:string){
+    this.calulcateTextFieldEvent.emit(id);
+  }
+
 
   getFormControlValidation(fieldId:string){
     this.getFormControlValidationEvent.emit(fieldId);

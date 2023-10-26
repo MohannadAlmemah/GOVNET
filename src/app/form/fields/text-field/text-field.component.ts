@@ -48,6 +48,9 @@ export class TextFieldComponent  {
   @Input()
   isContainer:boolean=false;
 
+  @Output()
+  calulcateTextField:EventEmitter<string>=new EventEmitter<string>;
+
 
   updateIsUserType(){
     if(this.formGroup?.get(this.fieldId!)?.value!="" && this.formGroup?.get(this.fieldId!)?.value!=null){
@@ -64,26 +67,30 @@ export class TextFieldComponent  {
 
     const baseId = this.field.id.replace(/#.*$/, '');
 
-    const targetCalculation = this.calculationFields.find(x => x.equation?.fieldId === baseId);
+    this.calulcateTextField.emit(baseId);
 
-    if (!targetCalculation) return;
+    // const baseId = this.field.id.replace(/#.*$/, '');
 
-    const targetValueControl = this.formGroup?.get(targetCalculation.id);
+    // const targetCalculation = this.calculationFields.find(x => x.equation?.fieldId === baseId);
 
-    let accumulatedValue: number = 0;
+    // if (!targetCalculation) return;
 
-    Object.keys(this.formGroup!.controls).forEach(controlKey => {
-        if (controlKey.startsWith(baseId)) {
-            const controlValue = Number(this.formGroup?.get(controlKey)?.value);
-            if (targetCalculation.equation?.operation === "PLUS") {
-                accumulatedValue += controlValue;
-            } else {
-                accumulatedValue -= controlValue;
-            }
-        }
-    });
+    // const targetValueControl = this.formGroup?.get(targetCalculation.id);
 
-    targetValueControl?.setValue(accumulatedValue);
+    // let accumulatedValue: number = 0;
+
+    // Object.keys(this.formGroup!.controls).forEach(controlKey => {
+    //     if (controlKey.startsWith(baseId)) {
+    //         const controlValue = Number(this.formGroup?.get(controlKey)?.value);
+    //         if (targetCalculation.equation?.operation === "PLUS") {
+    //             accumulatedValue += controlValue;
+    //         } else {
+    //             accumulatedValue -= controlValue;
+    //         }
+    //     }
+    // });
+
+    // targetValueControl?.setValue(accumulatedValue);
   }
 
 

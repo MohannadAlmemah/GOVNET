@@ -54,7 +54,7 @@ export class Field{
 
     /**
      *
-     */
+     **/
     constructor(id:string,type:string,regex:string|undefined,textFieldType:string|undefined,
         editable:boolean|undefined,required:boolean,label:string,modifiable:boolean|undefined,
         hidden:boolean|undefined,value:any|undefined,comment:string|undefined,

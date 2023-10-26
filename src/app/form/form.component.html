@@ -190,7 +190,9 @@
                                                     [fieldId]="field.id" [submitted]="submitted" [yourTurn]="yourTurn"
                                                     [containerFieldId]="undefined" [fieldIndex]="undefined"
                                                     [isContainer]="false"
-                                                    (refreshFormEvent)="refreshForm($event)"></app-text-field>
+                                                    (refreshFormEvent)="refreshForm($event)"
+                                                    (calulcateTextField)="calculate($event)"
+                                                    ></app-text-field>
 
 
                                             </ng-container>
@@ -328,7 +330,7 @@
                                                 (addContainerItemsEvent)="addContainerItems($event)"
                                                 (refreshFormEvent)="refreshForm($event)"
                                                 (getFormControlErrorsEvent)="getFormControlErrors($event)"
-
+                                                (calulcateTextFieldEvent)="calculate($event)"
 
                                                 >
 

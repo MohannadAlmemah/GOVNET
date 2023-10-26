@@ -71,7 +71,7 @@
                                         <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary px-2"></i>
                                         <i role="button" *ngIf="!viewApplication" (click)="downloadMinioFile(item.objectId)" class="fa fa-eye text-primary px-2"></i>
 
-                                        <i role="button"  *ngIf="!viewApplication"
+                                        <i role="button"  *ngIf="!viewApplication && field.editable==true"
                                             (click)="deleteFile(item.id)"
                                             class="fa-solid fa-trash text-danger"></i>
                                     </td>
