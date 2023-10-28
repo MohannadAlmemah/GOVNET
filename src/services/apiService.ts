@@ -7,9 +7,10 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ApiService {
   //
-  private apiUrl = 'https://stagingapp.govnet.gov.jo/api';
+  private apiUrl = 'https://stagingapp.sanad.gov.jo/api';
 
   token:string|undefined;
 
@@ -30,6 +31,18 @@ export class ApiService {
         'Authorization': this.token!=undefined ? `Bearer ${this.token}` :'',
       });
     }
+
+    return this.http.get<any>(url,{headers});
+  }
+
+  getWithoutToken(endpoint: string,apiUrl:string=this.apiUrl): Observable<any> {
+    const url = `${apiUrl}/${endpoint}`;
+
+    var headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin':'*',
+      'Accept-Language':'ar-JO',
+    });
 
     return this.http.get<any>(url,{headers});
   }
@@ -74,7 +87,7 @@ export class ApiService {
       })
     };
 
-    return this.http.post('https://stagingapp.govnet.gov.jo/api/Minio/UploadFile', formData, httpOptions)
+    return this.http.post('https://stagingapp.sanad.gov.jo/api/Minio/UploadFile', formData, httpOptions)
       .pipe(
         map(response => {
           // Handle your response here
@@ -87,7 +100,7 @@ export class ApiService {
       );
   }
 
-    // const url = 'https://stagingapp.govnet.gov.jo/api/Minio/UploadFile';
+    // const url = 'https://stagingapp.sanad.gov.jo/api/Minio/UploadFile';
 
 
     // const formData = new FormData();

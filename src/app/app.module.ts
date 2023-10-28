@@ -66,6 +66,7 @@ import { ContainerComponent } from './form/fields/container/container.component'
 import { PredfiendMultiSelectComponent } from './form/fields/predfiend-multi-select/predfiend-multi-select.component';
 import { DateComponent } from './form/fields/date/date.component';
 import { CalculationComponent } from './form/fields/calculation/calculation.component';
+import { JamarekComponent } from './investement/jamarek/jamarek.component';
 
 
 // export function HttpLoaderFactory(http: HttpClient) {
@@ -116,6 +117,7 @@ registerPlugin(FilePondPluginFileValidateType);
     PredfiendMultiSelectComponent,
     DateComponent,
     CalculationComponent,
+    JamarekComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

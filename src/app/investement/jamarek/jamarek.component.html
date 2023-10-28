@@ -1,0 +1,133 @@
+<main id="content" role="main" class="main">
+    <div class="content container">
+        <div dir="rtl">
+            <nav aria-label="breadcrumb">
+                <ol id="w6" class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="/Investment/Dashboard">الرئيسية</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">الجمارك</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row justify-content-center py-7" style="background:url(/img/bg-green-full.png);">
+        <div class="col-md-8 col-12">
+
+            <div class="js-step-form" >
+                <div id="basicStepFormContent">
+                    <div id="basicStepDetails" class="card">
+                        <div dir="rtl">
+                            <div class="card-header">
+                                <h3 class="card-title h3">
+                                    الجمارك
+                                </h3>
+                            </div>
+
+                            <div class="card-body">
+                                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                                    <!-- Tax Number -->
+                                    <div class="form-group">
+                                      <label for="taxNumber">الرقم الضريبي:</label>
+                                      <input type="text" id="taxNumber" formControlName="taxNumber" class="form-control">
+                                        <div *ngIf="form.get('taxNumber')?.invalid && form.get('taxNumber')?.touched" class="text-danger">
+                                            حقل اجباري
+                                        </div>
+                                    </div>
+
+                                    <hr>
+                                  
+                                    <!-- Form Items -->
+                                    <div formArrayName="fromItems">
+                                      <div *ngFor="let item of Items.controls; let i = index">
+
+                                        <div class="row">
+                                            <div class="col-12" style="text-align: left;">
+                                                <i role="button"
+                                                    *ngIf="i>0"
+                                                    (click)="removeName(i)"
+                                                    class="fa-solid fa-trash text-danger p-2"
+                                                    style="padding: 7px;border: 2px solid #eee;border-radius: 5px;"></i>
+                                            </div>
+                                        </div>
+
+
+                                        <div [formGroupName]="i" class="mb-3">
+                                          <!-- Unit Name -->
+                                          <div class="form-group py-2">
+                                            <label for="unitName-{{i}}">اسم العنصر:</label>
+                                            <input type="text" id="unitName-{{i}}" formControlName="unitName" (blur)="getUnits($event,i)"  class="form-control">
+                                            <div *ngIf="item.get('unitName')?.invalid && item.get('unitName')?.touched" class="text-danger">
+                                                حقل اجباري
+                                            </div>
+                                           
+                                          </div>
+                                  
+                                          <!-- Unit ID (select type) -->
+                                          <div class="form-group py-2">
+                                            <label for="unitId-{{i}}">العنصر:</label>
+                                            <select id="unitId-{{i}}" formControlName="unitId" class="form-control">
+                                              <option value="">يرحى الاختيار</option>
+                                              <option value="{{item.key }}" *ngFor="let item of units[i]" >{{item.value }}</option>
+                                              <!-- ... -->
+                                            </select>
+                                            <div *ngIf="item.get('unitId')?.invalid && item.get('unitId')?.touched" class="text-danger">
+                                                حقل اجباري
+                                            </div>
+                                          </div>
+                                  
+                                          <!-- Quantity -->
+                                          <div class="form-group py-2">
+                                            <label for="quantity-{{i}}">الكمية:</label>
+                                            <input type="text" id="quantity-{{i}}" formControlName="quantity" class="form-control">
+                                            <div *ngIf="item.get('quantity')?.invalid && item.get('quantity')?.touched" class="text-danger">
+                                                حقل اجباري
+                                            </div>
+                                          </div>
+                                  
+                                          <!-- Static Unit (select type) -->
+                                          <div class="form-group py-2">
+                                            <label for="staticUnit-{{i}}">وحدة القياس :</label>
+                                            <select id="staticUnit-{{i}}" formControlName="staticUnit" class="form-control">
+                                                <option value="">يرحى الاختيار</option>
+                                                <option value="{{item.key}}" *ngFor="let item of statisticalUnits">
+                                                {{item.value}}
+                                              </option>
+                                              <!-- ... -->
+                                            </select>
+                                            <div *ngIf="item.get('staticUnit')?.invalid && item.get('staticUnit')?.touched" class="text-danger">
+                                                حقل اجباري
+                                            </div>
+                                          </div>
+                                  
+
+                                          <!-- Remove Button -->
+                                          <!-- <button type="button" class="btn btn-danger" (click)="removeName(i)">Remove Item</button> -->
+                                        </div>
+
+                                        <hr>
+
+                                      </div>
+
+                                      <div class="row">
+                                        <div class="col-12 text-center mt-3">
+                                            <button type="button" class="btn btn-primary mb-3" style="border-radius: 50%;" (click)="addItem()">+</button>
+                                        </div>
+                                      </div>
+
+
+                                    </div>
+                                                                    
+                                    <button type="submit" class="btn btn-primary">حفظ</button>
+
+                                  </form>
+                                  
+                                  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

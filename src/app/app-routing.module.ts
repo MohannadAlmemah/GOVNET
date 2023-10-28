@@ -25,6 +25,7 @@ import { ServiceOutputComponent } from './investement/service-output/service-out
 import { AdminGuard } from 'src/security/admin.guard';
 import { AuthGuard } from 'src/security/auth.guard';
 import { TestComponent } from './test/test.component';
+import { JamarekComponent } from './investement/jamarek/jamarek.component';
 
 const routes: Routes = [
   { 
@@ -47,6 +48,14 @@ const routes: Routes = [
     ]
     ,canActivate:[ConsumerGuard],
   },
+  {
+    path:'Investment',
+    component:ServciesLayoutComponent,
+    children:[
+      {path:'Jamarek',component:JamarekComponent},
+    ]
+  },
+
   {
     path:'Investment',
     component:ServciesLayoutComponent,
