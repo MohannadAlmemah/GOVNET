@@ -67,6 +67,7 @@ import { PredfiendMultiSelectComponent } from './form/fields/predfiend-multi-sel
 import { DateComponent } from './form/fields/date/date.component';
 import { CalculationComponent } from './form/fields/calculation/calculation.component';
 import { JamarekComponent } from './investement/jamarek/jamarek.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 // export function HttpLoaderFactory(http: HttpClient) {
@@ -148,6 +149,7 @@ registerPlugin(FilePondPluginFileValidateType);
     FormsModule,
     FilePondModule,
     DialogModule,
+    DropdownModule,
   ],
   providers: [
     {
