@@ -325,7 +325,20 @@ export class FormComponent implements OnInit {
     
   }
   
-  
+  appendQueryString(url: string): string {
+    const token = `Token=${this.authService.getToken()}`;
+
+    if (url.includes('?')) {
+        if (url.charAt(url.length - 1) === '&') {
+            return url + token;
+        } else {
+            return url + '&' + token;
+        }
+    } else {
+        return url + '?' + token;
+    }
+}
+
   calculate(fieldId:string) {
 
     const baseId = fieldId.replace(/#.*$/, '');
@@ -495,7 +508,7 @@ export class FormComponent implements OnInit {
     else if (field.type == 'WEBVIEW') {
 
       //this.showSubmit=false;
-      this.generateOther(field,fieldId,field.value);
+      this.generateOther(field,fieldId,field.url);
 
     }
     else {
@@ -972,6 +985,12 @@ export class FormComponent implements OnInit {
 
         controlValue = this.checkCbValue(field.id);
         fieldType="BOOLEAN";
+
+        break;
+      
+        case 'WEBVIEW':
+
+        controlValue = field.url;
 
         break;
       case 'CONTAINER':

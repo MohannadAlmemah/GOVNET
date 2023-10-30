@@ -53,9 +53,9 @@ export class JamarekComponent {
 
     this.fillStaticUnit();
 
-    if(this.route.snapshot.queryParams['Token'] && this.route.snapshot.queryParams['CarbonCopyId']){
+    if(this.route.snapshot.queryParams['Token'] && this.route.snapshot.queryParams['Carponcopyid']){
 
-      this.carbonCopyId= this.route.snapshot.queryParamMap.get('CarbonCopyId')!;
+      this.carbonCopyId= this.route.snapshot.queryParamMap.get('Carponcopyid')!;
 
       this.form = this.fb.group({
         taxNumber:['', Validators.required],
@@ -64,18 +64,21 @@ export class JamarekComponent {
 
       this.fillApplicant(this.carbonCopyId);
 
-      // var token = this.route.snapshot.queryParamMap.get('Token')!;
+      var token = this.route.snapshot.queryParamMap.get('Token')!;
 
-      // var decoded = jwt_decode(token) as any;
+      var decoded = jwt_decode(token) as any;
       
-      // var roel= decoded.role as string;
+      var roel= decoded.role as string;
 
-      // if(roel.toLocaleLowerCase() =='consumer'){
-      //   this.hideisTaxExempt=true;
-      // }else{
-      //   this.hideisTaxExempt=false;
-      // }
+      if(roel.toLocaleLowerCase() =='consumer'){
+        this.userType="Consumer";
+        this.hideisTaxExempt=true;
+      }else{
+        this.hideisTaxExempt=false;
+      }
 
+    }else{
+      location.href="/Investment/Dashboard";
     }
 
 
