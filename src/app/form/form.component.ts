@@ -537,6 +537,9 @@ export class FormComponent implements OnInit {
     for (let i = 0; i < loops; i++) {
       var updatedContainer= this.updateContainerIds(container);
 
+      console.log(updatedContainer);
+
+
       this.containers.push(new Container(this.containers.length+1,updatedContainer.id,updatedContainer.fields!,1));
 
       const currentLoopValue = containerValues[i] as any[] || [];
@@ -578,9 +581,9 @@ export class FormComponent implements OnInit {
 
       var newId =field.id+"#"+randomText;
 
-      clonedContainer.fields?.map(pf=>{
-        if(pf.parent!=null){
-          this.updateParentIds(pf, field, newId);
+      clonedContainer.fields?.forEach(pf => {
+        if (pf.parent) {
+          this.updateFieldIdInCondition(pf.parent.condition, field.id, newId);
         }
       });
 
@@ -598,17 +601,15 @@ export class FormComponent implements OnInit {
   }
 
   
-  
-  private updateParentIds(pf: Field, field: Field, newId: string) {
-    if (pf.parent?.condition?.left?.fieldId == field.id) {
-      if (pf.parent.condition && pf.parent.condition.left) {
-        pf.parent.condition.left.fieldId = newId;
-      }
-    }
-
-    if (pf.parent?.condition?.right?.fieldId == field.id) {
-      if (pf.parent.condition && pf.parent.condition.right) {
-        pf.parent.condition.right.fieldId = newId;
+  updateFieldIdInCondition(condition: any, oldId: string, newId: string) {
+    if (condition) {
+      if (condition.type === "OPERATION") {
+        // Recursively update left and right sides
+        this.updateFieldIdInCondition(condition.left, oldId, newId);
+        this.updateFieldIdInCondition(condition.right, oldId, newId);
+      } else if (condition.type === "UI" && condition.fieldId === oldId) {
+        // Update the fieldId if it matches
+        condition.fieldId = newId;
       }
     }
   }
