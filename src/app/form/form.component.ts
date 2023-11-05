@@ -456,7 +456,11 @@ export class FormComponent implements OnInit {
 
       this.isLoading=false;
 
+      console.log(this.myForm);
+
+
     });
+
 
   }
 
@@ -558,28 +562,6 @@ export class FormComponent implements OnInit {
     }
   }
 
-  oldgenerate(){
-     // const containerValues = container.value as any[] || [];
-    // const containerId = container.id;
-    // var  existingContainerCount = this.containers.filter((x) => x.containerId === containerId).length;
-    // const loops = containerValues.length > 0 ? containerValues.length : 1;
-
-    
-    // for (let i = 0; i < loops; i++) {
-        
-    //   this.containers?.push(new Container(containerId, containerFields!, index));
-  
-    //   const currentLoopValue = containerValues[i] as any[] || [];
-  
-    //   containerFields!.forEach((containerField) => {
-  
-    //     this.addField(containerField, fieldKey, value);
-    //   });
-    // }
-  
-    // this.myForm.addControl(containerId, new FormControl(container.value || ''));
-  }
-
 
   getBaisFieldName(field:Field):string{
     const index = field.id.indexOf("#");
@@ -591,8 +573,6 @@ export class FormComponent implements OnInit {
   updateContainerIds(container:Field): Field {
 
     const clonedContainer = _.cloneDeep(container); 
-
-    // console.log(container);
 
     clonedContainer.fields?.map(field=>{
 
@@ -631,7 +611,6 @@ export class FormComponent implements OnInit {
 
     });
 
-    var x=this.myForm.get('') as FormControl;
   }
 
   private generateFile(field: Field,fieldId:string,value:any[]|null) {
@@ -1160,6 +1139,7 @@ export class FormComponent implements OnInit {
 
   
   getConditionType(condition: any): any {
+
     switch (condition.type) {
       case ConditionType.Operation:
         return this.conditionLogicOperation(condition);
