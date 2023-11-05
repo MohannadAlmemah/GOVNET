@@ -576,66 +576,43 @@ export class FormComponent implements OnInit {
 
       var randomText = Math.floor(Math.random() * 10000000000000).toString();
 
-      const oldId= field.id;
+      var newId =field.id+"#"+randomText;
 
-      field.id=field.id+"#"+randomText;
+      clonedContainer.fields?.map(pf=>{
+        if(pf.parent!=null){
+          this.updateParentIds(pf, field, newId);
+        }
+      });
 
-      this.replaceInJsonObjectV2(container.fields!,oldId,field.id);
-      
+      field.id=newId;
+
 
       if(field.fields){
         this.updateContainerIds(field);
       }
+
     });
 
     return clonedContainer;
 
   }
-  
 
-  replaceInJsonObject(obj: any, oldStr: string, newStr: string): any {
-
-    if(obj!=null){
-      // Step 1: Convert the JSON object to a string
-      let jsonString = JSON.stringify(obj);
-      
-      // Step 2: Replace old string with new string
-      jsonString = jsonString.replace(oldStr, newStr);
-      
-      // Step 3: Convert the string back to a JSON object
-      const newObject: any = JSON.parse(jsonString);
   
-      console.log(newObject);
-      
-      return newObject;
+  
+  private updateParentIds(pf: Field, field: Field, newId: string) {
+    if (pf.parent?.condition?.left?.fieldId == field.id) {
+      if (pf.parent.condition && pf.parent.condition.left) {
+        pf.parent.condition.left.fieldId = newId;
+      }
+    }
+
+    if (pf.parent?.condition?.right?.fieldId == field.id) {
+      if (pf.parent.condition && pf.parent.condition.right) {
+        pf.parent.condition.right.fieldId = newId;
+      }
     }
   }
 
-  replaceInJsonObjectV2(fields: Field[], oldStr: string, newStr: string): any {
-
-    fields.map(field=>{
-
-      if(field.parent!=null){
-        // Step 1: Convert the JSON object to a string
-        let jsonString = JSON.stringify(field);
-        
-        // Step 2: Replace old string with new string
-        jsonString = jsonString.replace(oldStr, newStr);
-        
-        // Step 3: Convert the string back to a JSON object
-        const newObject: any = JSON.parse(jsonString);
-
-        console.log(jsonString);
-
-        //field.parent=newObject;
-            
-        return newObject;
-      }
-
-    })
-  }
-
-  
   getCalculationFields():Field[]{
     var fields=this.fields.filter(x=>x.type=="CALCULATION");
 
