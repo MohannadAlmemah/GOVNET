@@ -456,8 +456,6 @@ export class FormComponent implements OnInit {
 
       this.isLoading=false;
 
-      console.log(this.myForm);
-
 
     });
 
@@ -578,7 +576,12 @@ export class FormComponent implements OnInit {
 
       var randomText = Math.floor(Math.random() * 10000000000000).toString();
 
+      const oldId= field.id;
+
       field.id=field.id+"#"+randomText;
+
+      this.replaceInJsonObjectV2(container.fields!,oldId,field.id);
+      
 
       if(field.fields){
         this.updateContainerIds(field);
@@ -588,6 +591,50 @@ export class FormComponent implements OnInit {
     return clonedContainer;
 
   }
+  
+
+  replaceInJsonObject(obj: any, oldStr: string, newStr: string): any {
+
+    if(obj!=null){
+      // Step 1: Convert the JSON object to a string
+      let jsonString = JSON.stringify(obj);
+      
+      // Step 2: Replace old string with new string
+      jsonString = jsonString.replace(oldStr, newStr);
+      
+      // Step 3: Convert the string back to a JSON object
+      const newObject: any = JSON.parse(jsonString);
+  
+      console.log(newObject);
+      
+      return newObject;
+    }
+  }
+
+  replaceInJsonObjectV2(fields: Field[], oldStr: string, newStr: string): any {
+
+    fields.map(field=>{
+
+      if(field.parent!=null){
+        // Step 1: Convert the JSON object to a string
+        let jsonString = JSON.stringify(field);
+        
+        // Step 2: Replace old string with new string
+        jsonString = jsonString.replace(oldStr, newStr);
+        
+        // Step 3: Convert the string back to a JSON object
+        const newObject: any = JSON.parse(jsonString);
+
+        console.log(jsonString);
+
+        //field.parent=newObject;
+            
+        return newObject;
+      }
+
+    })
+  }
+
   
   getCalculationFields():Field[]{
     var fields=this.fields.filter(x=>x.type=="CALCULATION");
