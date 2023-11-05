@@ -425,6 +425,8 @@ export class FormComponent implements OnInit {
     this.containers.push(new Container(this.containers.length+1,updatedFields.id,updatedFields.fields!,1));
 
     updatedFields.fields?.map(field=>{
+
+      field.value=null;
       
       this.addField(field,field.id,'');
 
@@ -448,6 +450,8 @@ export class FormComponent implements OnInit {
         this.generateField(res.data.fields,false);
 
         this.onParentChange(this.fields);
+      }else{
+        this.showSubmit=false;
       }
 
       this.isLoading=false;
@@ -463,8 +467,12 @@ export class FormComponent implements OnInit {
     apiFields.map(x => {
       const field = <Field>x;
 
+      // if(field.editable==undefined || field.editable==null){
+      //   field.editable=true;
+      // }
+
       field.oldRequired=field.required;
-      field.oldEditable=field.editable;
+      field.oldEditable=field.editable??true;
       field.oldHidden=field.hidden;
       field.oldModifiable=field.modifiable;
       
@@ -580,56 +588,6 @@ export class FormComponent implements OnInit {
     return newFieldId;
   }
 
-  // generateContainerV3(container: Field) {
-  //   // Find the parent container for the given field
-  //   const parentContainer = this.parentContainer.find((pc) => pc.cotnainerId === container.id);
-  
-  //   // Extract container values and ID
-  //   const containerValues = container.value as any[] || [];
-  //   const containerId = container.id;
-  
-  //   // Initialize existing container count
-  //   const existingContainerCount = parentContainer?.containers.length ?? 0;
-  
-  //   // Determine the number of loops based on container values
-  //   const loops = containerValues.length > 0 ? containerValues.length : 1;
-  
-  //   for (let i = 0; i < loops; i++) {
-  //     // Calculate the index for the current container
-  //     const index = existingContainerCount + 1 || 1;
-  
-  //     // Extract container fields
-  //     const containerFields = container.fields;
-  
-  //     if (parentContainer) {
-  //       // Push the sub-index and a new container to the parent container
-  //       parentContainer.subIndex!.push(i + 1);
-  //       parentContainer.containers.push(new Container(container.id, containerFields!, index));
-  //     } else {
-  //       // Create a new container array and push it to the parent containers
-  //       const newContainer: Container[] = [new Container(container.id, containerFields!, index)];
-  //       this.parentContainer.push(new ParentContainer(container.id, newContainer, [i]));
-  //     }
-  
-  //     // Extract values for the current loop
-  //     const currentLoopValue = containerValues[i] as any[] || [];
-  
-  //     // Iterate through container fields and process them
-  //     containerFields!.forEach((containerField) => {
-  //       const fieldId = containerField.id;
-  //       const fieldKey = `${fieldId}#${index}`;
-  //       const value = currentLoopValue.find((value) => value.fieldId === fieldId)?.value || null;
-  
-  //       // Add the field with the computed key and value
-  //       this.addField(containerField, fieldKey, value);
-  //     });
-  //   }
-  
-  //   // Add a control to the form with the container ID and default value
-  //   this.myForm.addControl(containerId, new FormControl(container.value || ''));
-  // }
-  
-
   updateContainerIds(container:Field): Field {
 
     const clonedContainer = _.cloneDeep(container); 
@@ -651,57 +609,6 @@ export class FormComponent implements OnInit {
 
   }
   
-    // generateContainer(containerUI:Field){
-
-  //   this.myForm.addControl(containerUI.id, new FormControl(""));
-    
-  //   var fieldValuesArr=containerUI.value as any[];
-
-  //   if(fieldValuesArr.length>0){
-
-  //     fieldValuesArr.map((fieldValue)=>{
-
-  //       var index=this.containers.filter(x=>x.containerId==containerUI.id).length+1;
-
-  //       this.containers.push(new Container(containerUI.id,containerUI.fields!,index));
-
-  //       var fieldValueItems=fieldValue as any[];
-
-  //       fieldValueItems.map(item=>{
-
-  //         containerUI.fields?.map((fieled)=>{
-
-  //           if(item.fieldId==fieled.id){
-
-  //             this.addField(fieled,fieled.id+`#${index}`,item.value);
-
-  //           }
-
-  //         });
-  //       })
-  //     });
-
-  //   }else{
-
-
-  //     var containerFields = containerUI.fields;
-
-  //     this.containers?.push(new Container(containerUI.id, containerFields!, 1));
-  
-  //     containerFields!.forEach((containerField) => {
-
-  //       this.addField(containerField,containerField.id+"#1",containerField.value);
-
-         
-  //     });
-  
-  //     this.myForm.addControl(containerUI.id, new FormControl(containerUI.value ?? ""));
-
-  //   }
-
-  // }
-
-
   getCalculationFields():Field[]{
     var fields=this.fields.filter(x=>x.type=="CALCULATION");
 
@@ -767,8 +674,6 @@ export class FormComponent implements OnInit {
       const day = dateObject.getDate().toString().padStart(2, '0');
       formatedValue=`${year}-${month}-${day}`;
     }
-
-    console.log(formatedValue);
 
     this.myForm.addControl(fieldId, new FormControl(formatedValue));
   }
@@ -840,7 +745,7 @@ export class FormComponent implements OnInit {
           else{
 
             this.isLoading = false;
-            this.showSubmit=true;
+            //this.showSubmit=false;
 
             this.sweetAlertService.ShowAlert('error',response.message);
 
@@ -1215,11 +1120,6 @@ export class FormComponent implements OnInit {
     fields.filter((field) => field.parent != null).map((field) => {
       const data = this.getConditionType(field.parent!.condition);
 
-      if( field.parent?.editable ==false){
-        this.myForm.get(field.id)?.disable();
-      }else if(field.parent?.editable ==true){
-        this.myForm.get(field.id)?.enable();
-      }
 
       if (data === true) {
         field.hidden = field.parent?.hidden;
@@ -1240,6 +1140,14 @@ export class FormComponent implements OnInit {
         }
 
       }
+
+      if( field.editable ==false){
+        this.myForm.get(field.id)?.disable();
+      }else if(field.editable ==true){
+        this.myForm.get(field.id)?.enable();
+      }
+
+
 
     });
 

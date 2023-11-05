@@ -31,8 +31,6 @@
                             <div class="card-body">
                                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-                                    
-
                                     <div class="form-group py-2">
                                       <label for="taxNumber">الرقم الضريبي:</label>
                                       <input type="text" id="taxNumber" formControlName="taxNumber" class="form-control">
@@ -44,6 +42,15 @@
                                     <hr>
                                   
                                     <!-- Form Items -->
+
+                                    <div class="row">
+                                      <div class="col-12">
+                                          <p>
+                                            العناصر المستوردة
+                                          </p>
+                                      </div>
+                                    </div>
+
                                     <div formArrayName="formItems">
                                       <div *ngFor="let item of Items.controls; let i = index">
 
@@ -51,7 +58,7 @@
                                             <div class="col-12" style="text-align: left;">
                                                 <i role="button"
                                                     *ngIf="i>0"
-                                                    (click)="removeName(i)"
+                                                    (click)="removeJamarek(i)"
                                                     class="fa-solid fa-trash text-danger p-2"
                                                     style="padding: 7px;border: 2px solid #eee;border-radius: 5px;"></i>
                                             </div>
@@ -59,27 +66,6 @@
 
 
                                         <div [formGroupName]="i" class="mb-3">
-
-                                          <!-- <div class="row">
-                                              <div class="col-md-6">
-                                                <p-dropdown (onFilter)="getUnits($event,i)" [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Country">
-                                                  <ng-template pTemplate="selectedItem">
-                                                      <div class="flex align-items-center gap-2" *ngIf="selectedCountry">
-                                                          <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px"/>
-                                                          <div>{{ selectedCountry.name }}</div>
-                                                      </div>
-                                                  </ng-template>
-                                                  <ng-template let-country pTemplate="item">
-                                                      <div class="flex align-items-center gap-2">
-                                                          <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px"/>
-                                                          <div>{{ country.name }}</div>
-                                                      </div>
-                                                  </ng-template>
-                                              </p-dropdown>
-                                              </div>
-                                          </div> -->
-                                          <!-- Unit Name -->
-
 
                                           <input type="hidden" formControlName="id">
 
@@ -98,7 +84,7 @@
                                             <div class="col-md-6 col-12">
                                               <div class="form-group py-2">
                                                 <label for="unitId-{{i}}">العنصر:</label>
-                                                <select id="unitId-{{i}}" formControlName="unitId" class="form-control">
+                                                <select id="unitId-{{i}}" formControlName="unitId" class="form-control" (change)="onUnitIdChange($event, i)">
                                                   <option value="">يرحى الاختيار</option>
                                                   <option value="{{item.key }}" *ngFor="let item of units[i]" >{{item.value }}</option>
                                                   <!-- ... -->
@@ -111,6 +97,18 @@
                                           </div>
 
                                           <div class="row">
+
+                                            <div class="col-md-6 col-12">
+                                              <div class="form-group py-2">
+                                                <label for="hsCode-{{i}}">hs code:</label>
+                                                <input type="text" id="hsCode-{{i}}" formControlName="hsCode" readonly="true" class="form-control">
+                                                <div *ngIf="item.get('hsCode')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                              </div>
+                                            </div>
+
+
                                             <div class="col-md-6 col-12">
                                               <div class="form-group py-2">
                                                 <label for="quantity-{{i}}">الكمية:</label>
@@ -121,6 +119,142 @@
                                               </div>
                                             </div>
 
+
+                                          </div>
+
+                                          <div class="row">
+                                            <div class="col-md-6 col-12">
+                                              <div class="form-group py-2">
+                                                <label for="staticUnit-{{i}}">وحدة القياس :</label>
+                                                <select id="staticUnit-{{i}}" formControlName="staticUnit" class="form-control">
+                                                    <option value="">يرحى الاختيار</option>
+                                                    <option value="{{item.key}}" *ngFor="let item of statisticalUnits">
+                                                    {{item.value}}
+                                                  </option>
+                                                  <!-- ... -->
+                                                </select>
+                                                <div *ngIf="item.get('staticUnit')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          
+                                          <div class="row" [hidden]="hideisTaxExempt">
+                                            <div class="col-md-6 col-12">
+                                              <div class="form-group py-2">
+                                                <label for="isTaxExempt-{{i}}">
+                                                  معفي ضريبياً ؟ 
+                                                </label>
+                                                <select id="staticUnit-{{i}}" formControlName="isTaxExempt" class="form-control">
+                                                    <option value="false"> 708 </option>
+                                                    <option value="true"> 709 </option>
+                                                </select>
+                                               
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                        </div>
+
+                                        <hr>
+
+                                      </div>
+
+                                      <div class="row">
+                                        <div class="col-12 text-center mt-3">
+                                            <button type="button" class="btn btn-primary mb-3" style="border-radius: 50%;" (click)="addItem()">+</button>
+                                        </div>
+                                      </div>
+
+
+                                    </div>
+
+
+                                    <hr>
+                                  
+                                    <!-- Form Items -->
+
+                                    <div class="row">
+                                      <div class="col-12">
+                                          <p>
+                                            العناصر المحلية
+                                          </p>
+                                      </div>
+                                    </div>
+                                    
+                                    <div formArrayName="taxItems">
+                                      <div *ngFor="let item of TaxItems.controls; let i = index">
+
+                                        <div class="row">
+                                            <div class="col-12" style="text-align: left;">
+                                                <i role="button"
+                                                    *ngIf="i>0"
+                                                    (click)="removeTax(i)"
+                                                    class="fa-solid fa-trash text-danger p-2"
+                                                    style="padding: 7px;border: 2px solid #eee;border-radius: 5px;"></i>
+                                            </div>
+                                        </div>
+
+
+                                        <div [formGroupName]="i" class="mb-3">
+
+                                          <input type="hidden" formControlName="id">
+
+                                          <div class="row">
+                                            <div class="col-md-6 col-12">
+                                              <div class="form-group py-2">
+                                                <label for="unitName-{{i}}">اكتب للبحث:</label>
+                                                <input type="text" id="unitName-{{i}}" formControlName="unitName" (blur)="getTaxUnits($event,i)"  class="form-control">
+                                                <div *ngIf="item.get('unitName')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                               
+                                              </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
+                                              <div class="form-group py-2">
+                                                <label for="unitId-{{i}}">العنصر:</label>
+                                                <select id="unitId-{{i}}" formControlName="unitId" class="form-control" (change)="onTaxUnitIdChange($event, i)">
+                                                  <option value="">يرحى الاختيار</option>
+                                                  <option value="{{item.key }}" *ngFor="let item of taxUnits[i]" >{{item.value }}</option>
+                                                  <!-- ... -->
+                                                </select>
+                                                <div *ngIf="item.get('unitId')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div class="row">
+
+                                            <div class="col-md-6 col-12">
+                                              <div class="form-group py-2">
+                                                <label for="hsCode-{{i}}">hs code:</label>
+                                                <input type="text" id="hsCode-{{i}}" formControlName="hsCode" readonly="true" class="form-control">
+                                                <div *ngIf="item.get('hsCode')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                              </div>
+                                            </div>
+
+
+                                            <div class="col-md-6 col-12">
+                                              <div class="form-group py-2">
+                                                <label for="quantity-{{i}}">الكمية:</label>
+                                                <input type="text" id="quantity-{{i}}" formControlName="quantity" class="form-control">
+                                                <div *ngIf="item.get('quantity')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                              </div>
+                                            </div>
+
+
+                                          </div>
+
+                                          <div class="row">
                                             <div class="col-md-6 col-12">
                                               <div class="form-group py-2">
                                                 <label for="staticUnit-{{i}}">وحدة القياس :</label>
@@ -139,16 +273,6 @@
                                           </div>
                                           
 
-                                          <div class="form-group py-3" [hidden]="hideisTaxExempt">
-                                    
-                                            <p-checkbox formControlName="isTaxExempt" id="isTaxExempt-{{i}}" [binary]="true" ></p-checkbox>
-                                            <label for="isTaxExempt-{{i}}" class="px-2"> معفي ضريبياً ؟ </label>
-        
-                                              <div *ngIf="form.get('isTaxExempt')?.invalid && formSubmited" class="text-danger">
-                                                  حقل اجباري
-                                              </div>
-                                          </div>
-
                                         </div>
 
                                         <hr>
@@ -157,7 +281,7 @@
 
                                       <div class="row">
                                         <div class="col-12 text-center mt-3">
-                                            <button type="button" class="btn btn-primary mb-3" style="border-radius: 50%;" (click)="addItem()">+</button>
+                                            <button type="button" class="btn btn-primary mb-3" style="border-radius: 50%;" (click)="addTaxItem()">+</button>
                                         </div>
                                       </div>
 
