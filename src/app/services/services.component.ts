@@ -74,6 +74,7 @@ export class ServicesComponent implements OnInit {
     'bg-blue',
     'bg-gold',
     'bg-green',
+    'bg-blue',
   ];
 
   textColorArr:string[]=[
@@ -86,6 +87,7 @@ export class ServicesComponent implements OnInit {
     'text-blue',
     'text-gold',
     'text-green',
+    'text-blue',
   ];
 
   imagesArr:string[]=[
@@ -98,6 +100,7 @@ export class ServicesComponent implements OnInit {
     '../../assets/images/grievance.png',
     '../../assets/images/invest-box.png',
     '../../assets/images/one-approval.png',
+    '../../assets/images/ease.png',
   ];
 
   // openDialog(serviceId:string,shouldShow:boolean){

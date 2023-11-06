@@ -463,26 +463,45 @@ export class FormComponent implements OnInit {
   }
 
 
-  private generateField(fields: any[],refresh:boolean) {
-    var apiFields = fields as any[];
+  // private generateField(fields: any[],refresh:boolean) {
+  //   var apiFields = fields as any[];
 
-    apiFields.map(x => {
-      const field = <Field>x;
+  //   apiFields.map(x => {
+  //     const field = <Field>x;
 
-      // if(field.editable==undefined || field.editable==null){
-      //   field.editable=true;
-      // }
+  //     // if(field.editable==undefined || field.editable==null){
+  //     //   field.editable=true;
+  //     // }
 
-      field.oldRequired=field.required;
-      field.oldEditable=field.editable??true;
-      field.oldHidden=field.hidden;
-      field.oldModifiable=field.modifiable;
+  //     field.oldRequired=field.required;
+  //     field.oldEditable=field.editable??true;
+  //     field.oldHidden=field.hidden;
+  //     field.oldModifiable=field.modifiable;
       
-      this.fields.push(field);
-      this.addField(field,field.id,field.value);
+  //     this.fields.push(field);
+  //     this.addField(field,field.id,field.value);
       
+  //   });
+
+  // }
+
+  private generateField(fields: Field[], refresh: boolean): void {
+    const backupFields = (field: Field) => {
+        field.oldRequired = field.required;
+        field.oldEditable = field.editable;
+        field.oldHidden = field.hidden;
+        field.oldModifiable = field.modifiable;
+    };
+
+    fields.forEach(field => {
+        backupFields(field);
+        if (field.type === "CONTAINER" && field.fields) {
+            field.fields.forEach(backupFields);
+        }
+        
+        this.fields.push(field);
+        this.addField(field, field.id, field.value);
     });
-
   }
 
   private addField(field: Field,fieldId:string,value:any) {

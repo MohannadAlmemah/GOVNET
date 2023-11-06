@@ -23,6 +23,7 @@ export class SectionsComponent {
     'bg-blue',
     'bg-gold',
     'bg-green',
+    'bg-blue',
   ];
 
   textColorArr:string[]=[
@@ -35,6 +36,7 @@ export class SectionsComponent {
     'text-blue',
     'text-gold',
     'text-green',
+    'text-blue',
   ];
 
   imagesArr:string[]=[
@@ -47,6 +49,7 @@ export class SectionsComponent {
     '../../assets/images/grievance.png',
     '../../assets/images/invest-box.png',
     '../../assets/images/one-approval.png',
+    '../../assets/images/ease.png',
   ];
 
   constructor(private apiService:ApiService,private route: ActivatedRoute,private authService:AuthService) {
