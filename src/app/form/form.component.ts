@@ -553,7 +553,7 @@ export class FormComponent implements OnInit {
         if(field.type=="CONTAINER"){
           this.generateContainerV2(field,value);
         }else{
-          this.addField(field,field.id,value);
+          this.addField(field,field.id,value??"");
         }
 
       });
@@ -1117,7 +1117,7 @@ export class FormComponent implements OnInit {
   }
 
   
-  onParentChange(fields:Field[]): void {
+  onParentChange(fields:Field[],doContainer:boolean=true): void {
 
     this.updateValidation();
     
@@ -1156,9 +1156,13 @@ export class FormComponent implements OnInit {
     });
 
 
-    fields.filter(x=>x.type=="CONTAINER").map(container=>{
-      this.onParentChange(container.fields!);
-    });
+    if(doContainer){
+      this.containers.map(container=>{
+
+        console.log(container.containerFields);
+        this.onParentChange(container.containerFields,false);
+      });
+    }
 
   }
 
