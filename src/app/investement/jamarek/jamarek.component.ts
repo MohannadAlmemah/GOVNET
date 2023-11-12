@@ -311,7 +311,7 @@ export class JamarekComponent {
         })
       }else{
 
-        this.addItem();
+        //this.addItem();
 
         this.isLoading=false;
 
@@ -347,7 +347,7 @@ export class JamarekComponent {
         })
       }else{
 
-        this.addTaxItem();
+        //this.addTaxItem();
 
         this.isLoading=false;
 

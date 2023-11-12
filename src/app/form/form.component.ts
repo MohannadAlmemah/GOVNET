@@ -262,6 +262,8 @@ export class FormComponent implements OnInit {
      
     }
 
+    this.listenToVisibilityChange();
+
   }
 
   private applyForService(body: { serviceId: string | undefined; rootValues: { fieldId: any; keyValue: any; value: string | null; }[]; }) {
@@ -686,20 +688,54 @@ export class FormComponent implements OnInit {
     this.myForm.addControl(fieldId, new FormControl(value ?? null));
   }
 
-  generateDate(field: Field,fieldId:string,value:string) {
-    
-    var formatedValue="";
-
-    if(value!=null && value !=""){
-      const dateObject = new Date(value);
-      const year = dateObject.getFullYear();
-      const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
-      const day = dateObject.getDate().toString().padStart(2, '0');
-      formatedValue=`${year}-${month}-${day}`;
+  generateDate(field: any, fieldId: string, value: string) {
+    let formattedValue = "";
+  
+    // A helper function to try different date formats
+    const parseDate = (dateStr: string): Date | null => {
+      // Try ISO format first (yyyy-mm-dd)
+      let date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        return date;
+      }
+  
+      // Try dd/mm/yyyy format
+      const parts = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (parts) {
+        date = new Date(+parts[3], +parts[2] - 1, +parts[1]);
+        if (!isNaN(date.getTime())) {
+          return date;
+        }
+      }
+  
+      // Add additional date format checks if necessary
+  
+      return null; // If no format matches
+    };
+  
+    // Check if value is not null or empty
+    if (value) {
+      const dateObject = parseDate(value);
+  
+      // If a valid date object is returned
+      if (dateObject) {
+        // Extract the date components
+        const year = dateObject.getFullYear();
+        const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+        const day = dateObject.getDate().toString().padStart(2, '0');
+        formattedValue = `${year}-${month}-${day}`;
+      } else {
+        console.error('Invalid date format:', value);
+      }
     }
-
-    this.myForm.addControl(fieldId, new FormControl(formatedValue));
+  
+    console.log(formattedValue);
+  
+    // Assuming this.myForm is already defined and is of a type that has addControl method
+    this.myForm.addControl(fieldId, new FormControl(formattedValue));
   }
+  
+  
 
   private generatePredefinedComboBox(field: Field,fieldId:string,value:any) {
     this.myForm.addControl(fieldId, new FormControl(value ?? null));
@@ -1072,6 +1108,31 @@ export class FormComponent implements OnInit {
     }else{
       return true;
     }
+
+  }
+
+  listenToVisibilityChange() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        var webViewField=this.fields.filter(x=>x.type=="WEBVIEW")[0];
+
+        console.log(webViewField);
+
+        if(webViewField){
+
+          var body={
+            fieldId:webViewField.id,
+            shouldRefresh:true,
+            isContainer:false,
+            containerFieldId:undefined,
+            fieldIndex:undefined
+          }
+
+          this.refreshForm(body);
+
+        }
+      }
+    });
 
   }
 
