@@ -106,4 +106,26 @@ export class ContainerComponent implements OnInit {
     return containerItems;
   }
 
+
+  @Output() 
+  onUploadFileEvent:EventEmitter<{fieldId: string,event:any,multi:boolean}>=new EventEmitter<{fieldId: string,event:any,multi:boolean}>();
+
+  @Output() 
+  deleteFileEvent:EventEmitter<{fieldId: number}>=new EventEmitter<{fieldId: number}>();
+
+
+  onUploadFile(currentData: any) {
+    var fieldId = currentData.fieldId as string;
+    var event = currentData.event as any; 
+    var multi = currentData.multi as boolean;
+
+    this.onUploadFileEvent.emit({fieldId, event, multi});
+  }
+
+  deleteFile(fieldId:any){
+
+    this.deleteFileEvent.emit(fieldId);
+
+  }
+
 }
