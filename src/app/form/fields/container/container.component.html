@@ -188,7 +188,8 @@
                                         [fieldIndex]="i"
                                         [isContainer]="true"
                                         (refreshFormEvent)="refreshForm($event)"
-                                        
+                                        (onUploadFileEvent)="onUploadFile($event)"
+                                        (deleteFileEvent)="deleteFile($event)"
                                         >
                                     </app-file>
 
