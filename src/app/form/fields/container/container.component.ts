@@ -80,7 +80,9 @@ export class ContainerComponent implements OnInit {
   }
 
   getFiles(controlName:string):FileModel[]{
-    return this.files.filter(x=>x.controlName==controlName);
+    var files= this.files.filter(x=>x.controlName==controlName);
+
+    return files;
   }
   
   getFormControlErrors(fieldId:string){
@@ -112,7 +114,6 @@ export class ContainerComponent implements OnInit {
 
   @Output() 
   deleteFileEvent:EventEmitter<{fieldId: number}>=new EventEmitter<{fieldId: number}>();
-
 
   onUploadFile(currentData: any) {
     var fieldId = currentData.fieldId as string;

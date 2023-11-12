@@ -1342,6 +1342,8 @@ export class FormComponent implements OnInit {
 
   onUploadFile(event:any) {
 
+    console.log(event);
+
     this.showSubmit=false;
 
     var controlName=event.fieldId;
