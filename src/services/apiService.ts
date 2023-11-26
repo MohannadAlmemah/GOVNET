@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment.development';
 // import { AuthService } from 'src/app/auth.service';
 
 @Injectable({
@@ -9,8 +10,8 @@ import { AuthService } from './auth.service';
 })
 export class ApiService {
 
-  private apiUrl = 'https://stagingapp.sanad.gov.jo/api';
-
+  private apiUrl = environment.govnet;
+  
   token:string|undefined;
 
   constructor(private http: HttpClient,private authService:AuthService) {
@@ -63,7 +64,7 @@ export class ApiService {
     const formData = new FormData();
 
     console.log(file);
-    formData.append('CarbonCopyId',carbonCopyId);
+    formData.append('Id',carbonCopyId);
     formData.append('File', file);
 
     const httpOptions = {
@@ -74,7 +75,7 @@ export class ApiService {
       })
     };
 
-    return this.http.post('https://stagingapp.sanad.gov.jo/api/Minio/UploadFile', formData, httpOptions)
+    return this.http.post(`${environment.govnet}/Minio/UploadFile`, formData, httpOptions)
       .pipe(
         map(response => {
           // Handle your response here
@@ -87,26 +88,7 @@ export class ApiService {
       );
   }
 
-    // const url = 'https://stagingapp.sanad.gov.jo/api/Minio/UploadFile';
-
-
-    // const formData = new FormData();
-
-    // formData.append('carbonCopyId','12');
-    // formData.append('file',file,file.name);
-
-    // const headers = new HttpHeaders({
-    //   // Ensure you set the 'Content-Type' header to 'multipart/form-data'.
-    //   'Content-Type': 'multipart/form-data',
-    //   'Accept-Language':'ar-JO',
-    //   'Authorization': this.token!=undefined ? `Bearer ${this.token}` :'',
-    // });
-
-    // this.http.post(url, formData ,{headers}).subscribe(
-    //   (response) => {
-    //     console.log(response);
-    //   }
-    // );
-  }
+    
+}
 
 

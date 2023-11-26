@@ -1,10 +1,14 @@
-<div class="row mb-4" [formGroup]="formGroup!">
+<div class="row mb-4" [hidden]="field.hidden" [formGroup]="formGroup!">
 
     <div class="col-sm-12">
         <p-checkbox formControlName="{{fieldId}}" (onChange)="refreshForm(field.id,field.shouldRefresh,containerFieldId,fieldIndex,isContainer)"
             [binary]="true" [pattern]="field.required?'true':''" ></p-checkbox>
         <label class="mx-2">{{field.label}}</label>
     </div>
+
+    <p class="pt-1 text-danger" style="font-size: 13px !important;" *ngIf="yourTurn && field?.approved == false">
+        {{field.comment}}
+    </p>
 
     <div *ngIf="isInvalid && submitted">
         <span class="text-danger"

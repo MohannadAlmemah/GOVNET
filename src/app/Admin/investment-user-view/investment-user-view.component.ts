@@ -2,6 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, forkJoin, tap } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 import { ApiService } from 'src/services/apiService';
 
 @Component({
@@ -55,7 +56,7 @@ export class InvestmentUserViewComponent {
       'Password': 'LASU2zapNIrqJAVX',
     });
 
-    return this.apiService.get(`Individual/GetPersonalInfo?NationalID=${this.userNatId}`, 'https://appv4.sanad.gov.jo/api', headers)
+    return this.apiService.get(`Individual/GetPersonalInfo?NationalID=${this.userNatId}`, `${environment.getterLink}`, headers)
       .pipe(
         tap(response => {
           this.userInfo = response;

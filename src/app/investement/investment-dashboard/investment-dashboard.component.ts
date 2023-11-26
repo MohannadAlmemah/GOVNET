@@ -2,6 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, finalize, tap } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 import { ApiService } from 'src/services/apiService';
 import { AuthService } from 'src/services/auth.service';
 import { SweetAlertService } from 'src/services/sweetAlertService';
@@ -71,7 +72,7 @@ export class InvestmentDashboardComponent {
       'Authorization': this.authService.getToken() != undefined ? `Bearer ${this.authService.getToken()}` : '',
     });
 
-    var request= this.apiService.get('Investment/GetAllCompanyAuthorizationData?NationalId=' + this.authService.getNationalNumber(), 'https://appv4.sanad.gov.jo/api', headers);
+    var request= this.apiService.get('Investment/GetAllCompanyAuthorizationData?NationalId=' + this.authService.getNationalNumber(), `${environment.getterLink}`, headers);
 
     request.subscribe(response=>{
       var data = response.list;

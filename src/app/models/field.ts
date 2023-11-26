@@ -23,6 +23,7 @@ export class Field{
     public editable:boolean|undefined;
     public required:boolean;
     public label:string;
+    public sizeLimit:string|undefined;
     public equation:Equation|undefined;
     public textDirection:string|undefined;
     public mediaType:string|undefined;
@@ -38,6 +39,7 @@ export class Field{
     public keyboardType:string;
     public description:string;
     public approved:boolean|undefined;
+    public isTitle:boolean|undefined;
     public shouldRefresh:boolean;
     public parent:parentModel|undefined;
 
@@ -64,7 +66,7 @@ export class Field{
         url:string|undefined,mediaType:string|undefined,allowedExtensions:string[]|undefined,
         withTime:boolean, defaultDate:DateModel|undefined,minDate:DateModel|undefined,
         maxDate:DateModel|undefined,textDirection:string|undefined,
-        equation:Equation|undefined
+        equation:Equation|undefined,sizeLimit:string|undefined,isTitle:boolean|undefined
         ) {
             this.id=id;
             this.type=type;
@@ -97,5 +99,7 @@ export class Field{
             this.minDate=minDate;
             this.maxDate=maxDate;
             this.equation=equation;
+            this.sizeLimit=sizeLimit;
+            this.isTitle=isTitle;
         }
 }

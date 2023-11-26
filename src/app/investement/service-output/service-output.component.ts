@@ -52,7 +52,7 @@ export class ServiceOutputComponent {
   }
 
   downloadMinioFile(objectId:string){
-    var request=this.apiService.get(`Minio/GetFile?ObjectName=${objectId}`);
+    var request=this.apiService.get(`Minio/GetFile?Path=${objectId}`);
     request.subscribe(response=>{
 
       this.downloadFile(response.data?.objectstat?.objectName,response.data.data,response.data?.objectstat?.contentType);

@@ -68,6 +68,7 @@ import { DateComponent } from './form/fields/date/date.component';
 import { CalculationComponent } from './form/fields/calculation/calculation.component';
 import { JamarekComponent } from './investement/jamarek/jamarek.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { EdtiJamarekComponent } from './investement/edti-jamarek/edti-jamarek.component';
 
 
 // export function HttpLoaderFactory(http: HttpClient) {
@@ -119,6 +120,7 @@ registerPlugin(FilePondPluginFileValidateType);
     DateComponent,
     CalculationComponent,
     JamarekComponent,
+    EdtiJamarekComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),

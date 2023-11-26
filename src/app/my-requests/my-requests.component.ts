@@ -76,4 +76,10 @@ export class MyRequestsComponent {
       );
   }
 
+  showRejectedType(id:string){
+    var archiveService=this.archiveService.filter(x=>x.id==id)[0];
+
+    this.sweetAlertService.ShowAlert('info',archiveService.rejectReason??"");
+  }
+
 }

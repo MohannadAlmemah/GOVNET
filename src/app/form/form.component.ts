@@ -420,6 +420,19 @@ export class FormComponent implements OnInit {
   
   addContainerItems(event:any){
 
+
+    if(event.field.sizeLimit!=null){
+
+      var maxContainer=this.myForm.get(event.field.sizeLimit)?.value;
+
+
+      if(this.containers.filter(x=>x.containerId==event.field.id).length>=maxContainer && maxContainer!=null){
+        this.sweetAlertService.ShowAlert('error','وصلت الى الحد الاقصى');
+        return;
+      }
+
+    }
+
     var container=event.field as Field;
 
     var updatedFields=this.updateContainerIds(_.cloneDeep(container));
@@ -557,9 +570,6 @@ export class FormComponent implements OnInit {
 
     for (let i = 0; i < loops; i++) {
       var updatedContainer= this.updateContainerIds(container);
-
-      console.log(updatedContainer);
-
 
       this.containers.push(new Container(this.containers.length+1,updatedContainer.id,updatedContainer.fields!,1));
 
@@ -830,7 +840,6 @@ export class FormComponent implements OnInit {
   updateValidation(): void {
     Object.keys(this.myForm.controls).forEach(controlName => {
       const control = this.myForm.controls[controlName];
-      // Mark the control as untouched and update its validity
       control.markAsUntouched();
       control.updateValueAndValidity();
     });
@@ -998,8 +1007,6 @@ export class FormComponent implements OnInit {
       containerItem.containerFields.forEach(field => {
         var formField = this.myForm.get(`${field.id}`);
 
-        // console.log(formField);
-
         let fieldType = this.getFieldType(field.type);
   
         let fieldValue: any;
@@ -1115,8 +1122,6 @@ export class FormComponent implements OnInit {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         var webViewField=this.fields.filter(x=>x.type=="WEBVIEW")[0];
-
-        console.log(webViewField);
 
         if(webViewField){
 
@@ -1238,8 +1243,6 @@ export class FormComponent implements OnInit {
 
     if(doContainer){
       this.containers.map(container=>{
-
-        console.log(container.containerFields);
         this.onParentChange(container.containerFields,false);
       });
     }
@@ -1342,8 +1345,6 @@ export class FormComponent implements OnInit {
 
   onUploadFile(event:any) {
 
-    console.log(event);
-
     this.showSubmit=false;
 
     var controlName=event.fieldId;
@@ -1409,7 +1410,7 @@ export class FormComponent implements OnInit {
   
   uploadFileAndGetObjectName(file: any): Observable<string> {
     return this.apiService.uploadFile(file, this.serviceId!).pipe(
-      map((response: any) => response.data.objectName)
+      map((response: any) => response.data.path)
     );
   }
 
@@ -1430,7 +1431,13 @@ export class FormComponent implements OnInit {
     var fileId=event.fieldId;
 
     if (window.confirm("هل انت متأكد ؟")) {
+
+      var fieldName=this.files.filter(x=>x.id==fileId)[0];
+
+      this.myForm.get(fieldName.controlName)?.setValue(null);
+
       this.files=this.files.filter(x=>x.id!=fileId);
+
     }
   }
 

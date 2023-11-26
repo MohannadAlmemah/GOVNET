@@ -26,6 +26,7 @@ import { AdminGuard } from 'src/security/admin.guard';
 import { AuthGuard } from 'src/security/auth.guard';
 import { TestComponent } from './test/test.component';
 import { JamarekComponent } from './investement/jamarek/jamarek.component';
+import { EdtiJamarekComponent } from './investement/edti-jamarek/edti-jamarek.component';
 
 const routes: Routes = [
   { 
@@ -63,6 +64,7 @@ const routes: Routes = [
     component:ServciesLayoutComponent,
     children:[
       {path:'Jamarek',component:JamarekComponent},
+      {path:'EditJamarek',component:EdtiJamarekComponent},
     ],
   },
   {

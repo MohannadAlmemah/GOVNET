@@ -149,6 +149,11 @@
                                                     href="/Form?serviceId={{item?.id}}">استكمال</a>
     
                                             </ng-container>
+
+                                            
+                                            <span *ngIf="item.typeStatus==2">
+                                                <i class="fa fa-eye text-primary" role="button" (click)="showRejectedType(item.id)"></i>
+                                            </span>
     
                                         </td>
                                     </tr>

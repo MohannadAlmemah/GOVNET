@@ -65,3 +65,17 @@ body {
  .input-country-code{
   padding-left: 10px !important;
  }
+
+ .p-dropdown {
+  width: 100% !important;
+  height: 40px;
+}
+
+.p-dropdown-filter{
+  margin: 0 !important;
+}
+
+.dropdown-item {
+  white-space: normal;
+  width: 200px; 
+}

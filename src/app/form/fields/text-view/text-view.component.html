@@ -1,6 +1,6 @@
 <div class="row mb-4" [hidden]="field.hidden" [formGroup]="formGroup!">
 
-    <label class="col-sm-2 col-form-label form-label">
+    <label class="col-sm-2 col-form-label form-label" [style]="field.isTitle?{'text-align': 'center' , 'font-size':'16px'} : null">
         {{field.label}}
     </label>
 
@@ -11,4 +11,9 @@
         </label>
 
     </div>
+
+    <p class="pt-1 text-danger" style="font-size: 13px !important;" *ngIf="yourTurn && field?.approved == false">
+        {{field.comment}}
+    </p>
+    
 </div>

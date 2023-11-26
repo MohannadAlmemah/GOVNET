@@ -6,6 +6,7 @@ import { Delegate } from 'src/app/models/companyProfile/Delegate';
 import { Director } from 'src/app/models/companyProfile/Director';
 import { Member } from 'src/app/models/companyProfile/Member';
 import { Objectives } from 'src/app/models/companyProfile/Objectives';
+import { environment } from 'src/environments/environment.development';
 import { ApiService } from 'src/services/apiService';
 
 @Component({
@@ -45,7 +46,7 @@ export class CompanyInfoComponent {
   
 
       if(companyId.startsWith("2")){
-        var request=this.apiService.get(`Investment/GetCCdCompanyData?CompanyNationalId=${companyId}`,'http://appv4.sanad.gov.jo/api',headers);
+        var request=this.apiService.get(`Investment/GetCCdCompanyData?CompanyNationalId=${companyId}`,`${environment.getterLink}`,headers);
 
         request.subscribe(response=>{
 
@@ -99,7 +100,7 @@ export class CompanyInfoComponent {
 
       }
       else if(companyId.startsWith("1")){
-        var request=this.apiService.get(`Investment/GetMITCompanyData?CompanyNationalId=${companyId}`,'http://appv4.sanad.gov.jo/api',headers);
+        var request=this.apiService.get(`Investment/GetMITCompanyData?CompanyNationalId=${companyId}`,`${environment.getterLink}`,headers);
 
         request.subscribe(response=>{
 

@@ -1,45 +1,20 @@
-
 import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/services/apiService';
 import { SweetAlertService } from 'src/services/sweetAlertService';
+import { jamarekObj } from '../jamarek/jamarek.component';
 import jwt_decode from "jwt-decode";
 import { environment } from 'src/environments/environment.development';
 
-export class jamarekObj{
-  public id :number;
-  public unitName :string ;
-  public unitId :string ;
-  public quantity :string ;
-  public staticUnit :string ;
-  public exemptAssets :string ;
-  public isTaxExempt :boolean =false ;
- 
-
-  /**
-   *
-   */
-  constructor(id :number,unitName :string,unitId :string,quantity :string,staticUnit :string,isTaxExempt :boolean,exemptAssets:string) {
-    this.id=id;
-    this.unitName=unitName;
-    this.unitName=unitName;
-    this.unitId=unitId;
-    this.isTaxExempt=isTaxExempt;
-    this.quantity=quantity;
-    this.staticUnit=staticUnit;
-    this.exemptAssets=exemptAssets;
-    
-  }
-}
-
 @Component({
-  selector: 'app-jamarek',
-  templateUrl: './jamarek.component.html',
-  styleUrls: ['./jamarek.component.css']
+  selector: 'app-edti-jamarek',
+  templateUrl: './edti-jamarek.component.html',
+  styleUrls: ['./edti-jamarek.component.css']
 })
-export class JamarekComponent {
+
+export class EdtiJamarekComponent {
 
   form!: FormGroup;
   statisticalUnits:any[]=[];
@@ -50,61 +25,20 @@ export class JamarekComponent {
   formSubmited:boolean=false;
   isLoading=true;
   userType="Employee";
+  countries: any[]=[];
 
-  showSaveBtn=true;  
-
-  public exemptAssetsList:any[]=[];
-
-  
-
-  getExemptAssetsList(){
-
-    
-    var headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Accept-Language': 'ar-JO',
-      'Password': 'LASU2zapNIrqJAVX',
-    });
-
-    var request=this.apiService.get("Investment/GetFindings",`${environment.getterLink}`,headers);
-
-    request.subscribe(response=>{
-      var data=response.list as any[];
-
-      var newList= data.map(item=>{
-
-        var value=  item.value as string;
-
-        var newValue=value.substring(0,50);
-
-        return  {
-          key:item.key,
-          value:newValue,
-        }
-
-      });
-
-      this.exemptAssetsList=newList;
-
-    });
-  }
+  selectedCountry: any | undefined;
 
   constructor(private fb: FormBuilder,private apiService:ApiService,private route: ActivatedRoute,private alertService:SweetAlertService) {
 
-    this.getExemptAssetsList();
     this.fillStaticUnit();
 
     if(this.route.snapshot.queryParams['Token'] && this.route.snapshot.queryParams['Carponcopyid']){
 
       this.carbonCopyId= this.route.snapshot.queryParamMap.get('Carponcopyid')!;
 
-      var TaxNumber = this.route.snapshot.queryParamMap.get('TaxNumber')!;
-
-      console.log(TaxNumber);
-
       this.form = this.fb.group({
-        taxNumber:[TaxNumber, Validators.required],
+        taxNumber:['', Validators.required],
         formItems: this.fb.array([]),
         taxItems: this.fb.array([]),
       });
@@ -136,26 +70,31 @@ export class JamarekComponent {
 
   }
 
+  searchLicense(){
+    var licenseId=this.form.get('licenseId');
+
+    
+
+  }
+
 
   generateItem(data?: {
     id?: number;
     unitName?: string;
     unitId?: string;
     quantity?: string;
-    exemptAssets?: string;
+    newQuantity?: string;
     staticUnit?: string;
     isTaxExempt?: boolean;
     hsCode?: boolean;
   }): FormGroup {
-
-    console.log({ key:data?.exemptAssets,value:data?.exemptAssets } );
 
     return this.fb.group({
       id: [data?.id ||0],
       unitName: [data?.unitName || '', Validators.required],
       unitId: [data?.unitId || '', [Validators.required]],
       quantity: [data?.quantity || '', Validators.required],
-      exemptAssets: [ data?.exemptAssets  || '', Validators.required],
+      newQuantity: [data?.newQuantity || '', Validators.required],
       staticUnit: [data?.staticUnit || '', Validators.required],
       isTaxExempt: [data?.isTaxExempt || false],
       hsCode: [data?.unitId || ''],
@@ -226,8 +165,8 @@ export class JamarekComponent {
           "ssCode": control.get('unitId')?.value,
           "additionalCode":  "Default",
           "quantity": control.get('quantity')?.value,
+          "newQuantity": control.get('newQuantity')?.value,
           "statisticalUnit": control.get('staticUnit')?.value,
-          "exemptAssets": control.get('exemptAssets')?.value,
           "isTaxExempt":control.get('isTaxExempt')?.value ,
           "searchKeyword": control.get('unitName')?.value
         };
@@ -242,8 +181,8 @@ export class JamarekComponent {
           "ssCode": control.get('unitId')?.value,
           "additionalCode":  "Default",
           "quantity": control.get('quantity')?.value,
+          "newQuantity": control.get('newQuantity')?.value,
           "statisticalUnit": control.get('staticUnit')?.value,
-          "exemptAssets": control.get('exemptAssets')?.value,
           "isTaxExempt":control.get('isTaxExempt')?.value ,
           "searchKeyword": control.get('unitName')?.value
         };
@@ -283,9 +222,7 @@ export class JamarekComponent {
           }
         });
 
-        this.showSaveBtn=false;
-
-        this.alertService.ShowAlert('success','تم الحفظ بنجاح');
+        this.alertService.ShowAlertThenRedirect('success','تم الحفظ بنجاح','/Investment/Dashboard');
 
       }else{
         var request=this.apiService.post('Customs/SubmitForm',body,`${environment.getterLink}`,headers);
@@ -306,9 +243,7 @@ export class JamarekComponent {
           }
         });
 
-        this.showSaveBtn=false;
-
-        this.alertService.ShowAlert('success',' تم الحفظ بنجاح');
+        this.alertService.ShowAlertThenRedirect('success','تم الحفظ بنجاح','/Investment/Dashboard');
 
       }
 
@@ -495,9 +430,4 @@ export class JamarekComponent {
 
     }
   }
-
-  
-
-
 }
-

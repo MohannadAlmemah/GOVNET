@@ -33,7 +33,7 @@
 
                                     <div class="col-md-4 form-group py-2">
                                       <label for="taxNumber" class="pb-2">الرقم الضريبي:</label>
-                                      <input type="text" id="taxNumber" formControlName="taxNumber" class="form-control">
+                                      <input type="text" id="taxNumber" formControlName="taxNumber" class="form-control" readonly>
                                         <div *ngIf="form.get('taxNumber')?.invalid && formSubmited" class="text-danger">
                                             حقل اجباري
                                         </div>
@@ -111,7 +111,7 @@
                                             <div class="col-md-6 col-12">
                                               <div class="form-group py-2">
                                                 <label for="quantity-{{i}}">الكمية:</label>
-                                                <input type="text" id="quantity-{{i}}" formControlName="quantity" class="form-control">
+                                                <input type="number" id="quantity-{{i}}" formControlName="quantity" class="form-control">
                                                 <div *ngIf="item.get('quantity')?.invalid && formSubmited" class="text-danger">
                                                     حقل اجباري
                                                 </div>
@@ -137,6 +137,31 @@
                                                 </div>
                                               </div>
                                             </div>
+
+
+                                            <div class="col-md-6 col-12">
+                                              <label for="exemptAssets-{{i}}">قائمة الموجودات المعفاة :</label>
+                                              <div class="form-group py-2">
+
+                                                <p-dropdown [options]="exemptAssetsList" id="exemptAssets-{{i}}" formControlName="exemptAssets" optionValue="key"  [filter]="true" filterBy="key" [showClear]="false"  [required]="true">
+                                                  <ng-template pTemplate="selectedItem">
+                                                      <div class="flex align-items-center gap-2" *ngIf="item.get('exemptAssets')?.value!='' ">
+                                                          <div>{{ item.get('exemptAssets')?.value }}</div>
+                                                      </div>
+                                                  </ng-template>
+                                                  <ng-template let-item pTemplate="item">
+                                                      <div class="flex align-items-center gap-2">
+                                                          <div>{{ item.value  }}</div>
+                                                      </div>
+                                                  </ng-template>
+                                              </p-dropdown>
+
+                                                <div *ngIf="item.get('exemptAssets')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                              </div>
+                                            </div>
+
                                           </div>
                                           
                                           <div class="row" [hidden]="hideisTaxExempt">
@@ -242,7 +267,7 @@
                                             <div class="col-md-6 col-12">
                                               <div class="form-group py-2">
                                                 <label for="quantity-{{i}}">الكمية:</label>
-                                                <input type="text" id="quantity-{{i}}" formControlName="quantity" class="form-control">
+                                                <input type="number" id="quantity-{{i}}" formControlName="quantity" class="form-control">
                                                 <div *ngIf="item.get('quantity')?.invalid && formSubmited" class="text-danger">
                                                     حقل اجباري
                                                 </div>
@@ -268,6 +293,29 @@
                                                 </div>
                                               </div>
                                             </div>
+
+                                            <div class="col-md-6 col-12">
+                                              <label for="exemptAssets-{{i}}">قائمة الموجودات المعفاة :</label>
+                                              <div class="form-group py-2">
+                                                <p-dropdown [options]="exemptAssetsList" id="exemptAssets-{{i}}" formControlName="exemptAssets"  [filter]="true" filterBy="key" [showClear]="false"  [required]="true">
+                                                  <ng-template pTemplate="selectedItem">
+                                                      <div class="flex align-items-center gap-2" *ngIf="item.get('exemptAssets')?.value!=''">
+                                                          <div>{{ item.get('exemptAssets')?.value  }}</div>
+                                                      </div>
+                                                  </ng-template>
+                                                  <ng-template let-item pTemplate="item">
+                                                      <div class="flex align-items-center gap-2">
+                                                          <div>{{ item.value  }}</div>
+                                                      </div>
+                                                  </ng-template>
+                                              </p-dropdown>
+                                              
+                                                <div *ngIf="item.get('exemptAssets')?.invalid && formSubmited" class="text-danger">
+                                                    حقل اجباري
+                                                </div>
+                                              </div>
+                                            </div>
+                                            
                                           </div>
                                           
 
@@ -289,7 +337,7 @@
                                     <hr>
                                                                     
 
-                                    <div class="row">
+                                    <div class="row"  *ngIf="showSaveBtn">
                                       <div class="col-12" style="text-align: center;">
                                         <button type="submit" class="btn btn-primary">حفظ</button>
                                       </div>

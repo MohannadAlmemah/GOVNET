@@ -62,11 +62,11 @@ export class TextFieldPhoneComponent implements AfterViewInit {
    
   }
   ngAfterViewInit(): void {
-   
-    if(this.phoneNumber !=undefined && this.phoneNumber!="" && this.phoneNumber!=null){
-      console.log(this.phoneNumber);
+
+    if(this.field.value!=null && this.field.value!=''){
+      this.phoneNumber= this.field.value;
     }
-    
+
   }
 
   @Output() 
