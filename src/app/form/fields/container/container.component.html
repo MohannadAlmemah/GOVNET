@@ -1,4 +1,18 @@
-<div *ngIf="!field.hidden" [formGroup]="myForm!">
+<div class="text-center py-2" *ngIf="viewContainer==false && !field.hidden">
+    
+    <button (click)="viewContainerFunc()" class="btn btn-primary">
+        {{field.label}} عرض
+    </button>
+</div>
+
+<div class="text-center py-2" *ngIf="viewContainer==true && field.required==false && !field.hidden">
+    
+    <button (click)="hideContainerFunc()" class="btn btn-primary">
+        {{field.label}} اخفاء
+    </button>
+</div>
+
+<div *ngIf="!field.hidden && viewContainer" [formGroup]="myForm!">
 
     <div class=" card px-2" *ngIf="field.designType!='TABLE'">
         <div class=" row">

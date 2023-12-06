@@ -354,8 +354,8 @@
                                                 <i class="bi-chevron-right small"></i>
                                                 الشروط </button>
 
-                                                <button (click)="Save()" [disabled]="!showSubmit" id="submit-button"
-                                                    class="btn btn-primary btn-lg">{{currentSubmitButtonText??"تقديم طلب"}}</button>
+                                                <button *ngIf="payment==false" (click)="Save()" [disabled]="!showSubmit" id="submit-button"
+                                                    class="btn btn-primary btn-lg">{{ currentSubmitButtonText=="Submit"?"تقديم":currentSubmitButtonText}}</button>
 
 
                                         </div>
@@ -366,7 +366,7 @@
                                                 السابق </button>
 
                                                 <button (click)="goNext()" id="submit-button"
-                                                    class="btn btn-primary btn-lg">{{currentSubmitButtonText??"تقديم طلب"}}</button>
+                                                class="btn btn-primary btn-lg">{{ currentSubmitButtonText=="Submit"?"تقديم":currentSubmitButtonText}}</button>
 
 
                                         </div>

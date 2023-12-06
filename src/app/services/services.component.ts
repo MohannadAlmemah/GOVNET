@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { ApiService } from 'src/services/apiService';
 
 @Component({
@@ -17,7 +17,7 @@ export class ServicesComponent implements OnInit {
   index=0;
   sectionId:string|undefined;
 
-  constructor(private apiService:ApiService,private route: ActivatedRoute) {
+  constructor(private apiService:ApiService,private route: ActivatedRoute,private router:Router) {
     if (this.route.snapshot.queryParams['SectionId']) {
       this.sectionId = this.route.snapshot.queryParamMap.get('SectionId')!;
       if(this.sectionId!=null){
@@ -102,6 +102,16 @@ export class ServicesComponent implements OnInit {
     '../../assets/images/one-approval.png',
     '../../assets/images/ease.png',
   ];
+
+  apply(item:any){
+    if(item.redirectionUrl==""){
+      this.router.navigateByUrl(`/Form?BluePrintId=${item.id}&SectionId=${this.sectionId}`);
+    }else{
+      window.open(item.redirectionUrl, '_blank');
+
+    }
+
+  }
 
   // openDialog(serviceId:string,shouldShow:boolean){
 

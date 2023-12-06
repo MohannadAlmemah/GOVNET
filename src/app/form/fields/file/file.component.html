@@ -54,7 +54,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>اسم الملف</th>
-                                    <th  *ngIf="!viewApplication">id</th>
+                                    <!-- <th  *ngIf="!viewApplication">id</th> -->
                                     <th>الاجراء</th>
                                 </tr>
                             </thead>
@@ -64,11 +64,11 @@
                                 <tr
                                     *ngFor="let item of files">
                                     <td>{{field.label}}</td>
-                                    <td style="max-width: 120px;" *ngIf="!viewApplication">{{item.objectId}}</td>
+                                    <!-- <td style="max-width: 120px;" *ngIf="!viewApplication">{{item.objectId}}</td> -->
                                     <td>
 
-                                        <i role="button" *ngIf="viewApplication" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary px-2"></i>
-                                        <i role="button" *ngIf="!viewApplication" (click)="downloadMinioFile(item.objectId)" class="fa fa-eye text-primary px-2"></i>
+                                        <i role="button" *ngIf="viewApplication && item.fileBase64!=null &&item.fileBase64!=''" (click)="downloadMinioFile(item.fileBase64)" class="fa fa-eye text-primary px-2"></i>
+                                        <i role="button" *ngIf="!viewApplication && item.objectId!=null &&item.objectId!=''" (click)="downloadMinioFile(item.objectId)" class="fa fa-eye text-primary px-2"></i>
 
                                         <i role="button"  *ngIf="!viewApplication && field.editable==true"
                                             (click)="deleteFile(item.id)"
@@ -81,7 +81,6 @@
                         <br>
 
                     </td>
-                    <td class="list-cell__button"></td>
                 </tr>
             </tbody>
         </table>

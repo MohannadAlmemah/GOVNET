@@ -126,9 +126,10 @@ export class InvestementSignupComponent {
 
         if(response.statusCode==200){
           this.sweetAlert.ShowAlert('success','تم الارسال بنجاح');
-        }else{
-          this.sweetAlert.ShowAlert('error','حدث خطأ يرجى المحاولة مره اخرى');
         }
+        // else{
+        //   this.sweetAlert.ShowAlert('error','حدث خطأ يرجى المحاولة مره اخرى');
+        // }
 
       });
 

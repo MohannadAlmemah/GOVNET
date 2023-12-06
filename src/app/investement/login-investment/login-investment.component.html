@@ -33,12 +33,11 @@
                 <div class="w-100 content-space-t-4 content-space-t-lg-2 content-space-b-1" style="max-width: 25rem;">
 
                     <form #myForm="ngForm" dir="rtl">
-                        <input type="hidden" name="_csrf-frontend"
-                            value="sZ9ONHk_X0BSkIisIu4MTD5v44pzUqj8HGR9eMOQ6pPipzh7EkwNBTzm5thrg1g9VyuK3Rc36qxpMDEMreeg1g==">
+                    
                         <div class="text-center">
                             <div class="mb-5">
                                 <h1 class="display-4">تسجيل الدخول</h1>
-                                <p >هل أنت مستخدم جديد؟ <a class="link" routerLink="/Investment/SignUp">إنشاء حساب</a> </p>
+                                <p >هل أنت مستخدم جديد؟ <a class="link" (click)="registerSabad()" role="button">إنشاء حساب</a> </p>
                             </div>
                         </div>
 
@@ -70,8 +69,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="my-1 mx-0 text-center" style="color:#999;">
+                           يرجى تسجيل الدخول بحساب تطبيق سند
+                        </div>
+
+                        <br>
+
                         <div class="my-1 mx-0" style="color:#999;">
-                            لإستعادة كلمة السر يرجى <a routerLink="Investment/ForgetPassword">طلب إستعادة كلمة السر</a>.
+                            لإستعادة كلمة السر يرجى <a routerLink="/Investment/ForgetPassword">طلب إستعادة كلمة السر</a>.
                             <!-- <br>
                             لم تصلني رسالة التوثيق <a href="/ar/site/resend-verification">إعادة إرسالها</a> -->
                         </div>
@@ -90,7 +96,7 @@
                                         style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea>
                                 </div><iframe style="display: none;"></iframe>
                             </div>
-                            <button (click)="login()" class="btn btn-primary btn-lg g-recaptcha" name="login-button"
+                            <button (click)="login()" type="submit" class="btn btn-primary btn-lg g-recaptcha" name="login-button"
                                 data-sitekey="6LerqC8kAAAAAL0zr64D5T6_bXZYcbbIOkAQw71y" data-callback="onSubmit"
                                 data-action="submit">تسجيل دخول</button>
                                 

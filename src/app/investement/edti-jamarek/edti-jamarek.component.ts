@@ -7,6 +7,7 @@ import { SweetAlertService } from 'src/services/sweetAlertService';
 import { jamarekObj } from '../jamarek/jamarek.component';
 import jwt_decode from "jwt-decode";
 import { environment } from 'src/environments/environment.development';
+import { AuthService } from 'src/services/auth.service';
 
 @Component({
   selector: 'app-edti-jamarek',
@@ -24,21 +25,60 @@ export class EdtiJamarekComponent {
   hideisTaxExempt=false;
   formSubmited:boolean=false;
   isLoading=true;
-  userType="Employee";
-  countries: any[]=[];
 
-  selectedCountry: any | undefined;
+  showSaveBtn=true;  
 
-  constructor(private fb: FormBuilder,private apiService:ApiService,private route: ActivatedRoute,private alertService:SweetAlertService) {
+  public exemptAssetsList:any[]=[];
 
+  
+
+  getExemptAssetsList(){
+
+    
+    var headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Accept-Language': 'ar-JO',
+      'Password': 'LASU2zapNIrqJAVX',
+    });
+
+    var request=this.apiService.get("Investment/GetFindings",`${environment.getterLink}`,headers);
+
+    request.subscribe(response=>{
+      var data=response.list as any[];
+
+      var newList= data.map(item=>{
+
+        var value=  item.value as string;
+
+        var newValue=value.substring(0,50);
+
+        return  {
+          key:item.key,
+          value:newValue,
+        }
+
+      });
+
+      this.exemptAssetsList=newList;
+
+    });
+  }
+
+  constructor(private fb: FormBuilder,private apiService:ApiService,private authService:AuthService,
+    private route: ActivatedRoute,private alertService:SweetAlertService) {
+
+    this.getExemptAssetsList();
     this.fillStaticUnit();
 
     if(this.route.snapshot.queryParams['Token'] && this.route.snapshot.queryParams['Carponcopyid']){
 
       this.carbonCopyId= this.route.snapshot.queryParamMap.get('Carponcopyid')!;
 
+      var TaxNumber = this.route.snapshot.queryParamMap.get('TaxNumber')!;
+
       this.form = this.fb.group({
-        taxNumber:['', Validators.required],
+        taxNumber:[TaxNumber, Validators.required],
         formItems: this.fb.array([]),
         taxItems: this.fb.array([]),
       });
@@ -52,29 +92,16 @@ export class EdtiJamarekComponent {
       
       var role= decoded.role as string|string[];
 
-      if (typeof role === 'string') {
-        if (role.toLocaleLowerCase() == 'consumer') {
-          this.userType="Consumer";
-          this.hideisTaxExempt=true;
-        } else {
-          this.hideisTaxExempt = false;
-        }
-      } else if (Array.isArray(role)) {
+      if (Array.isArray(role)) {
         this.hideisTaxExempt=false;
+      }else{
+        //location.href="/Investment/Dashboard";
+        this.hideisTaxExempt=true;
       }
-
+      
     }else{
       location.href="/Investment/Dashboard";
     }
-
-
-  }
-
-  searchLicense(){
-    var licenseId=this.form.get('licenseId');
-
-    
-
   }
 
 
@@ -83,7 +110,7 @@ export class EdtiJamarekComponent {
     unitName?: string;
     unitId?: string;
     quantity?: string;
-    newQuantity?: string;
+    exemptAssets?: string;
     staticUnit?: string;
     isTaxExempt?: boolean;
     hsCode?: boolean;
@@ -94,7 +121,7 @@ export class EdtiJamarekComponent {
       unitName: [data?.unitName || '', Validators.required],
       unitId: [data?.unitId || '', [Validators.required]],
       quantity: [data?.quantity || '', Validators.required],
-      newQuantity: [data?.newQuantity || '', Validators.required],
+      exemptAssets: [ data?.exemptAssets  || '', Validators.required],
       staticUnit: [data?.staticUnit || '', Validators.required],
       isTaxExempt: [data?.isTaxExempt || false],
       hsCode: [data?.unitId || ''],
@@ -165,8 +192,8 @@ export class EdtiJamarekComponent {
           "ssCode": control.get('unitId')?.value,
           "additionalCode":  "Default",
           "quantity": control.get('quantity')?.value,
-          "newQuantity": control.get('newQuantity')?.value,
           "statisticalUnit": control.get('staticUnit')?.value,
+          "exemptAssets": control.get('exemptAssets')?.value,
           "isTaxExempt":control.get('isTaxExempt')?.value ,
           "searchKeyword": control.get('unitName')?.value
         };
@@ -181,8 +208,8 @@ export class EdtiJamarekComponent {
           "ssCode": control.get('unitId')?.value,
           "additionalCode":  "Default",
           "quantity": control.get('quantity')?.value,
-          "newQuantity": control.get('newQuantity')?.value,
           "statisticalUnit": control.get('staticUnit')?.value,
+          "exemptAssets": control.get('exemptAssets')?.value,
           "isTaxExempt":control.get('isTaxExempt')?.value ,
           "searchKeyword": control.get('unitName')?.value
         };
@@ -193,59 +220,23 @@ export class EdtiJamarekComponent {
       var body={
         "carponcopyid": this.carbonCopyId,
         "taxNumber": this.form.get('taxNumber')?.value,
-        "gamarekExemptionReqest": gamarekExemptionReqest,
+        "userId":this.authService.getNationalNumber(),
+        "jamarekItems": gamarekExemptionReqest,
+        "taxItems":taxExemptionReqest,
       }
 
-      var taxbody={
-        "carponcopyid": this.carbonCopyId,
-        "taxNumber": this.form.get('taxNumber')?.value,
-        "gamarekExemptionReqest": taxExemptionReqest,
-      }
-
-      if(this.userType=="Employee"){
-        var request=this.apiService.post('Customs/UpdateSubmitForm',body,`${environment.getterLink}`,headers);
+      var request=this.apiService.post('Customs/UpdateSubmitExemptionForm',body,`${environment.getterLink}`,headers);
 
         request.subscribe(response=>{
           if(response){
             if(response.value==true){
+              
+              this.showSaveBtn=false;
+
+              this.alertService.ShowAlert('success',' تم الحفظ بنجاح');
             }
           }
         });
-
-
-        var request=this.apiService.post('Customs/UpdateTaxSubmitForm',taxbody,`${environment.getterLink}`,headers);
-
-        request.subscribe(response=>{
-          if(response){
-            if(response.value==true){
-            }
-          }
-        });
-
-        this.alertService.ShowAlertThenRedirect('success','تم الحفظ بنجاح','/Investment/Dashboard');
-
-      }else{
-        var request=this.apiService.post('Customs/SubmitForm',body,`${environment.getterLink}`,headers);
-
-        request.subscribe(response=>{
-          if(response){
-            if(response.value==true){
-            }
-          }
-        });
-
-        var request=this.apiService.post('Customs/SubmitTaxForm',taxbody,`${environment.getterLink}`,headers);
-
-        request.subscribe(response=>{
-          if(response){
-            if(response.value==true){
-            }
-          }
-        });
-
-        this.alertService.ShowAlertThenRedirect('success','تم الحفظ بنجاح','/Investment/Dashboard');
-
-      }
 
 
 
@@ -291,7 +282,7 @@ export class EdtiJamarekComponent {
 
         data.map((item,index)=>{
 
-          var obj=new jamarekObj(item.id,item.searchKeyword,item.hsCode,'1',item.statisticalUnit,item.isTaxExempt,item.exemptAssets);
+          var obj=new jamarekObj(item.id,item.searchKeyword,item.hsCode,item.remainingQuantity,item.statisticalUnit,item.isTaxExempt,item.exemptAssets);
           var form= this.generateItem(obj);
           this.searchEnquiry(item.searchKeyword,index);
           this.addItemWithValue(form);
@@ -327,7 +318,7 @@ export class EdtiJamarekComponent {
 
         data.map((item,index)=>{
 
-          var obj=new jamarekObj(item.id,item.searchKeyword,item.hsCode,'1',item.statisticalUnit,item.isTaxExempt,item.exemptAssets);
+          var obj=new jamarekObj(item.id,item.searchKeyword,item.hsCode,item.remainingQuantity,item.statisticalUnit,item.isTaxExempt,item.exemptAssets);
           var form= this.generateItem(obj);
           this.searchTaxEnquiry(item.searchKeyword,index);
           this.addTaxItemWithValue(form);
@@ -430,4 +421,6 @@ export class EdtiJamarekComponent {
 
     }
   }
+
+  
 }

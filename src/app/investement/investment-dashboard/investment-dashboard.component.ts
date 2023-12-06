@@ -72,13 +72,12 @@ export class InvestmentDashboardComponent {
       'Authorization': this.authService.getToken() != undefined ? `Bearer ${this.authService.getToken()}` : '',
     });
 
-    var request= this.apiService.get('Investment/GetAllCompanyAuthorizationData?NationalId=' + this.authService.getNationalNumber(), `${environment.getterLink}`, headers);
+    var request= this.apiService.get('Moin/GetCompanyAuthorizationData', `${environment.govnet}`, headers);
 
     request.subscribe(response=>{
-      var data = response.list;
+      var data = response.data;
       this.compaines = data;
       this.companyLoading=false;
-      
     });
 
   }

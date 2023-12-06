@@ -1,6 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { finalize, forkJoin, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/services/apiService';
 import { AuthService } from 'src/services/auth.service';
 
@@ -39,13 +40,13 @@ export class InvestmentProfileComponent {
       'Access-Control-Allow-Origin': '*',
       'Accept-Language': 'ar-JO',
       'Password': 'LASU2zapNIrqJAVX',
+      'Authorization': this.authService.getToken()!=undefined ? `Bearer ${this.authService.getToken()}` :'',
     });
 
-    var request= this.apiService.get(`api/Individual/GetPersonalInfo?NationalID=${this.authService.getNationalNumber()}`,'https://appv4.sanad.gov.jo',headers);
-
+    var request= this.apiService.get(`Moin/GetPersonalInfo`, `${environment.govnet}`, headers);
     return request.pipe(
       tap(response => {
-        this.nationality=response.nationalty;
+        this.nationality=response.data.nationalty;
       }
     ));
   }

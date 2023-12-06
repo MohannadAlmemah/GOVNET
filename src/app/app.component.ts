@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { ApiService } from 'src/services/apiService';
+import { AuthService } from 'src/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +11,13 @@ import { CookieService } from 'ngx-cookie-service';
 export class AppComponent {
   date:any;
   title = 'GovNet';
+
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit() {
+    this.apiService.initializeTimer();
+  }
+  
   // currentLanguage: string|undefined;
   // globalTranslations: any;
 

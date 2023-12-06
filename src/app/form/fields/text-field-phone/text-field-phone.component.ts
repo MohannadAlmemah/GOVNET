@@ -65,7 +65,12 @@ export class TextFieldPhoneComponent implements AfterViewInit {
 
     if(this.field.value!=null && this.field.value!=''){
       this.phoneNumber= this.field.value;
+    }else{
+      var control= this.formGroup?.get(this.field.id);
+      this.phoneNumber=control?.value;
+
     }
+
 
   }
 

@@ -46,7 +46,7 @@
 
                         <div class="card-footer">
 
-                            <a type="button" class="btn btn-outline-dark" routerLink="/Form" [queryParams]="{'BluePrintId':item.id, 'SectionId':sectionId}"  >تقديم طلب </a>
+                            <a type="button" class="btn btn-outline-dark"  role="button" (click)="apply(item)"  >تقديم طلب </a>
                         </div>
                     </div>
                 </div>

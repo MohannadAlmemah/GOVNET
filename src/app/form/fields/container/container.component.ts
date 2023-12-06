@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { Container } from 'src/app/models/ContainerField';
 import { Field } from 'src/app/models/field';
@@ -9,12 +9,17 @@ import { FileModel } from 'src/app/models/file';
   templateUrl: './container.component.html',
   styleUrls: ['./container.component.css']
 })
-export class ContainerComponent implements OnInit {
+export class ContainerComponent implements OnInit , DoCheck {
 
 
-  ngOnInit(): void {
-
+  ngDoCheck(): void {
+    if(this.field.required==true){
+      this.viewContainer=true;
+    }else{
+      this.viewContainer=false;
+    }
   }
+
 
   @Input()
   field!: Field;
@@ -43,12 +48,20 @@ export class ContainerComponent implements OnInit {
   @Input()
   allcontainers:Container[]=[];
 
+  viewContainer:boolean=true;
 
   @Input()
   phoneDto:any;
 
   @Input()
   files:FileModel[]=[];
+
+  ngOnInit(): void {
+    if(this.field.required==false){
+      this.viewContainer=false;
+    }
+  }
+
 
   @Output() 
   deleteContainerEvent:EventEmitter<{indexId: number, containerId: string}>=new EventEmitter<{indexId: number, containerId: string}>();
@@ -87,6 +100,14 @@ export class ContainerComponent implements OnInit {
   
   getFormControlErrors(fieldId:string){
     this.getFormControlErrorsEvent.emit(fieldId);
+  }
+
+  viewContainerFunc(){
+    this.viewContainer=true;
+  }
+
+  hideContainerFunc(){
+    this.viewContainer=false;
   }
   
   refreshForm(event:any){

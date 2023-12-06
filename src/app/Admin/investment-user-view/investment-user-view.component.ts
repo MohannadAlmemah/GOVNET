@@ -56,7 +56,7 @@ export class InvestmentUserViewComponent {
       'Password': 'LASU2zapNIrqJAVX',
     });
 
-    return this.apiService.get(`Individual/GetPersonalInfo?NationalID=${this.userNatId}`, `${environment.getterLink}`, headers)
+    return this.apiService.get(`Moin/GetPersonalInfo`, `${environment.govnet}`, headers)
       .pipe(
         tap(response => {
           this.userInfo = response;

@@ -10,7 +10,7 @@ import { FileModel } from '../models/file';
 import {ConditionType} from '../models/enum/conditionType';
 import { AuthService } from 'src/services/auth.service';
 import * as _ from 'lodash';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 import { CalculationComponent } from './fields/calculation/calculation.component';
 
 export class FieldInfo{
@@ -695,6 +695,7 @@ export class FormComponent implements OnInit {
   }
 
   private generateOther(field: Field,fieldId:string,value:any) {
+
     this.myForm.addControl(fieldId, new FormControl(value ?? null));
   }
 
@@ -739,7 +740,7 @@ export class FormComponent implements OnInit {
       }
     }
   
-    console.log(formattedValue);
+    
   
     // Assuming this.myForm is already defined and is of a type that has addControl method
     this.myForm.addControl(fieldId, new FormControl(formattedValue));
@@ -761,23 +762,23 @@ export class FormComponent implements OnInit {
 
     this.submitted = true;
 
-    if(this.route.snapshot.queryParams['serviceId'] && this.payment==true){
-      var body={
-        "serviceId": this.serviceId,
-        "status": true
-      }
+    // if(this.route.snapshot.queryParams['serviceId'] && this.payment==true){
+    //   var body={
+    //     "serviceId": this.serviceId,
+    //     "status": true
+    //   }
 
-      var request=this.apiService.post('carboncopies/CompletePaymentProcess', body);
+    //   var request=this.apiService.post('carboncopies/CompletePaymentProcess', body);
 
-      request.subscribe(res=>{
-        if(res.statusCode==200){
-          this.sweetAlertService.ShowAlertThenRedirect('success', res.message ?? "paymet success", '/Investment/Dashboard');
-        }
-      })
+    //   request.subscribe(res=>{
+    //     if(res.statusCode==200){
+    //       this.sweetAlertService.ShowAlertThenRedirect('success', res.message ?? "paymet success", '/Investment/Dashboard');
+    //     }
+    //   })
 
-      return;
+    //   return;
 
-    }
+    // }
     
     if (this.myForm.valid) {
       this.submitted = false;
@@ -816,7 +817,7 @@ export class FormComponent implements OnInit {
             this.isLoading = false;
             //this.showSubmit=false;
 
-            this.sweetAlertService.ShowAlert('error',response.message);
+            //this.sweetAlertService.ShowAlert('error',response.message);
 
           }
         });
@@ -1029,6 +1030,8 @@ export class FormComponent implements OnInit {
            case 'TEXT_FIELD_PHONE':
 
             var phone=formField?.value as any;
+
+            console.log(phone);
     
             if(phone!=null){
               this.phoneDto=phone;
@@ -1167,31 +1170,33 @@ export class FormComponent implements OnInit {
         values: filteredFormValues,
       };
   
-      this.apiService.post('carboncopies/RefreshStep', body).subscribe(
-        (res: any) => {
-  
+      this.apiService.post('carboncopies/RefreshStep', body).pipe(
+        tap((res: any) => {
+
           if (res.statusCode === 200) {
-
-            this.showSubmit=true;
-
+            this.showSubmit = true;
             this.removeFormControls();
-
             this.generateField(res.data.fields, true);
-            
-          } else {
-
-            this.showSubmit=false;
-
-            //alert(res.message);
           }
-  
+          else if(res.statusCode === 400){
+            this.sweetAlertService.ShowAlert('error',res.message);
+            this.showSubmit = false;
+          }
+          else {
+            this.showSubmit = false;
+          }
+        }),
+        catchError((error: any) => {
+          return of(null); // Handle the error and return a new observable
+        })
+      ).subscribe(
+        (res: any) => {
           this.isLoading = false;
           this.onParentChange(this.fields);
-
         },
         (error: any) => {
+          // This will be executed only if catchError doesn't handle the error
           this.isLoading = false;
-          console.error('Error refreshing form:', error);
         }
       );
     } else {

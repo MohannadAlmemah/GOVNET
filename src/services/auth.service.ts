@@ -1,18 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, Subscription, catchError, switchMap, tap, throwError, timer } from 'rxjs';
+import { ApiService } from './apiService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http:HttpClient,private cookieService: CookieService) {
+  constructor(private http:HttpClient,private cookieService: CookieService,private inject: Injector) {
 
   }
 
   private apiUrl = 'https://stagingapp.sanad.gov.jo/api';
+  private nextCallTimeKey = 'next_api_call_time';
+
+  
 
   login(email: string, password: string): Observable<any> {
     const url = `${this.apiUrl}/api/user/login`;
@@ -57,6 +61,7 @@ export class AuthService {
     this.cookieService.delete('refreshToken','/');
     this.cookieService.delete('nationalNumber','/');
     this.cookieService.delete('role','/');
+    localStorage.removeItem(this.nextCallTimeKey);
   }
 
   removeToken2(): void {

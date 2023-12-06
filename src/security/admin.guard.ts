@@ -14,7 +14,7 @@ export class AdminGuard implements CanActivate {
       const token = this.authService.getToken();
       const role = this.authService.getRole();
 
-      if (token && role?.toLocaleLowerCase() == "admin") {
+      if (token) {
         // Token exists, user is authorized to access the requested route
         return true;
       } else {

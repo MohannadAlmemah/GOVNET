@@ -7,6 +7,7 @@ import { ApiService } from 'src/services/apiService';
 import { SweetAlertService } from 'src/services/sweetAlertService';
 import jwt_decode from "jwt-decode";
 import { environment } from 'src/environments/environment.development';
+import { AuthService } from 'src/services/auth.service';
 
 export class jamarekObj{
   public id :number;
@@ -49,7 +50,6 @@ export class JamarekComponent {
   hideisTaxExempt=false;
   formSubmited:boolean=false;
   isLoading=true;
-  userType="Employee";
 
   showSaveBtn=true;  
 
@@ -90,7 +90,8 @@ export class JamarekComponent {
     });
   }
 
-  constructor(private fb: FormBuilder,private apiService:ApiService,private route: ActivatedRoute,private alertService:SweetAlertService) {
+  constructor(private fb: FormBuilder,private apiService:ApiService,private authService:AuthService,
+    private route: ActivatedRoute,private alertService:SweetAlertService) {
 
     this.getExemptAssetsList();
     this.fillStaticUnit();
@@ -99,9 +100,9 @@ export class JamarekComponent {
 
       this.carbonCopyId= this.route.snapshot.queryParamMap.get('Carponcopyid')!;
 
-      var TaxNumber = this.route.snapshot.queryParamMap.get('TaxNumber')!;
+      this.checkValidty();
 
-      console.log(TaxNumber);
+      var TaxNumber = this.route.snapshot.queryParamMap.get('TaxNumber')!;
 
       this.form = this.fb.group({
         taxNumber:[TaxNumber, Validators.required],
@@ -109,33 +110,32 @@ export class JamarekComponent {
         taxItems: this.fb.array([]),
       });
 
-      this.fillApplicant(this.carbonCopyId);
-      this.fillTaxApplicant(this.carbonCopyId);
-
       var token = this.route.snapshot.queryParamMap.get('Token')!;
 
       var decoded = jwt_decode(token) as any;
       
-      var role= decoded.role as string|string[];
-
-      if (typeof role === 'string') {
-        if (role.toLocaleLowerCase() == 'consumer') {
-          this.userType="Consumer";
-          this.hideisTaxExempt=true;
-        } else {
-          this.hideisTaxExempt = false;
-        }
-      } else if (Array.isArray(role)) {
-        this.hideisTaxExempt=false;
-      }
+      this.hideisTaxExempt=true;
 
     }else{
       location.href="/Investment/Dashboard";
     }
 
-
   }
 
+  checkValidty(){
+    var request=this.apiService.get(`Customs/istExemptionFormExist?carbonId=${this.carbonCopyId}`,`${environment.getterLink}`);
+
+    request.subscribe(response=>{
+
+      this.isLoading=false;
+
+      if(response.value==true){
+        location.href="/Investment/Dashboard";
+        return;
+      }
+    });
+
+  }
 
   generateItem(data?: {
     id?: number;
@@ -147,8 +147,6 @@ export class JamarekComponent {
     isTaxExempt?: boolean;
     hsCode?: boolean;
   }): FormGroup {
-
-    console.log({ key:data?.exemptAssets,value:data?.exemptAssets } );
 
     return this.fb.group({
       id: [data?.id ||0],
@@ -254,63 +252,23 @@ export class JamarekComponent {
       var body={
         "carponcopyid": this.carbonCopyId,
         "taxNumber": this.form.get('taxNumber')?.value,
-        "gamarekExemptionReqest": gamarekExemptionReqest,
+        "userId":this.authService.getNationalNumber(),
+        "jamarekItems": gamarekExemptionReqest,
+        "taxItems":taxExemptionReqest,
       }
 
-      var taxbody={
-        "carponcopyid": this.carbonCopyId,
-        "taxNumber": this.form.get('taxNumber')?.value,
-        "gamarekExemptionReqest": taxExemptionReqest,
-      }
-
-      if(this.userType=="Employee"){
-        var request=this.apiService.post('Customs/UpdateSubmitForm',body,`${environment.getterLink}`,headers);
+      var request=this.apiService.post('Customs/SubmitExemptionForm',body,`${environment.getterLink}`,headers);
 
         request.subscribe(response=>{
           if(response){
             if(response.value==true){
+              
+              this.showSaveBtn=false;
+
+              this.alertService.ShowAlert('success',' تم الحفظ بنجاح');
             }
           }
         });
-
-
-        var request=this.apiService.post('Customs/UpdateTaxSubmitForm',taxbody,`${environment.getterLink}`,headers);
-
-        request.subscribe(response=>{
-          if(response){
-            if(response.value==true){
-            }
-          }
-        });
-
-        this.showSaveBtn=false;
-
-        this.alertService.ShowAlert('success','تم الحفظ بنجاح');
-
-      }else{
-        var request=this.apiService.post('Customs/SubmitForm',body,`${environment.getterLink}`,headers);
-
-        request.subscribe(response=>{
-          if(response){
-            if(response.value==true){
-            }
-          }
-        });
-
-        var request=this.apiService.post('Customs/SubmitTaxForm',taxbody,`${environment.getterLink}`,headers);
-
-        request.subscribe(response=>{
-          if(response){
-            if(response.value==true){
-            }
-          }
-        });
-
-        this.showSaveBtn=false;
-
-        this.alertService.ShowAlert('success',' تم الحفظ بنجاح');
-
-      }
 
 
 

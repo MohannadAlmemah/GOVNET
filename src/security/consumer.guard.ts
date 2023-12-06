@@ -15,7 +15,7 @@ export class ConsumerGuard implements CanActivate {
 
       var role=this.authService.getRole();
 
-      if (token && role?.toLocaleLowerCase()=='consumer') {
+      if (token) {
         // Token exists, user is authorized to access the requested route
         return true;
       } else {
